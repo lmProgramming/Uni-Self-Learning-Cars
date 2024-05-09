@@ -95,21 +95,12 @@ else:
 
 
 
-def check_if_intersect(car_ray, border):
-    A = Point(car_ray.get_origin_position().x, car_ray.get_origin_position().y)
-    B = Point(car_ray.get_end_position().x, car_ray.get_end_position().y)
-
-    C = Point(border.start_position.x, border.start_position.y)
-    D = Point(border.end_position.x, border.end_position.y)
-    distance = overlap_point_distance(p1, p2, q1, q2)
-    #if distance is not None:
-    #return 
-
+def check_if_intersect(car_ray_origin: Point, car_ray_end: Point, border_origin: Point, border_end: Point):
     line1 = LineString([A, B])
     line2 = LineString([C, D])
-#
+
     int_pt = line1.intersection(line2)
-#
+
     if int_pt.is_empty:
         return False, 0, 0
     else:
