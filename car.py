@@ -2,6 +2,31 @@ import pygame as pg
 from pygame.math import Vector2
 import math
 from typing import List
+import os
+
+WIDTH = 1280
+HEIGHT = 960
+
+PLAYER_ONLY = False
+LOAD_MAP = True
+
+GEN = 0
+
+CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
+
+CAR_WIDTH = CAR_IMG.get_width()
+CAR_HEIGHT = CAR_IMG.get_height()
+
+BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
+
+WHEEL_TURN_SPEED = 3
+
+STARTING_CAR_POSITION = Vector2(450, HEIGHT - 472)
+
+RAY_DISTANCE_KILL = 10
+
+RAY_COUNT = 5
+RAY_LENGTH = 100
 
 class Car:
     WHEEL_TURN = 60
@@ -102,3 +127,34 @@ class Car:
         rotated_image = pg.transform.rotate(CAR_IMG, -self.angle)
         new_rect = rotated_image.get_rect(center=CAR_IMG.get_rect(topleft=(self.position.x, self.position.y)).center)
         win.blit(rotated_image, new_rect.topleft)
+        
+
+
+class AICar(Car):
+    def get_desired_movement(self):
+        return super().get_desired_movement()
+
+
+class CarRay:
+    def __init__(self, car, additional_angle, base_dist):
+        self.car = car
+        self.additional_angle = additional_angle
+        self.base_dist = base_dist
+        self.color = pg.Color(0, 0, 0, 255)
+
+    def get_origin_position(self):
+        return self.car.get_centre_position()
+    
+    def get_end_position(self):
+        return self.get_origin_position() + get_position_change_based_on_length_and_angle(-self.car.angle + self.additional_angle, self.base_dist)
+
+    def check_intersection(self, border):
+        result = find_lines_intersection(self, border)
+
+        hit, x, y = result
+        distance = self.base_dist if not hit else Vector2(x, y).distance_to(self.get_origin_position())
+
+        return (hit, x, y, distance)
+
+    def draw(self, win):
+        pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)

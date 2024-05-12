@@ -6,8 +6,9 @@ import math
 import random
 from typing import List
 from car import Car
+from map import Wall, Gate
 
-from intersection_math import check_if_intersect
+from intersection_math import find_lines_intersection
 from map_reader import read_map_txt
 
 pg.font.init()
@@ -38,76 +39,7 @@ RAY_DISTANCE_KILL = 10
 RAY_COUNT = 5
 RAY_LENGTH = 100
 
-class AICar(Car):
-    def get_desired_movement(self):
-        return super().get_desired_movement()
 
-
-class CarRay:
-    def __init__(self, car, additional_angle, base_dist):
-        self.car = car
-        self.additional_angle = additional_angle
-        self.base_dist = base_dist
-        self.color = pg.Color(0, 0, 0, 255)
-
-    def get_origin_position(self):
-        return self.car.get_centre_position()
-    
-    def get_end_position(self):
-        return self.get_origin_position() + get_position_change_based_on_length_and_angle(-self.car.angle + self.additional_angle, self.base_dist)
-
-    def check_intersection(self, border):
-        result = check_if_intersect(self, border)
-
-        hit, x, y = result
-        distance = self.base_dist if not hit else Vector2(x, y).distance_to(self.get_origin_position())
-
-        return (hit, x, y, distance)
-
-    def draw(self, win):
-        pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)
-
-class Wall:
-    def __init__(self, x1, y1, x2, y2, thickness=6):
-        self.start_position: Vector2 = Vector2(x1, y1)
-        self.end_position: Vector2 = Vector2(x2, y2)
-        self.thickness = thickness
-
-    def draw(self, win):
-        pg.draw.line(win, (0, 0, 0), self.start_position, self.end_position, self.thickness)
-
-class Gate:
-    def __init__(self, num, x1, y1, x2, y2, thickness=6):
-        self.start_position: Vector2 = Vector2(x1, y1)
-        self.end_position: Vector2 = Vector2(x2, y2)
-        self.thickness = thickness
-        self.num = num
-
-    def get_centre_position(self):
-        return self.start_position + (self.end_position - self.start_position) / 2
-
-    def check_if_inside(self, position):
-        if self.start_position.x < self.end_position.x:
-            x1 = self.start_position.x
-            x2 = self.end_position.x
-        else:
-            x1 = self.end_position.x
-            x2 = self.start_position.x
-        
-        if self.start_position.y < self.end_position.y:
-            y1 = self.start_position.y
-            y2 = self.end_position.y
-        else:
-            y1 = self.end_position.y
-            y2 = self.start_position.y
-
-        return position.x > x1 and \
-               position.y > y1 and \
-               position.x < x2 and \
-               position.y < y2
-
-    def draw(self, win):
-        pg.draw.line(win, (0, 0, 255), self.start_position, self.end_position, self.thickness)
 
 
 def draw_line(position, angle, line_length, line_width, color, screen):
