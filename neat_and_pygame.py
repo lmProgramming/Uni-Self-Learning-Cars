@@ -8,7 +8,6 @@ from typing import List
 from car import Car
 from map import Wall, Gate
 
-from intersection_math import find_lines_intersection
 from map_reader import read_map_txt
 
 pg.font.init()
@@ -36,22 +35,13 @@ STARTING_CAR_POSITION = Vector2(450, HEIGHT - 472)
 
 RAY_DISTANCE_KILL = 10
 
-RAY_COUNT = 5
+RAY_COUNT = 8
 RAY_LENGTH = 100
-
-
-
 
 def draw_line(position, angle, line_length, line_width, color, screen):
     vector = Vector2()
     vector.from_polar((line_length, angle))
     pg.draw.line(screen, color, position, position+vector, line_width)
-
-def get_position_change_based_on_length_and_angle(angle, length):
-    delta_y = length * math.cos(math.radians(angle))
-    delta_x = length * math.sin(math.radians(angle))
-
-    return Vector2(delta_x, delta_y)
 
 def draw_window(win, cars: List[Car], borders, gates, bg_img, score, gen, debug=False):
     win.blit(bg_img, (0, 0))
@@ -114,7 +104,7 @@ def main(genomes, config):
             
             new_car = Car(starting_point.x, starting_point.y, random.randrange(-180, 180))
             new_car.genome = genome
-            new_car.generate_rays()
+            new_car.generate_rays(RAY_COUNT, RAY_LENGTH)
             cars.append(new_car)
 
     win = pg.display.set_mode((WIDTH, HEIGHT))
@@ -149,7 +139,7 @@ def main(genomes, config):
         while i < len(cars):
             neural_net, genome, car = nets[i], ges[i], cars[i]
 
-            refresh_inputs = frames % 4 == 0
+            refresh_inputs = True
             inputs = car.get_line_distances(borders, refresh_inputs) + [random.random()]
             if PLAYER_ONLY:
                 outputs = [0.5, 0.5]                    
@@ -206,13 +196,13 @@ def run(config_path):
 
     print(winner)
 
-
 if __name__ == "__main__":    
     with open('config', 'r') as f:
         for line in f:
             if line.startswith("num_inputs"):
                 RAY_COUNT = int(line.strip().split(" = ")[1]) - 1
-
+                break
+    
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, "config")
     run(config_path)

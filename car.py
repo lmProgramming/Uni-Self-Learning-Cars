@@ -3,14 +3,7 @@ from pygame.math import Vector2
 import math
 from typing import List
 import os
-
-WIDTH = 1280
-HEIGHT = 960
-
-PLAYER_ONLY = False
-LOAD_MAP = True
-
-GEN = 0
+import vector_math
 
 CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
 
@@ -21,18 +14,13 @@ BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
 WHEEL_TURN_SPEED = 3
 
-STARTING_CAR_POSITION = Vector2(450, HEIGHT - 472)
-
 RAY_DISTANCE_KILL = 10
-
-RAY_COUNT = 5
-RAY_LENGTH = 100
 
 class Car:
     WHEEL_TURN = 60
 
     def __init__(self, x, y, starting_angle):
-        self.position: Vector2 = Vector2(x, y)
+        self.position = Vector2(x, y)
         self.angle = starting_angle
         self.speed = 0
         self.acceleration = 0.3
@@ -69,7 +57,7 @@ class Car:
             for line in self.lines:
                 lowest_distance = line.base_dist
                 for border in borders:
-                    _, _, _, distance = line.check_intersection(border)
+                    _, _, distance = line.check_intersection(border)
                     lowest_distance = min(lowest_distance, distance)
                 outputs.append(lowest_distance / line.base_dist)     
 
@@ -90,9 +78,9 @@ class Car:
 
         self.speed += normalized_force * self.acceleration * (1 if force >= 0 else self.back_acceleration_multiplier)
 
-    def generate_rays(self):
-        for i in range(RAY_COUNT):
-            self.lines.append(CarRay(self, 360 / RAY_COUNT * i - 90, RAY_LENGTH))
+    def generate_rays(self, ray_count, ray_length):
+        for i in range(ray_count):
+            self.lines.append(CarRay(self, 360 / ray_length * i - 90, ray_length))
 
     def steer(self, way):
         wheel_turn_coefficient = math.sqrt(abs(self.speed))
@@ -136,7 +124,7 @@ class AICar(Car):
 
 
 class CarRay:
-    def __init__(self, car, additional_angle, base_dist):
+    def __init__(self, car: Car, additional_angle, base_dist):
         self.car = car
         self.additional_angle = additional_angle
         self.base_dist = base_dist
@@ -146,15 +134,14 @@ class CarRay:
         return self.car.get_centre_position()
     
     def get_end_position(self):
-        return self.get_origin_position() + get_position_change_based_on_length_and_angle(-self.car.angle + self.additional_angle, self.base_dist)
+        return self.get_origin_position() + vector_math.position_from_length_and_angle(-self.car.angle + self.additional_angle, self.base_dist)
 
     def check_intersection(self, border):
-        result = find_lines_intersection(self, border)
+        result: Vector2 = vector_math.find_lines_intersection(self.get_origin_position(), self.get_end_position(), border.start_position, border.end_position)
 
-        hit, x, y = result
-        distance = self.base_dist if not hit else Vector2(x, y).distance_to(self.get_origin_position())
+        distance = self.base_dist if result is None else result.distance_to(self.get_origin_position())
 
-        return (hit, x, y, distance)
+        return (result is not None, result, distance)
 
     def draw(self, win):
         pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)

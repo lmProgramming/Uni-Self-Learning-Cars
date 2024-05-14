@@ -3,8 +3,8 @@ from pygame.math import Vector2
 
 class Wall:
     def __init__(self, x1, y1, x2, y2, thickness=6):
-        self.start_position: Vector2 = Vector2(x1, y1)
-        self.end_position: Vector2 = Vector2(x2, y2)
+        self.start_position = Vector2(x1, y1)
+        self.end_position = Vector2(x2, y2)
         self.thickness = thickness
 
     def draw(self, win):
@@ -12,8 +12,8 @@ class Wall:
 
 class Gate:
     def __init__(self, num, x1, y1, x2, y2, thickness=6):
-        self.start_position: Vector2 = Vector2(x1, y1)
-        self.end_position: Vector2 = Vector2(x2, y2)
+        self.start_position = Vector2(x1, y1)
+        self.end_position = Vector2(x2, y2)
         self.thickness = thickness
         self.num = num
 
@@ -42,3 +42,4 @@ class Gate:
 
     def draw(self, win):
         pg.draw.line(win, (0, 0, 255), self.start_position, self.end_position, self.thickness)
+        
