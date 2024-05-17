@@ -10,7 +10,7 @@ def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
     cdef float denom = s10_x * s32_y - s32_x * s10_y
 
     if denom == 0:
-        return None # collinear
+        return None
 
     cdef bint denom_is_positive = denom > 0
 
@@ -32,7 +32,9 @@ def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
 
     cdef float t = t_numer / denom
 
-    return Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+    point = Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+
+    return point
 
 def position_from_length_and_angle(float angle, float length):
     cdef float delta_y = length * math.cos(math.radians(angle))

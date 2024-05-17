@@ -2,11 +2,9 @@ import neat
 import os
 import pygame as pg
 from pygame.math import Vector2
-import math
 import random
 from typing import List
-from car import Car
-from map import Wall, Gate
+from car import Car, AICar, HumanCar
 
 from map_reader import read_map_txt
 
@@ -19,11 +17,6 @@ PLAYER_ONLY = False
 LOAD_MAP = True
 
 GEN = 0
-
-CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
-
-CAR_WIDTH = CAR_IMG.get_width()
-CAR_HEIGHT = CAR_IMG.get_height()
 
 BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
@@ -43,7 +36,7 @@ def draw_line(position, angle, line_length, line_width, color, screen):
     vector.from_polar((line_length, angle))
     pg.draw.line(screen, color, position, position+vector, line_width)
 
-def draw_window(win, cars: List[Car], borders, gates, bg_img, score, gen, debug=False):
+def draw_window(win, cars: List[Car], walls, gates, bg_img, score, gen, debug=False):
     win.blit(bg_img, (0, 0))
 
     for car in cars:
@@ -54,8 +47,8 @@ def draw_window(win, cars: List[Car], borders, gates, bg_img, score, gen, debug=
             text = STAT_FONT.render(str(int(car.genome.fitness)), True, (255, 255, 255))
             win.blit(text, car.get_centre_position())
 
-    for border in borders:
-        border.draw(win)
+    for wall in walls:
+        wall.draw(win)
 
     for gate in gates:
         gate.draw(win)
@@ -70,19 +63,129 @@ def draw_window(win, cars: List[Car], borders, gates, bg_img, score, gen, debug=
     win.blit(text, (10, 10))
 
     pg.display.update()
+    
+def run_new_generation(genomes, config):    
+    global GEN
+    GEN += 1
+    
+    nets, ges, cars, walls, gates, starting_point = setup_generation(genomes, config)
+    
+    simulation()
+    
+def check_if_quit():
+    keys = pg.key.get_pressed()
 
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            return True
+
+    return keys[pg.K_ESCAPE]
+    
+def simulation():
+    win = pg.display.set_mode((WIDTH, HEIGHT))
+    clock = pg.time.Clock()
+
+    score = 0
+    run = True
+    frames = 0
+    while run:
+        clock.tick(60)
+
+        m_x, m_y = pg.mouse.get_pos()
+        mouse_pressed = pg.mouse.get_pressed()
+
+        if mouse_pressed[0]:
+            print(m_x, ",", m_y)
+            
+        if check_if_quit():
+            run = False
+            pg.quit()
+            quit()
+              
+        i = 0
+        while i < len(cars):
+            neural_net, genome, car = nets[i], ges[i], cars[i]
+
+            inputs = car.get_line_distances(walls) + [random.random()]
+            outputs = car.get_desired_movement()
+            if PLAYER_ONLY:
+
+            else:
+                outputs = neural_net.activate(inputs)
+
+            car.move_forward(outputs[0])
+            car.steer(outputs[1])    
+
+            if car.check_if_in_next_gate(gates):
+                genome.fitness += 10
+
+            genome.fitness += car.speed / 60
+
+            if car.dead:
+                genome.fitness -= 10
+
+                nets.pop(i)
+                ges.pop(i)
+                cars.pop(i)
+            else:
+                i += 1
+                
+        for car in cars:
+            car.move()
+
+        if len(cars) == 0 or frames > 60 * (10 + GEN):
+            run = False     
+
+        draw_window(win, cars, walls, gates, BG_IMG, score, GEN, debug=keys[pg.K_f])
+
+        frames += 1
+    
+def setup_generation(genomes, config):
+    nets = []
+    ges = []
+    cars = []
+
+    if LOAD_MAP:
+        walls, gates, starting_point = read_map_txt()
+    else:
+        walls = []
+        gates = []
+        starting_point = STARTING_CAR_POSITION
+
+    if PLAYER_ONLY:
+        new_car = HumanCar(starting_point.x, starting_point.y, random.randrange(-180, 180))
+        _, genome = genomes[0]
+        genome.fitness = 0
+        new_car.genome = genome
+        new_car.generate_rays()
+        cars.append(new_car)
+        
+        ges.append(genomes[0][1])
+        nets.append(neat.nn.FeedForwardNetwork.create(genomes[0][1], config))
+    else:    
+        for _, genome in genomes:
+            genome.fitness = 0
+            ges.append(genome)
+            nets.append(neat.nn.FeedForwardNetwork.create(genome, config))
+            
+            new_car = AICar(starting_point.x, starting_point.y, random.randrange(-180, 180))
+            new_car.genome = genome
+            new_car.generate_rays(RAY_COUNT, RAY_LENGTH)
+            cars.append(new_car)
+            
+    return nets, ges, cars, walls, gates, starting_point
 
 def main(genomes, config):
     global GEN
     GEN += 1
     nets = []
     ges = []
-    cars = []
+    cars: List[Car] = []
 
     if LOAD_MAP:
-        borders, gates, starting_point = read_map_txt()
+        walls, gates, starting_point = read_map_txt()
     else:
-        borders = []
+        walls = []
         gates = []
         starting_point = STARTING_CAR_POSITION
 
@@ -102,7 +205,7 @@ def main(genomes, config):
             ges.append(genome)
             nets.append(neat.nn.FeedForwardNetwork.create(genome, config))
             
-            new_car = Car(starting_point.x, starting_point.y, random.randrange(-180, 180))
+            new_car = AICar(starting_point.x, starting_point.y, random.randrange(-180, 180))
             new_car.genome = genome
             new_car.generate_rays(RAY_COUNT, RAY_LENGTH)
             cars.append(new_car)
@@ -139,8 +242,7 @@ def main(genomes, config):
         while i < len(cars):
             neural_net, genome, car = nets[i], ges[i], cars[i]
 
-            refresh_inputs = True
-            inputs = car.get_line_distances(borders, refresh_inputs) + [random.random()]
+            inputs = car.get_line_distances(walls) + [random.random()]
             if PLAYER_ONLY:
                 outputs = [0.5, 0.5]                    
                 if keys[pg.K_w]:
@@ -179,7 +281,7 @@ def main(genomes, config):
         if len(cars) == 0 or frames > 60 * (10 + GEN):
             run = False     
 
-        draw_window(win, cars, borders, gates, BG_IMG, score, GEN, debug=keys[pg.K_f])
+        draw_window(win, cars, walls, gates, BG_IMG, score, GEN, debug=keys[pg.K_f])
 
         frames += 1
 

@@ -4,19 +4,18 @@ import math
 from typing import List
 import os
 import vector_math
+from abc import ABC
 
 CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
 
 CAR_WIDTH = CAR_IMG.get_width()
 CAR_HEIGHT = CAR_IMG.get_height()
 
-BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
-
 WHEEL_TURN_SPEED = 3
 
 RAY_DISTANCE_KILL = 10
 
-class Car:
+class Car(ABC):
     WHEEL_TURN = 60
 
     def __init__(self, x, y, starting_angle):
@@ -30,7 +29,6 @@ class Car:
         self.last_gate = None
         self.direction = None
         self.genome = None
-        self.saved_inputs = []
 
     def die(self):
         self.dead = True
@@ -50,25 +48,27 @@ class Car:
             return True
         return False
 
-    def get_line_distances(self, borders, refresh):
-        if refresh:
-            outputs = []
+    def get_line_distances(self, walls):        
+        results = []
 
-            for line in self.lines:
-                lowest_distance = line.base_dist
-                for border in borders:
-                    _, _, distance = line.check_intersection(border)
-                    lowest_distance = min(lowest_distance, distance)
-                outputs.append(lowest_distance / line.base_dist)     
+        for line in self.lines:
+            lowest_distance = line.base_dist
+            for wall in walls:
+                _, _, distance = line.find_distance_to_wall(wall)
+                line.set_last_distance(distance)
+                lowest_distance = min(lowest_distance, distance)
+            results.append(lowest_distance / line.base_dist)     
 
-                col = int(255 * (lowest_distance / line.base_dist))
-                line.color = pg.Color(255, col, col)
+            col = int(255 * (lowest_distance / line.base_dist))
+            line.color = pg.Color(255, col, col)
+            
+            if lowest_distance < RAY_DISTANCE_KILL:
+                self.die()      
                 
-                if lowest_distance < RAY_DISTANCE_KILL:
-                    self.die()
-
-            self.saved_inputs = outputs
-        return self.saved_inputs           
+        return results
+    
+    def get_desired_movement(self):
+        ...
 
     def get_centre_position(self):
         return self.position + Vector2(CAR_WIDTH / 2, CAR_HEIGHT / 2)
@@ -97,8 +97,6 @@ class Car:
             self.angle = 180
         if self.angle > 180:
             self.angle = -180
-
-        # self.velocity = Point(self.velocity.x * 0.96, self.velocity.y * 0.96)
         
         delta_y = -self.speed * math.cos(math.radians(self.angle))
         delta_x = self.speed * math.sin(math.radians(self.angle))
@@ -108,7 +106,7 @@ class Car:
     def get_desired_movement(self):
         return 0, 0
 
-    def check_intersections(self, borders, win):
+    def check_intersections(self, walls, win):
         ...
 
     def draw(self, win):
@@ -116,12 +114,35 @@ class Car:
         new_rect = rotated_image.get_rect(center=CAR_IMG.get_rect(topleft=(self.position.x, self.position.y)).center)
         win.blit(rotated_image, new_rect.topleft)
         
-
-
-class AICar(Car):
+class AICar(Car):    
+    def __init__(self, *args):
+        super().__init__(args)
+        
+    def set_neural_net(self, neural_net):
+        self.neural_net = neural_net
+    
+    def get_desired_movement(self):      
+        inputs = [ray.last_distance for ray in self.lines]      
+        outputs = self.neural_net.activate(inputs)
+        
+        return outputs
+    
+class HumanCar(Car):
     def get_desired_movement(self):
-        return super().get_desired_movement()
+        keys = pg.key.get_pressed()
+        
+        outputs = Vector2(0.5, 0.5)                    
+        if keys[pg.K_w]:
+            outputs.x += 0.5
+        if keys[pg.K_s]:
+            outputs.x -= 0.5
 
+        if keys[pg.K_a]:
+            outputs.y -= 0.5
+        if keys[pg.K_d]:
+            outputs.y += 0.5
+            
+        return outputs
 
 class CarRay:
     def __init__(self, car: Car, additional_angle, base_dist):
@@ -136,12 +157,16 @@ class CarRay:
     def get_end_position(self):
         return self.get_origin_position() + vector_math.position_from_length_and_angle(-self.car.angle + self.additional_angle, self.base_dist)
 
-    def check_intersection(self, border):
-        result: Vector2 = vector_math.find_lines_intersection(self.get_origin_position(), self.get_end_position(), border.start_position, border.end_position)
+    def find_distance_to_wall(self, wall):
+        result = vector_math.find_lines_intersection(self.get_origin_position(), self.get_end_position(), wall.start_position, wall.end_position)
 
         distance = self.base_dist if result is None else result.distance_to(self.get_origin_position())
 
         return (result is not None, result, distance)
 
+    def set_last_distance(self, distance: float):
+        self.last_distance = distance
+        
     def draw(self, win):
         pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)
+        

@@ -2103,6 +2103,7 @@ static const char __pyx_k_spec[] = "__spec__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_angle[] = "angle";
 static const char __pyx_k_denom[] = "denom";
+static const char __pyx_k_point[] = "point";
 static const char __pyx_k_s02_x[] = "s02_x";
 static const char __pyx_k_s02_y[] = "s02_y";
 static const char __pyx_k_s10_x[] = "s10_x";
@@ -2183,6 +2184,7 @@ typedef struct {
   PyObject *__pyx_n_s_main;
   PyObject *__pyx_n_s_math;
   PyObject *__pyx_n_s_name;
+  PyObject *__pyx_n_s_point;
   PyObject *__pyx_n_s_position_from_length_and_angle;
   PyObject *__pyx_n_s_pygame_math;
   PyObject *__pyx_n_s_radians;
@@ -2270,6 +2272,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
   Py_CLEAR(clear_module_state->__pyx_n_s_math);
   Py_CLEAR(clear_module_state->__pyx_n_s_name);
+  Py_CLEAR(clear_module_state->__pyx_n_s_point);
   Py_CLEAR(clear_module_state->__pyx_n_s_position_from_length_and_angle);
   Py_CLEAR(clear_module_state->__pyx_n_s_pygame_math);
   Py_CLEAR(clear_module_state->__pyx_n_s_radians);
@@ -2335,6 +2338,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
   Py_VISIT(traverse_module_state->__pyx_n_s_math);
   Py_VISIT(traverse_module_state->__pyx_n_s_name);
+  Py_VISIT(traverse_module_state->__pyx_n_s_point);
   Py_VISIT(traverse_module_state->__pyx_n_s_position_from_length_and_angle);
   Py_VISIT(traverse_module_state->__pyx_n_s_pygame_math);
   Py_VISIT(traverse_module_state->__pyx_n_s_radians);
@@ -2410,6 +2414,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
 #define __pyx_n_s_math __pyx_mstate_global->__pyx_n_s_math
 #define __pyx_n_s_name __pyx_mstate_global->__pyx_n_s_name
+#define __pyx_n_s_point __pyx_mstate_global->__pyx_n_s_point
 #define __pyx_n_s_position_from_length_and_angle __pyx_mstate_global->__pyx_n_s_position_from_length_and_angle
 #define __pyx_n_s_pygame_math __pyx_mstate_global->__pyx_n_s_pygame_math
 #define __pyx_n_s_radians __pyx_mstate_global->__pyx_n_s_radians
@@ -2594,6 +2599,7 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
   float __pyx_v_s_numer;
   float __pyx_v_t_numer;
   float __pyx_v_t;
+  PyObject *__pyx_v_point = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2700,7 +2706,7 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
  *     cdef float denom = s10_x * s32_y - s32_x * s10_y
  * 
  *     if denom == 0:             # <<<<<<<<<<<<<<
- *         return None # collinear
+ *         return None
  * 
  */
   __pyx_t_5 = (__pyx_v_denom == 0.0);
@@ -2709,7 +2715,7 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
     /* "vector_math.pyx":13
  * 
  *     if denom == 0:
- *         return None # collinear             # <<<<<<<<<<<<<<
+ *         return None             # <<<<<<<<<<<<<<
  * 
  *     cdef bint denom_is_positive = denom > 0
  */
@@ -2721,13 +2727,13 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
  *     cdef float denom = s10_x * s32_y - s32_x * s10_y
  * 
  *     if denom == 0:             # <<<<<<<<<<<<<<
- *         return None # collinear
+ *         return None
  * 
  */
   }
 
   /* "vector_math.pyx":15
- *         return None # collinear
+ *         return None
  * 
  *     cdef bint denom_is_positive = denom > 0             # <<<<<<<<<<<<<<
  * 
@@ -2894,7 +2900,7 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
  * 
  *     cdef float t = t_numer / denom             # <<<<<<<<<<<<<<
  * 
- *     return Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+ *     point = Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
  */
   if (unlikely(__pyx_v_denom == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
@@ -2905,11 +2911,10 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
   /* "vector_math.pyx":35
  *     cdef float t = t_numer / denom
  * 
- *     return Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))             # <<<<<<<<<<<<<<
+ *     point = Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))             # <<<<<<<<<<<<<<
  * 
- * def position_from_length_and_angle(float angle, float length):
+ *     return point
  */
-  __Pyx_XDECREF(__pyx_r);
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_Vector2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_A, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 35, __pyx_L1_error)
@@ -2952,8 +2957,19 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
-  __pyx_r = __pyx_t_1;
+  __pyx_v_point = __pyx_t_1;
   __pyx_t_1 = 0;
+
+  /* "vector_math.pyx":37
+ *     point = Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+ * 
+ *     return point             # <<<<<<<<<<<<<<
+ * 
+ * def position_from_length_and_angle(float angle, float length):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_point);
+  __pyx_r = __pyx_v_point;
   goto __pyx_L0;
 
   /* "vector_math.pyx":4
@@ -2975,13 +2991,14 @@ static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED Py
   __Pyx_AddTraceback("vector_math.find_lines_intersection", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_point);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "vector_math.pyx":37
- *     return Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+/* "vector_math.pyx":39
+ *     return point
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
@@ -3044,7 +3061,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -3052,14 +3069,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, 1); __PYX_ERR(0, 37, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, 1); __PYX_ERR(0, 39, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "position_from_length_and_angle") < 0)) __PYX_ERR(0, 37, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "position_from_length_and_angle") < 0)) __PYX_ERR(0, 39, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -3067,12 +3084,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
     }
-    __pyx_v_angle = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_angle == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
-    __pyx_v_length = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_length == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+    __pyx_v_angle = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_angle == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L3_error)
+    __pyx_v_length = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_length == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 37, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 39, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3118,26 +3135,26 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("position_from_length_and_angle", 1);
 
-  /* "vector_math.pyx":38
+  /* "vector_math.pyx":40
  * 
  * def position_from_length_and_angle(float angle, float length):
  *     cdef float delta_y = length * math.cos(math.radians(angle))             # <<<<<<<<<<<<<<
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  * 
  */
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_math); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_math); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_math); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_math); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_radians); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_radians); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_7 = NULL;
   __pyx_t_8 = 0;
@@ -3158,7 +3175,7 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -3181,38 +3198,38 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   }
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_4); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_4); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_delta_y = __pyx_t_9;
 
-  /* "vector_math.pyx":39
+  /* "vector_math.pyx":41
  * def position_from_length_and_angle(float angle, float length):
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))             # <<<<<<<<<<<<<<
  * 
  *     return Vector2(delta_x, delta_y)
  */
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_math); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_math); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_math); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_math); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_radians); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_radians); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_7 = NULL;
   __pyx_t_8 = 0;
@@ -3233,7 +3250,7 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -3256,19 +3273,19 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_delta_x = __pyx_t_9;
 
-  /* "vector_math.pyx":41
+  /* "vector_math.pyx":43
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  * 
  *     return Vector2(delta_x, delta_y)             # <<<<<<<<<<<<<<
@@ -3276,11 +3293,11 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
  * # python setup.py build_ext --inplace
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_Vector2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_Vector2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_delta_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_delta_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_delta_y); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_delta_y); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_5 = NULL;
   __pyx_t_8 = 0;
@@ -3302,7 +3319,7 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
@@ -3310,8 +3327,8 @@ static PyObject *__pyx_pf_11vector_math_2position_from_length_and_angle(CYTHON_U
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "vector_math.pyx":37
- *     return Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+  /* "vector_math.pyx":39
+ *     return point
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
@@ -3375,6 +3392,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
     {&__pyx_n_s_math, __pyx_k_math, sizeof(__pyx_k_math), 0, 0, 1, 1},
     {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
+    {&__pyx_n_s_point, __pyx_k_point, sizeof(__pyx_k_point), 0, 0, 1, 1},
     {&__pyx_n_s_position_from_length_and_angle, __pyx_k_position_from_length_and_angle, sizeof(__pyx_k_position_from_length_and_angle), 0, 0, 1, 1},
     {&__pyx_n_s_pygame_math, __pyx_k_pygame_math, sizeof(__pyx_k_pygame_math), 0, 0, 1, 1},
     {&__pyx_n_s_radians, __pyx_k_radians, sizeof(__pyx_k_radians), 0, 0, 1, 1},
@@ -3413,22 +3431,22 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *     cdef float s10_x = B[0] - A[0]
  *     cdef float s10_y = B[1] - A[1]
  */
-  __pyx_tuple__3 = PyTuple_Pack(15, __pyx_n_s_A, __pyx_n_s_B, __pyx_n_s_C, __pyx_n_s_D, __pyx_n_s_s10_x, __pyx_n_s_s10_y, __pyx_n_s_s32_x, __pyx_n_s_s32_y, __pyx_n_s_denom, __pyx_n_s_denom_is_positive, __pyx_n_s_s02_x, __pyx_n_s_s02_y, __pyx_n_s_s_numer, __pyx_n_s_t_numer, __pyx_n_s_t); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(16, __pyx_n_s_A, __pyx_n_s_B, __pyx_n_s_C, __pyx_n_s_D, __pyx_n_s_s10_x, __pyx_n_s_s10_y, __pyx_n_s_s32_x, __pyx_n_s_s32_y, __pyx_n_s_denom, __pyx_n_s_denom_is_positive, __pyx_n_s_s02_x, __pyx_n_s_s02_y, __pyx_n_s_s_numer, __pyx_n_s_t_numer, __pyx_n_s_t, __pyx_n_s_point); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_find_lines_intersection, 4, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_find_lines_intersection, 4, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 4, __pyx_L1_error)
 
-  /* "vector_math.pyx":37
- *     return Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+  /* "vector_math.pyx":39
+ *     return point
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  */
-  __pyx_tuple__5 = PyTuple_Pack(4, __pyx_n_s_angle, __pyx_n_s_length, __pyx_n_s_delta_y, __pyx_n_s_delta_x); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(4, __pyx_n_s_angle, __pyx_n_s_length, __pyx_n_s_delta_y, __pyx_n_s_delta_x); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_position_from_length_and_angle, 37, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_position_from_length_and_angle, 39, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3843,16 +3861,16 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_lines_intersection, __pyx_t_2) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "vector_math.pyx":37
- *     return Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
+  /* "vector_math.pyx":39
+ *     return point
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11vector_math_3position_from_length_and_angle, 0, __pyx_n_s_position_from_length_and_angle, NULL, __pyx_n_s_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11vector_math_3position_from_length_and_angle, 0, __pyx_n_s_position_from_length_and_angle, NULL, __pyx_n_s_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_position_from_length_and_angle, __pyx_t_2) < 0) __PYX_ERR(0, 37, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_position_from_length_and_angle, __pyx_t_2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "vector_math.pyx":1

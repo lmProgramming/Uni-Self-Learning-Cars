@@ -19,11 +19,11 @@ CAR_HEIGHT = CAR_IMG.get_height()
 
 BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
-def draw_window(win, borders, gates, starting_point, bg_img):
+def draw_window(win, walls, gates, starting_point, bg_img):
     win.blit(bg_img, (0, 0))
 
-    for border in borders:
-        border.draw(win)
+    for wall in walls:
+        wall.draw(win)
 
     for gate in gates:
         gate.draw(win)
@@ -38,9 +38,9 @@ def main():
     clock = pg.time.Clock()
 
     if READ_MAP:
-        borders, gates, starting_point = read_map_txt()
+        walls, gates, starting_point = read_map_txt()
     else:
-        borders = []
+        walls = []
         gates = []
         starting_point = (0, 0)
 
@@ -57,9 +57,9 @@ def main():
         if mouse_pressed[0]:
             if not placing_wall:
                 placing_wall = True
-                borders.append(Wall(m_x, m_y, m_x, m_y, 6))
+                walls.append(Wall(m_x, m_y, m_x, m_y, 6))
 
-            borders[-1].end_position = Vector2(m_x, m_y)
+            walls[-1].end_position = Vector2(m_x, m_y)
         else:
             placing_wall = False
 
@@ -78,33 +78,33 @@ def main():
             if event.type == pg.QUIT:
                 run = False
                 pg.quit()
-                save_data_to_file(borders, gates, starting_point, backup=True)
-            if event.type == pg.KEYDOWN and event.key == pg.K_z and len(borders) > 0:
-                borders.pop()
+                save_data_to_file(walls, gates, starting_point, backup=True)
+            if event.type == pg.KEYDOWN and event.key == pg.K_z and len(walls) > 0:
+                walls.pop()
             if event.type == pg.KEYDOWN and event.key == pg.K_x and len(gates) > 0:
                 gates.pop()
 
         if keys[pg.K_ESCAPE]:
             run = False
             pg.quit()
-            save_data_to_file(borders, gates, starting_point, backup=True)
+            save_data_to_file(walls, gates, starting_point, backup=True)
         
         if keys[pg.K_s]:
             run = False
             pg.quit()
-            save_data_to_file(borders, gates, starting_point)
+            save_data_to_file(walls, gates, starting_point)
 
         if keys[pg.K_SPACE]:
             starting_point = (m_x, m_y)
 
-        draw_window(win, borders, gates, starting_point, BG_IMG)
+        draw_window(win, walls, gates, starting_point, BG_IMG)
 
 
-def save_data_to_file(borders, gates, starting_point, backup=False):
+def save_data_to_file(walls, gates, starting_point, backup=False):
     with open('maps/map.txt' if not backup else 'maps/backup.txt', 'w+') as f:
-        f.write("borders: x1,x2,y1,y2\n")
-        for border in borders:
-            line_text = (str(border.start_position) + "," + str(border.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
+        f.write("walls: x1,x2,y1,y2\n")
+        for wall in walls:
+            line_text = (str(wall.start_position) + "," + str(wall.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
             print(line_text, end=None)
             f.write(line_text)  
         f.write("\ngates: num,x1,x2,y1,y2\n")
