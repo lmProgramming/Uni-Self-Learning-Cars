@@ -1,10 +1,11 @@
 import pygame as pg
+from pygame.key import ScancodeWrapper
 from pygame.math import Vector2
 import math
 from typing import List
 import os
-import vector_math
-from abc import ABC
+import cython.vector_math as vector_math
+from abc import ABC, abstractmethod
 
 CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
 
@@ -13,10 +14,10 @@ CAR_HEIGHT = CAR_IMG.get_height()
 
 RAY_DISTANCE_KILL = 10
 
-class Car(ABC):
-    WHEEL_TURN = 60
-    WHEEL_TURN_SPEED = 3    
+WHEEL_TURN = 60
+WHEEL_TURN_SPEED = 3    
 
+class Car(ABC):
     def __init__(self, x, y, starting_angle):
         self.position = Vector2(x, y)
         self.angle = starting_angle
@@ -46,6 +47,9 @@ class Car(ABC):
             self.last_gate = gate.num
             return True
         return False
+    
+    def get_shortest_last_distance(self) -> float:
+        return min([line.last_distance for line in self.lines])            
 
     def calculate_line_distances(self, walls):        
         results = []
@@ -66,7 +70,8 @@ class Car(ABC):
         if min([line.last_distance for line in self.lines]) < RAY_DISTANCE_KILL:
             self.die()
     
-    def get_desired_movement(self):
+    @abstractmethod
+    def get_desired_movement(self) -> Vector2:
         ...
 
     def get_centre_position(self):
@@ -77,9 +82,9 @@ class Car(ABC):
 
         self.speed += normalized_force * self.acceleration * (1 if force >= 0 else self.back_acceleration_multiplier)
 
-    def generate_rays(self, ray_count, ray_length):
-        for i in range(ray_count):
-            self.lines.append(CarRay(self, 360 / ray_length * i - 90, ray_length))
+    def generate_rays(self, ray_count, ray_length) -> None:
+        for i in range(0, 360, 360 // ray_count):
+            self.lines.append(CarRay(self, i, ray_length))
 
     def steer(self, way):
         wheel_turn_coefficient = math.sqrt(abs(self.speed))
@@ -102,9 +107,6 @@ class Car(ABC):
 
         self.position += Vector2(delta_x, delta_y)
 
-    def get_desired_movement(self):
-        return 0, 0
-
     def check_intersections(self, walls, win):
         ...
 
@@ -115,20 +117,23 @@ class Car(ABC):
         
 class AICar(Car):    
     def __init__(self, *args):
-        super().__init__(args)
+        super().__init__(*args)
         
     def set_neural_net(self, neural_net):
         self.neural_net = neural_net
     
-    def get_desired_movement(self):      
-        inputs = [ray.last_distance for ray in self.lines]      
+    def get_desired_movement(self) -> Vector2:      
+        inputs: List[float] = [ray.last_distance for ray in self.lines]  
         outputs = self.neural_net.activate(inputs)
         
         return outputs
     
 class HumanCar(Car):
-    def get_desired_movement(self):
-        keys = pg.key.get_pressed()
+    def __init__(self, *args):
+        super().__init__(*args)
+        
+    def get_desired_movement(self) -> Vector2:
+        keys: ScancodeWrapper = pg.key.get_pressed()
         
         outputs = Vector2(0.5, 0.5)                    
         if keys[pg.K_w]:
@@ -156,20 +161,20 @@ class CarRay:
     def get_end_position(self):
         return self.get_origin_position() + vector_math.position_from_length_and_angle(-self.car.angle + self.angle_bias, self.length)
 
-    def find_distance_to_wall(self, wall):
+    def find_distance_to_wall(self, wall) -> tuple[bool, float, float]:
         result = vector_math.find_lines_intersection(self.get_origin_position(), self.get_end_position(), wall.start_position, wall.end_position)
 
         distance = self.length if result is None else result.distance_to(self.get_origin_position())
 
         return (result is not None, result, distance)
     
-    def set_debug_color(self):        
+    def set_debug_color(self) -> None:        
         color_value = int(255 * (self.last_distance / self.length))
         self.color = pg.Color(255, color_value, color_value)  
 
-    def set_last_distance(self, distance: float):
-        self.last_distance = distance
+    def set_last_distance(self, distance: float) -> None:
+        self.last_distance: float = distance
         
-    def draw(self, win):      
+    def draw(self, win) -> None:      
         pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)
         

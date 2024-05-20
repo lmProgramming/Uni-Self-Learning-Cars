@@ -36,8 +36,19 @@ def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
 
     return point
 
-def find_intersection_points(Vector2 starting_point, Vector2 wall_starting_points, Vector2 wall_ending_points):
-    ...
+def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> str:
+    # Calculate the cross product
+    cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
+
+    if cross_product > 0:
+        return "left"
+    elif cross_product < 0:
+        return "right"
+    else:
+        return "on the line"
+
+#def find_intersection_points(Vector2 starting_point, Vector2 wall_starting_points, Vector2 wall_ending_points):
+#    ...
 
 def position_from_length_and_angle(float angle, float length):
     cdef float delta_y = length * math.cos(math.radians(angle))

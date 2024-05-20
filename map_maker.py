@@ -1,7 +1,7 @@
 import os
 import pygame as pg
 from pygame.math import Vector2
-from neat_and_pygame import Wall, Gate
+from map import Wall, Gate
 
 from map_reader import read_map_txt
 
