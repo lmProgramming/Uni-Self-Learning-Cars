@@ -242,7 +242,7 @@ def main(genomes, config):
         while i < len(cars):
             neural_net, genome, car = nets[i], ges[i], cars[i]
 
-            inputs = car.get_line_distances(walls) + [random.random()]
+            inputs = car.calculate_line_distances(walls) + [random.random()]
             if PLAYER_ONLY:
                 outputs = [0.5, 0.5]                    
                 if keys[pg.K_w]:

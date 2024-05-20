@@ -36,6 +36,9 @@ def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
 
     return point
 
+def find_intersection_points(Vector2 starting_point, Vector2 wall_starting_points, Vector2 wall_ending_points):
+    ...
+
 def position_from_length_and_angle(float angle, float length):
     cdef float delta_y = length * math.cos(math.radians(angle))
     cdef float delta_x = length * math.sin(math.radians(angle))

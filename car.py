@@ -11,12 +11,11 @@ CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
 CAR_WIDTH = CAR_IMG.get_width()
 CAR_HEIGHT = CAR_IMG.get_height()
 
-WHEEL_TURN_SPEED = 3
-
 RAY_DISTANCE_KILL = 10
 
 class Car(ABC):
     WHEEL_TURN = 60
+    WHEEL_TURN_SPEED = 3    
 
     def __init__(self, x, y, starting_angle):
         self.position = Vector2(x, y)
@@ -48,24 +47,24 @@ class Car(ABC):
             return True
         return False
 
-    def get_line_distances(self, walls):        
+    def calculate_line_distances(self, walls):        
         results = []
 
         for line in self.lines:
-            lowest_distance = line.base_dist
+            lowest_distance = line.length
             for wall in walls:
                 _, _, distance = line.find_distance_to_wall(wall)
-                line.set_last_distance(distance)
                 lowest_distance = min(lowest_distance, distance)
-            results.append(lowest_distance / line.base_dist)     
-
-            col = int(255 * (lowest_distance / line.base_dist))
-            line.color = pg.Color(255, col, col)
+                
+            results.append(lowest_distance / line.length)    
             
-            if lowest_distance < RAY_DISTANCE_KILL:
-                self.die()      
+            line.set_last_distance(lowest_distance)      
                 
         return results
+    
+    def check_if_hit_wall(self):
+        if min([line.last_distance for line in self.lines]) < RAY_DISTANCE_KILL:
+            self.die()
     
     def get_desired_movement(self):
         ...
@@ -145,28 +144,32 @@ class HumanCar(Car):
         return outputs
 
 class CarRay:
-    def __init__(self, car: Car, additional_angle, base_dist):
+    def __init__(self, car: Car, angle_bias, length):
         self.car = car
-        self.additional_angle = additional_angle
-        self.base_dist = base_dist
+        self.angle_bias = angle_bias
+        self.length = length
         self.color = pg.Color(0, 0, 0, 255)
 
     def get_origin_position(self):
         return self.car.get_centre_position()
     
     def get_end_position(self):
-        return self.get_origin_position() + vector_math.position_from_length_and_angle(-self.car.angle + self.additional_angle, self.base_dist)
+        return self.get_origin_position() + vector_math.position_from_length_and_angle(-self.car.angle + self.angle_bias, self.length)
 
     def find_distance_to_wall(self, wall):
         result = vector_math.find_lines_intersection(self.get_origin_position(), self.get_end_position(), wall.start_position, wall.end_position)
 
-        distance = self.base_dist if result is None else result.distance_to(self.get_origin_position())
+        distance = self.length if result is None else result.distance_to(self.get_origin_position())
 
         return (result is not None, result, distance)
+    
+    def set_debug_color(self):        
+        color_value = int(255 * (self.last_distance / self.length))
+        self.color = pg.Color(255, color_value, color_value)  
 
     def set_last_distance(self, distance: float):
         self.last_distance = distance
         
-    def draw(self, win):
+    def draw(self, win):      
         pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)
         
