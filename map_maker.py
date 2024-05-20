@@ -1,6 +1,7 @@
 import os
 import pygame as pg
-from pygame.math import Vector2
+from pygame import Vector2
+from pygame.surface import Surface
 from map import Wall, Gate
 
 from map_reader import read_map_txt
@@ -10,16 +11,16 @@ pg.font.init()
 WIDTH = 1280
 HEIGHT = 960
 
-READ_MAP = True
+READ_MAP = False
 
-CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
+CAR_IMG: Surface = pg.image.load(os.path.join("imgs", "car_img.png"))
 
-CAR_WIDTH = CAR_IMG.get_width()
-CAR_HEIGHT = CAR_IMG.get_height()
+CAR_WIDTH: int = CAR_IMG.get_width()
+CAR_HEIGHT: int = CAR_IMG.get_height()
 
-BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
+BG_IMG: Surface = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
-def draw_window(win, walls, gates, starting_point, bg_img):
+def draw_window(win, walls, gates, starting_point, bg_img) -> None:
     win.blit(bg_img, (0, 0))
 
     for wall in walls:
@@ -33,7 +34,7 @@ def draw_window(win, walls, gates, starting_point, bg_img):
     pg.display.update()
 
 
-def main():       
+def main() -> None:       
     win = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
 
@@ -42,7 +43,7 @@ def main():
     else:
         walls = []
         gates = []
-        starting_point = (0, 0)
+        starting_point = Vector2(0, 0)
 
     run = True
     placing_wall = False
@@ -95,25 +96,24 @@ def main():
             save_data_to_file(walls, gates, starting_point)
 
         if keys[pg.K_SPACE]:
-            starting_point = (m_x, m_y)
+            starting_point = Vector2(m_x, m_y)
 
         draw_window(win, walls, gates, starting_point, BG_IMG)
 
-
 def save_data_to_file(walls, gates, starting_point, backup=False):
     with open('maps/map.txt' if not backup else 'maps/backup.txt', 'w+') as f:
-        f.write("walls: x1,x2,y1,y2\n")
+        f.write("walls: x1;x2;y1;y2\n")
         for wall in walls:
-            line_text = (str(wall.start_position) + "," + str(wall.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
+            line_text = (str(wall.start_position) + ";" + str(wall.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
             print(line_text, end=None)
             f.write(line_text)  
-        f.write("\ngates: num,x1,x2,y1,y2\n")
+        f.write("\ngates: num;x1;x2;y1;y2\n")
         for gate in gates:
-            line_text = (str(gate.num) + "," + str(gate.start_position) + "," + str(gate.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
+            line_text = (str(gate.num) + ";" + str(gate.start_position) + ";" + str(gate.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
 
             print(line_text, end=None)
             f.write(line_text)  
-        f.write("\nstart," + str(int(starting_point[0])) + "," + str(int(starting_point[1])))
+        f.write("\nstart: " + str(int(starting_point[0])) + ";" + str(int(starting_point[1])))
     quit()
 
 if __name__ == "__main__":

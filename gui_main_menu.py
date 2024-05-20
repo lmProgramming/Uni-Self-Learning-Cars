@@ -15,7 +15,6 @@ Użyję modułu abc, by stworzyć abstrakcyjną klasę Car oraz klasy dziedzicz�
 mapie, by je przetestować.
 '''
 
-from pyqt_search_bar import SearchBar
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QTextEdit, QPushButton, QLabel, QDateTimeEdit, QCheckBox, QFrame
 from typing import Optional
 from neat_and_pygame import main as start_simulation

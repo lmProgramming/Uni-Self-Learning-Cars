@@ -1,10 +1,12 @@
 import neat # type: ignore
 import os
 import pygame as pg
-from pygame.key import ScancodeWrapper
+from pygame.font import Font
 from pygame.math import Vector2
 import random
-from typing import List
+from typing import List, Sequence
+
+from pygame.surface import Surface
 from car import Car, AICar, HumanCar
 
 from map_reader import read_map_txt
@@ -19,9 +21,9 @@ LOAD_MAP = True
 
 GEN = 0
 
-BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
+BG_IMG: Surface = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
-STAT_FONT = pg.font.SysFont("comic sans", 25)
+STAT_FONT: Font = pg.font.SysFont("comic sans", 25)
 
 WHEEL_TURN_SPEED = 3
 
@@ -57,7 +59,7 @@ def draw_line(position, angle, line_length, line_width, color, screen) -> None:
 def draw_window(win, cars: List[Car], walls, gates, bg_img, score, gen, debug=False) -> None:
     win.blit(bg_img, (0, 0))
     
-    text: pg.Surface
+    text: pg.surface.Surface
 
     for car in cars:
         car.draw(win)
@@ -86,7 +88,7 @@ def draw_window(win, cars: List[Car], walls, gates, bg_img, score, gen, debug=Fa
     pg.display.update()
     
 def check_if_quit() -> bool:
-    keys: ScancodeWrapper = pg.key.get_pressed()
+    keys: Sequence[bool] = pg.key.get_pressed()
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -96,7 +98,7 @@ def check_if_quit() -> bool:
 
 def input() -> None:
     m_x, m_y = pg.mouse.get_pos()
-    mouse_pressed: tuple[bool, bool, bool] = pg.mouse.get_pressed()
+    mouse_pressed: tuple[bool, bool, bool] | tuple[bool, bool, bool, bool, bool] = pg.mouse.get_pressed()
 
     if mouse_pressed[0]:
         print(m_x, ",", m_y)       
@@ -145,8 +147,8 @@ def setup_generation(genomes, config) -> tuple[list, list, list[Car], list, list
             
     return nets, ges, cars, walls, gates
     
-def simulation(nets, ges: List[neat.DefaultGenome], cars: List[Car], walls, gates) -> None:
-    win: pg.Surface = pg.display.set_mode((WIDTH, HEIGHT))
+def simulation(nets: List[neat.nn.FeedForwardNetwork], ges: List[neat.DefaultGenome], cars: List[Car], walls, gates) -> None:
+    win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
 
     score = 0

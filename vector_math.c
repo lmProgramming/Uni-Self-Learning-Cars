@@ -1835,6 +1835,9 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject
 #define __Pyx_PyObject_FastCall(func, args, nargs)  __Pyx_PyObject_FastCallDict(func, args, (size_t)(nargs), NULL)
 static CYTHON_INLINE PyObject* __Pyx_PyObject_FastCallDict(PyObject *func, PyObject **args, size_t nargs, PyObject *kwargs);
 
+/* RaiseUnexpectedTypeError.proto */
+static int __Pyx_RaiseUnexpectedTypeError(const char *expected, PyObject *obj);
+
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
@@ -2097,9 +2100,8 @@ static const char __pyx_k_y[] = "y";
 static const char __pyx_k__2[] = "*";
 static const char __pyx_k__9[] = "?";
 static const char __pyx_k_cos[] = "cos";
+static const char __pyx_k_int[] = "int";
 static const char __pyx_k_sin[] = "sin";
-static const char __pyx_k_str[] = "str";
-static const char __pyx_k_left[] = "left";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_math[] = "math";
 static const char __pyx_k_name[] = "__name__";
@@ -2108,7 +2110,6 @@ static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_angle[] = "angle";
 static const char __pyx_k_denom[] = "denom";
 static const char __pyx_k_point[] = "point";
-static const char __pyx_k_right[] = "right";
 static const char __pyx_k_s02_x[] = "s02_x";
 static const char __pyx_k_s02_y[] = "s02_y";
 static const char __pyx_k_s10_x[] = "s10_x";
@@ -2126,7 +2127,6 @@ static const char __pyx_k_s_numer[] = "s_numer";
 static const char __pyx_k_t_numer[] = "t_numer";
 static const char __pyx_k_line_end[] = "line_end";
 static const char __pyx_k_line_start[] = "line_start";
-static const char __pyx_k_on_the_line[] = "on the line";
 static const char __pyx_k_pygame_math[] = "pygame.math";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
@@ -2193,22 +2193,20 @@ typedef struct {
   PyObject *__pyx_n_s_find_lines_intersection;
   PyObject *__pyx_n_s_import;
   PyObject *__pyx_n_s_initializing;
+  PyObject *__pyx_n_s_int;
   PyObject *__pyx_n_s_is_coroutine;
-  PyObject *__pyx_n_s_left;
   PyObject *__pyx_n_s_length;
   PyObject *__pyx_n_s_line_end;
   PyObject *__pyx_n_s_line_start;
   PyObject *__pyx_n_s_main;
   PyObject *__pyx_n_s_math;
   PyObject *__pyx_n_s_name;
-  PyObject *__pyx_kp_s_on_the_line;
   PyObject *__pyx_n_s_point;
   PyObject *__pyx_n_s_point_left_or_right_of_line;
   PyObject *__pyx_n_s_position_from_length_and_angle;
   PyObject *__pyx_n_s_pygame_math;
   PyObject *__pyx_n_s_radians;
   PyObject *__pyx_n_s_return;
-  PyObject *__pyx_n_s_right;
   PyObject *__pyx_n_s_s02_x;
   PyObject *__pyx_n_s_s02_y;
   PyObject *__pyx_n_s_s10_x;
@@ -2218,7 +2216,6 @@ typedef struct {
   PyObject *__pyx_n_s_s_numer;
   PyObject *__pyx_n_s_sin;
   PyObject *__pyx_n_s_spec;
-  PyObject *__pyx_n_s_str;
   PyObject *__pyx_n_s_t;
   PyObject *__pyx_n_s_t_numer;
   PyObject *__pyx_n_s_test;
@@ -2226,6 +2223,8 @@ typedef struct {
   PyObject *__pyx_n_s_x;
   PyObject *__pyx_n_s_y;
   PyObject *__pyx_int_0;
+  PyObject *__pyx_int_1;
+  PyObject *__pyx_int_neg_1;
   PyObject *__pyx_tuple__3;
   PyObject *__pyx_tuple__5;
   PyObject *__pyx_tuple__7;
@@ -2295,22 +2294,20 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_find_lines_intersection);
   Py_CLEAR(clear_module_state->__pyx_n_s_import);
   Py_CLEAR(clear_module_state->__pyx_n_s_initializing);
+  Py_CLEAR(clear_module_state->__pyx_n_s_int);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_coroutine);
-  Py_CLEAR(clear_module_state->__pyx_n_s_left);
   Py_CLEAR(clear_module_state->__pyx_n_s_length);
   Py_CLEAR(clear_module_state->__pyx_n_s_line_end);
   Py_CLEAR(clear_module_state->__pyx_n_s_line_start);
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
   Py_CLEAR(clear_module_state->__pyx_n_s_math);
   Py_CLEAR(clear_module_state->__pyx_n_s_name);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_on_the_line);
   Py_CLEAR(clear_module_state->__pyx_n_s_point);
   Py_CLEAR(clear_module_state->__pyx_n_s_point_left_or_right_of_line);
   Py_CLEAR(clear_module_state->__pyx_n_s_position_from_length_and_angle);
   Py_CLEAR(clear_module_state->__pyx_n_s_pygame_math);
   Py_CLEAR(clear_module_state->__pyx_n_s_radians);
   Py_CLEAR(clear_module_state->__pyx_n_s_return);
-  Py_CLEAR(clear_module_state->__pyx_n_s_right);
   Py_CLEAR(clear_module_state->__pyx_n_s_s02_x);
   Py_CLEAR(clear_module_state->__pyx_n_s_s02_y);
   Py_CLEAR(clear_module_state->__pyx_n_s_s10_x);
@@ -2320,7 +2317,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_s_numer);
   Py_CLEAR(clear_module_state->__pyx_n_s_sin);
   Py_CLEAR(clear_module_state->__pyx_n_s_spec);
-  Py_CLEAR(clear_module_state->__pyx_n_s_str);
   Py_CLEAR(clear_module_state->__pyx_n_s_t);
   Py_CLEAR(clear_module_state->__pyx_n_s_t_numer);
   Py_CLEAR(clear_module_state->__pyx_n_s_test);
@@ -2328,6 +2324,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_x);
   Py_CLEAR(clear_module_state->__pyx_n_s_y);
   Py_CLEAR(clear_module_state->__pyx_int_0);
+  Py_CLEAR(clear_module_state->__pyx_int_1);
+  Py_CLEAR(clear_module_state->__pyx_int_neg_1);
   Py_CLEAR(clear_module_state->__pyx_tuple__3);
   Py_CLEAR(clear_module_state->__pyx_tuple__5);
   Py_CLEAR(clear_module_state->__pyx_tuple__7);
@@ -2375,22 +2373,20 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_find_lines_intersection);
   Py_VISIT(traverse_module_state->__pyx_n_s_import);
   Py_VISIT(traverse_module_state->__pyx_n_s_initializing);
+  Py_VISIT(traverse_module_state->__pyx_n_s_int);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_coroutine);
-  Py_VISIT(traverse_module_state->__pyx_n_s_left);
   Py_VISIT(traverse_module_state->__pyx_n_s_length);
   Py_VISIT(traverse_module_state->__pyx_n_s_line_end);
   Py_VISIT(traverse_module_state->__pyx_n_s_line_start);
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
   Py_VISIT(traverse_module_state->__pyx_n_s_math);
   Py_VISIT(traverse_module_state->__pyx_n_s_name);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_on_the_line);
   Py_VISIT(traverse_module_state->__pyx_n_s_point);
   Py_VISIT(traverse_module_state->__pyx_n_s_point_left_or_right_of_line);
   Py_VISIT(traverse_module_state->__pyx_n_s_position_from_length_and_angle);
   Py_VISIT(traverse_module_state->__pyx_n_s_pygame_math);
   Py_VISIT(traverse_module_state->__pyx_n_s_radians);
   Py_VISIT(traverse_module_state->__pyx_n_s_return);
-  Py_VISIT(traverse_module_state->__pyx_n_s_right);
   Py_VISIT(traverse_module_state->__pyx_n_s_s02_x);
   Py_VISIT(traverse_module_state->__pyx_n_s_s02_y);
   Py_VISIT(traverse_module_state->__pyx_n_s_s10_x);
@@ -2400,7 +2396,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_s_numer);
   Py_VISIT(traverse_module_state->__pyx_n_s_sin);
   Py_VISIT(traverse_module_state->__pyx_n_s_spec);
-  Py_VISIT(traverse_module_state->__pyx_n_s_str);
   Py_VISIT(traverse_module_state->__pyx_n_s_t);
   Py_VISIT(traverse_module_state->__pyx_n_s_t_numer);
   Py_VISIT(traverse_module_state->__pyx_n_s_test);
@@ -2408,6 +2403,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_x);
   Py_VISIT(traverse_module_state->__pyx_n_s_y);
   Py_VISIT(traverse_module_state->__pyx_int_0);
+  Py_VISIT(traverse_module_state->__pyx_int_1);
+  Py_VISIT(traverse_module_state->__pyx_int_neg_1);
   Py_VISIT(traverse_module_state->__pyx_tuple__3);
   Py_VISIT(traverse_module_state->__pyx_tuple__5);
   Py_VISIT(traverse_module_state->__pyx_tuple__7);
@@ -2465,22 +2462,20 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_find_lines_intersection __pyx_mstate_global->__pyx_n_s_find_lines_intersection
 #define __pyx_n_s_import __pyx_mstate_global->__pyx_n_s_import
 #define __pyx_n_s_initializing __pyx_mstate_global->__pyx_n_s_initializing
+#define __pyx_n_s_int __pyx_mstate_global->__pyx_n_s_int
 #define __pyx_n_s_is_coroutine __pyx_mstate_global->__pyx_n_s_is_coroutine
-#define __pyx_n_s_left __pyx_mstate_global->__pyx_n_s_left
 #define __pyx_n_s_length __pyx_mstate_global->__pyx_n_s_length
 #define __pyx_n_s_line_end __pyx_mstate_global->__pyx_n_s_line_end
 #define __pyx_n_s_line_start __pyx_mstate_global->__pyx_n_s_line_start
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
 #define __pyx_n_s_math __pyx_mstate_global->__pyx_n_s_math
 #define __pyx_n_s_name __pyx_mstate_global->__pyx_n_s_name
-#define __pyx_kp_s_on_the_line __pyx_mstate_global->__pyx_kp_s_on_the_line
 #define __pyx_n_s_point __pyx_mstate_global->__pyx_n_s_point
 #define __pyx_n_s_point_left_or_right_of_line __pyx_mstate_global->__pyx_n_s_point_left_or_right_of_line
 #define __pyx_n_s_position_from_length_and_angle __pyx_mstate_global->__pyx_n_s_position_from_length_and_angle
 #define __pyx_n_s_pygame_math __pyx_mstate_global->__pyx_n_s_pygame_math
 #define __pyx_n_s_radians __pyx_mstate_global->__pyx_n_s_radians
 #define __pyx_n_s_return __pyx_mstate_global->__pyx_n_s_return
-#define __pyx_n_s_right __pyx_mstate_global->__pyx_n_s_right
 #define __pyx_n_s_s02_x __pyx_mstate_global->__pyx_n_s_s02_x
 #define __pyx_n_s_s02_y __pyx_mstate_global->__pyx_n_s_s02_y
 #define __pyx_n_s_s10_x __pyx_mstate_global->__pyx_n_s_s10_x
@@ -2490,7 +2485,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_s_numer __pyx_mstate_global->__pyx_n_s_s_numer
 #define __pyx_n_s_sin __pyx_mstate_global->__pyx_n_s_sin
 #define __pyx_n_s_spec __pyx_mstate_global->__pyx_n_s_spec
-#define __pyx_n_s_str __pyx_mstate_global->__pyx_n_s_str
 #define __pyx_n_s_t __pyx_mstate_global->__pyx_n_s_t
 #define __pyx_n_s_t_numer __pyx_mstate_global->__pyx_n_s_t_numer
 #define __pyx_n_s_test __pyx_mstate_global->__pyx_n_s_test
@@ -2498,6 +2492,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_x __pyx_mstate_global->__pyx_n_s_x
 #define __pyx_n_s_y __pyx_mstate_global->__pyx_n_s_y
 #define __pyx_int_0 __pyx_mstate_global->__pyx_int_0
+#define __pyx_int_1 __pyx_mstate_global->__pyx_int_1
+#define __pyx_int_neg_1 __pyx_mstate_global->__pyx_int_neg_1
 #define __pyx_tuple__3 __pyx_mstate_global->__pyx_tuple__3
 #define __pyx_tuple__5 __pyx_mstate_global->__pyx_tuple__5
 #define __pyx_tuple__7 __pyx_mstate_global->__pyx_tuple__7
@@ -3033,7 +3029,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  * 
  *     return point             # <<<<<<<<<<<<<<
  * 
- * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> str:
+ * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_point);
@@ -3068,9 +3064,9 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
 /* "SelfLearningCars/vector_math.pyx":39
  *     return point
  * 
- * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> str:             # <<<<<<<<<<<<<<
- *     # Calculate the cross product
+ * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
+ * 
  */
 
 /* Python wrapper */
@@ -3214,146 +3210,149 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("point_left_or_right_of_line", 1);
 
-  /* "SelfLearningCars/vector_math.pyx":41
- * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> str:
- *     # Calculate the cross product
+  /* "SelfLearningCars/vector_math.pyx":40
+ * 
+ * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)             # <<<<<<<<<<<<<<
  * 
  *     if cross_product > 0:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_end, __pyx_n_s_x); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_end, __pyx_n_s_x); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_x); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_x); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_point, __pyx_n_s_y); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_point, __pyx_n_s_y); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_y); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_y); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Subtract(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_end, __pyx_n_s_y); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_end, __pyx_n_s_y); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_y); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_y); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_point, __pyx_n_s_x); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_point, __pyx_n_s_x); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_line_start, __pyx_n_s_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyNumber_Subtract(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Subtract(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Subtract(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Subtract(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_cross_product = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":43
+  /* "SelfLearningCars/vector_math.pyx":42
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
  * 
  *     if cross_product > 0:             # <<<<<<<<<<<<<<
- *         return "left"
+ *         return -1
  *     elif cross_product < 0:
  */
-  __pyx_t_5 = PyObject_RichCompare(__pyx_v_cross_product, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 43, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_5 = PyObject_RichCompare(__pyx_v_cross_product, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   if (__pyx_t_6) {
-
-    /* "SelfLearningCars/vector_math.pyx":44
- * 
- *     if cross_product > 0:
- *         return "left"             # <<<<<<<<<<<<<<
- *     elif cross_product < 0:
- *         return "right"
- */
-    __Pyx_XDECREF(__pyx_r);
-    __Pyx_INCREF(__pyx_n_s_left);
-    __pyx_r = __pyx_n_s_left;
-    goto __pyx_L0;
 
     /* "SelfLearningCars/vector_math.pyx":43
+ * 
+ *     if cross_product > 0:
+ *         return -1             # <<<<<<<<<<<<<<
+ *     elif cross_product < 0:
+ *         return 1
+ */
+    __Pyx_XDECREF(__pyx_r);
+    if (!(likely(__Pyx_Py3Int_CheckExact(__pyx_int_neg_1)) || __Pyx_RaiseUnexpectedTypeError("int", __pyx_int_neg_1))) __PYX_ERR(0, 43, __pyx_L1_error)
+    __Pyx_INCREF(__pyx_int_neg_1);
+    __pyx_r = ((PyObject*)__pyx_int_neg_1);
+    goto __pyx_L0;
+
+    /* "SelfLearningCars/vector_math.pyx":42
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
  * 
  *     if cross_product > 0:             # <<<<<<<<<<<<<<
- *         return "left"
+ *         return -1
  *     elif cross_product < 0:
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":45
+  /* "SelfLearningCars/vector_math.pyx":44
  *     if cross_product > 0:
- *         return "left"
+ *         return -1
  *     elif cross_product < 0:             # <<<<<<<<<<<<<<
- *         return "right"
+ *         return 1
  *     else:
  */
-  __pyx_t_5 = PyObject_RichCompare(__pyx_v_cross_product, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 45, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_5 = PyObject_RichCompare(__pyx_v_cross_product, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   if (__pyx_t_6) {
 
-    /* "SelfLearningCars/vector_math.pyx":46
- *         return "left"
+    /* "SelfLearningCars/vector_math.pyx":45
+ *         return -1
  *     elif cross_product < 0:
- *         return "right"             # <<<<<<<<<<<<<<
+ *         return 1             # <<<<<<<<<<<<<<
  *     else:
- *         return "on the line"
+ *         return 0
  */
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_INCREF(__pyx_n_s_right);
-    __pyx_r = __pyx_n_s_right;
+    if (!(likely(__Pyx_Py3Int_CheckExact(__pyx_int_1)) || __Pyx_RaiseUnexpectedTypeError("int", __pyx_int_1))) __PYX_ERR(0, 45, __pyx_L1_error)
+    __Pyx_INCREF(__pyx_int_1);
+    __pyx_r = ((PyObject*)__pyx_int_1);
     goto __pyx_L0;
 
-    /* "SelfLearningCars/vector_math.pyx":45
+    /* "SelfLearningCars/vector_math.pyx":44
  *     if cross_product > 0:
- *         return "left"
+ *         return -1
  *     elif cross_product < 0:             # <<<<<<<<<<<<<<
- *         return "right"
+ *         return 1
  *     else:
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":48
- *         return "right"
+  /* "SelfLearningCars/vector_math.pyx":47
+ *         return 1
  *     else:
- *         return "on the line"             # <<<<<<<<<<<<<<
+ *         return 0             # <<<<<<<<<<<<<<
  * 
- * #def find_intersection_points(Vector2 starting_point, Vector2 wall_starting_points, Vector2 wall_ending_points):
+ * def position_from_length_and_angle(float angle, float length):
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_INCREF(__pyx_kp_s_on_the_line);
-    __pyx_r = __pyx_kp_s_on_the_line;
+    if (!(likely(__Pyx_Py3Int_CheckExact(__pyx_int_0)) || __Pyx_RaiseUnexpectedTypeError("int", __pyx_int_0))) __PYX_ERR(0, 47, __pyx_L1_error)
+    __Pyx_INCREF(__pyx_int_0);
+    __pyx_r = ((PyObject*)__pyx_int_0);
     goto __pyx_L0;
   }
 
   /* "SelfLearningCars/vector_math.pyx":39
  *     return point
  * 
- * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> str:             # <<<<<<<<<<<<<<
- *     # Calculate the cross product
+ * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
+ * 
  */
 
   /* function exit code */
@@ -3372,8 +3371,8 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   return __pyx_r;
 }
 
-/* "SelfLearningCars/vector_math.pyx":53
- * #    ...
+/* "SelfLearningCars/vector_math.pyx":49
+ *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
@@ -3436,7 +3435,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -3444,14 +3443,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, 1); __PYX_ERR(0, 53, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, 1); __PYX_ERR(0, 49, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "position_from_length_and_angle") < 0)) __PYX_ERR(0, 53, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "position_from_length_and_angle") < 0)) __PYX_ERR(0, 49, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -3459,12 +3458,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
     }
-    __pyx_v_angle = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_angle == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
-    __pyx_v_length = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_length == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
+    __pyx_v_angle = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_angle == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
+    __pyx_v_length = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_length == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 53, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("position_from_length_and_angle", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 49, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3510,26 +3509,26 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("position_from_length_and_angle", 1);
 
-  /* "SelfLearningCars/vector_math.pyx":54
+  /* "SelfLearningCars/vector_math.pyx":50
  * 
  * def position_from_length_and_angle(float angle, float length):
  *     cdef float delta_y = length * math.cos(math.radians(angle))             # <<<<<<<<<<<<<<
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  * 
  */
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_math); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_math); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_math); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_math); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_radians); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_radians); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_7 = NULL;
   __pyx_t_8 = 0;
@@ -3550,7 +3549,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 54, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 50, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -3573,38 +3572,38 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   }
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_4); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_4); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_delta_y = __pyx_t_9;
 
-  /* "SelfLearningCars/vector_math.pyx":55
+  /* "SelfLearningCars/vector_math.pyx":51
  * def position_from_length_and_angle(float angle, float length):
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))             # <<<<<<<<<<<<<<
  * 
  *     return Vector2(delta_x, delta_y)
  */
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_length); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_math); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_math); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_math); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_math); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_radians); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_radians); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_angle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_7 = NULL;
   __pyx_t_8 = 0;
@@ -3625,7 +3624,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -3648,31 +3647,29 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_delta_x = __pyx_t_9;
 
-  /* "SelfLearningCars/vector_math.pyx":57
+  /* "SelfLearningCars/vector_math.pyx":53
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  * 
  *     return Vector2(delta_x, delta_y)             # <<<<<<<<<<<<<<
- * 
- * # python setup.py build_ext --inplace
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_Vector2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_Vector2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_delta_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_delta_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_delta_y); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_delta_y); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_5 = NULL;
   __pyx_t_8 = 0;
@@ -3694,7 +3691,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 53, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
@@ -3702,8 +3699,8 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "SelfLearningCars/vector_math.pyx":53
- * #    ...
+  /* "SelfLearningCars/vector_math.pyx":49
+ *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
@@ -3764,22 +3761,20 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_find_lines_intersection, __pyx_k_find_lines_intersection, sizeof(__pyx_k_find_lines_intersection), 0, 0, 1, 1},
     {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
     {&__pyx_n_s_initializing, __pyx_k_initializing, sizeof(__pyx_k_initializing), 0, 0, 1, 1},
+    {&__pyx_n_s_int, __pyx_k_int, sizeof(__pyx_k_int), 0, 0, 1, 1},
     {&__pyx_n_s_is_coroutine, __pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 0, 1, 1},
-    {&__pyx_n_s_left, __pyx_k_left, sizeof(__pyx_k_left), 0, 0, 1, 1},
     {&__pyx_n_s_length, __pyx_k_length, sizeof(__pyx_k_length), 0, 0, 1, 1},
     {&__pyx_n_s_line_end, __pyx_k_line_end, sizeof(__pyx_k_line_end), 0, 0, 1, 1},
     {&__pyx_n_s_line_start, __pyx_k_line_start, sizeof(__pyx_k_line_start), 0, 0, 1, 1},
     {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
     {&__pyx_n_s_math, __pyx_k_math, sizeof(__pyx_k_math), 0, 0, 1, 1},
     {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-    {&__pyx_kp_s_on_the_line, __pyx_k_on_the_line, sizeof(__pyx_k_on_the_line), 0, 0, 1, 0},
     {&__pyx_n_s_point, __pyx_k_point, sizeof(__pyx_k_point), 0, 0, 1, 1},
     {&__pyx_n_s_point_left_or_right_of_line, __pyx_k_point_left_or_right_of_line, sizeof(__pyx_k_point_left_or_right_of_line), 0, 0, 1, 1},
     {&__pyx_n_s_position_from_length_and_angle, __pyx_k_position_from_length_and_angle, sizeof(__pyx_k_position_from_length_and_angle), 0, 0, 1, 1},
     {&__pyx_n_s_pygame_math, __pyx_k_pygame_math, sizeof(__pyx_k_pygame_math), 0, 0, 1, 1},
     {&__pyx_n_s_radians, __pyx_k_radians, sizeof(__pyx_k_radians), 0, 0, 1, 1},
     {&__pyx_n_s_return, __pyx_k_return, sizeof(__pyx_k_return), 0, 0, 1, 1},
-    {&__pyx_n_s_right, __pyx_k_right, sizeof(__pyx_k_right), 0, 0, 1, 1},
     {&__pyx_n_s_s02_x, __pyx_k_s02_x, sizeof(__pyx_k_s02_x), 0, 0, 1, 1},
     {&__pyx_n_s_s02_y, __pyx_k_s02_y, sizeof(__pyx_k_s02_y), 0, 0, 1, 1},
     {&__pyx_n_s_s10_x, __pyx_k_s10_x, sizeof(__pyx_k_s10_x), 0, 0, 1, 1},
@@ -3789,7 +3784,6 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_s_numer, __pyx_k_s_numer, sizeof(__pyx_k_s_numer), 0, 0, 1, 1},
     {&__pyx_n_s_sin, __pyx_k_sin, sizeof(__pyx_k_sin), 0, 0, 1, 1},
     {&__pyx_n_s_spec, __pyx_k_spec, sizeof(__pyx_k_spec), 0, 0, 1, 1},
-    {&__pyx_n_s_str, __pyx_k_str, sizeof(__pyx_k_str), 0, 0, 1, 1},
     {&__pyx_n_s_t, __pyx_k_t, sizeof(__pyx_k_t), 0, 0, 1, 1},
     {&__pyx_n_s_t_numer, __pyx_k_t_numer, sizeof(__pyx_k_t_numer), 0, 0, 1, 1},
     {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
@@ -3825,26 +3819,26 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "SelfLearningCars/vector_math.pyx":39
  *     return point
  * 
- * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> str:             # <<<<<<<<<<<<<<
- *     # Calculate the cross product
+ * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
+ * 
  */
   __pyx_tuple__5 = PyTuple_Pack(4, __pyx_n_s_line_start, __pyx_n_s_line_end, __pyx_n_s_point, __pyx_n_s_cross_product); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
   __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_point_left_or_right_of_line, 39, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 39, __pyx_L1_error)
 
-  /* "SelfLearningCars/vector_math.pyx":53
- * #    ...
+  /* "SelfLearningCars/vector_math.pyx":49
+ *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  */
-  __pyx_tuple__7 = PyTuple_Pack(4, __pyx_n_s_angle, __pyx_n_s_length, __pyx_n_s_delta_y, __pyx_n_s_delta_x); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(4, __pyx_n_s_angle, __pyx_n_s_length, __pyx_n_s_delta_y, __pyx_n_s_delta_x); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_position_from_length_and_angle, 53, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_position_from_length_and_angle, 49, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3856,6 +3850,8 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 static CYTHON_SMALL_CODE int __Pyx_InitConstants(void) {
   if (__Pyx_CreateStringTabAndInitStrings() < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -4263,16 +4259,16 @@ if (!__Pyx_RefNanny) {
   /* "SelfLearningCars/vector_math.pyx":39
  *     return point
  * 
- * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> str:             # <<<<<<<<<<<<<<
- *     # Calculate the cross product
+ * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
+ * 
  */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_line_start, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_line_end, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_point, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_s_str) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_s_int) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_16SelfLearningCars_11vector_math_3point_left_or_right_of_line, 0, __pyx_n_s_point_left_or_right_of_line, NULL, __pyx_n_s_SelfLearningCars_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_2);
@@ -4280,16 +4276,16 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_point_left_or_right_of_line, __pyx_t_3) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":53
- * #    ...
+  /* "SelfLearningCars/vector_math.pyx":49
+ *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_16SelfLearningCars_11vector_math_5position_from_length_and_angle, 0, __pyx_n_s_position_from_length_and_angle, NULL, __pyx_n_s_SelfLearningCars_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_16SelfLearningCars_11vector_math_5position_from_length_and_angle, 0, __pyx_n_s_position_from_length_and_angle, NULL, __pyx_n_s_SelfLearningCars_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_position_from_length_and_angle, __pyx_t_3) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_position_from_length_and_angle, __pyx_t_3) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "SelfLearningCars/vector_math.pyx":1
@@ -5364,6 +5360,17 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_FastCallDict(PyObject *func, PyObj
     #else
     return __Pyx_PyObject_FastCall_fallback(func, args, (size_t)nargs, kwargs);
     #endif
+}
+
+/* RaiseUnexpectedTypeError */
+static int
+__Pyx_RaiseUnexpectedTypeError(const char *expected, PyObject *obj)
+{
+    __Pyx_TypeName obj_type_name = __Pyx_PyType_GetName(Py_TYPE(obj));
+    PyErr_Format(PyExc_TypeError, "Expected %s, got " __Pyx_FMT_TYPENAME,
+                 expected, obj_type_name);
+    __Pyx_DECREF_TypeName(obj_type_name);
+    return 0;
 }
 
 /* Import */

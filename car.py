@@ -4,7 +4,7 @@ from pygame.math import Vector2
 import math
 from typing import List
 import os
-import cython.vector_math as vector_math
+import vector_math
 from abc import ABC, abstractmethod
 
 CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
