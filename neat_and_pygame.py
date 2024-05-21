@@ -183,7 +183,7 @@ def spawn_player_cars(starting_point=STARTING_CAR_POSITION, count: int=1) -> Lis
 
 def selected_car(cars: List[Car], mouse_pos: Vector2) -> Car | None:
     for car in cars:
-        if car.rect.collidepoint(mouse_pos):
+        if car.rect.collidepoint(mouse_pos.x, mouse_pos.y):
             return car
     return None
 

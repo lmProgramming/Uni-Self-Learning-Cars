@@ -15,9 +15,13 @@ Użyję modułu abc, by stworzyć abstrakcyjną klasę Car oraz klasy dziedzicz�
 mapie, by je przetestować.
 '''
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QTextEdit, QPushButton, QLabel, QDateTimeEdit, QCheckBox, QFrame
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QScreen
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTextEdit, QPushButton, QLabel
+from PyQt5.QtWidgets import QStackedWidget, QVBoxLayout, QPushButton, QWidget
 from typing import Optional
 from neat_and_pygame import main as start_simulation, test_drive
+import sys
 
 WIDTH = 900
 HEIGHT = 800
@@ -40,6 +44,12 @@ class MainMenu(QMainWindow):
         
         if dimensions is None:
             dimensions = self.get_centre_dimensions(WIDTH, HEIGHT)
+            
+        self.stacked_widget = QStackedWidget()        
+        self.stacked_widget.addWidget(self)
+
+        self.settings_widget = QWidget()
+        self.stacked_widget.addWidget(self.settings_widget)
         
         self.setGeometry(*dimensions)
         
@@ -53,6 +63,10 @@ class MainMenu(QMainWindow):
         self.start_simulation_button = QPushButton("Start Simulation", self)
         self.start_simulation_button.clicked.connect(self.start_simulation)
         main_layout.addWidget(self.start_simulation_button)
+        
+        self.settings_button = QPushButton("Settings", self)
+        self.settings_button.clicked.connect(self.show_initial_parameters_setup)
+        main_layout.addWidget(self.settings_button)
 
         self.test_drive_button = QPushButton("Test Drive", self)
         self.test_drive_button.clicked.connect(self.test_drive)
@@ -66,6 +80,10 @@ class MainMenu(QMainWindow):
 
     def start_simulation(self) -> None:
         start_simulation()
+        
+    def show_initial_parameters_setup(self) -> None:
+        self.stacked_widget.setCurrentWidget(self.settings_widget)
+        print("Mkay")
 
     def make_map(self) -> None:
         print("Making map...")
@@ -87,7 +105,7 @@ class MainMenu(QMainWindow):
         
         return layout, text
             
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
         
@@ -96,7 +114,11 @@ class MainMenu(QMainWindow):
         layout.addLayout(self.setup_main_layout())   
     
     def get_centre_dimensions(self, width, height) -> tuple[int, int, int, int]:   
-        primary_screen_dimensions = self.app.primaryScreen().size()
+        primary_screen: QScreen | None = self.app.primaryScreen()
+        if primary_screen is None:
+            raise Exception("No primary screen found")
+        
+        primary_screen_dimensions: QSize = primary_screen.size()
             
         x = primary_screen_dimensions.width() // 2 - width // 2
         y = primary_screen_dimensions.height() // 2 - height // 2
@@ -104,7 +126,7 @@ class MainMenu(QMainWindow):
         return x, y, width, height
       
 if __name__ == "__main__":
+    print("OKay")
     app = QApplication([])
     window = MainMenu(app)
-    window.show()
-    app.exec_()
+    sys.exit(app.exec_())
