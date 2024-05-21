@@ -7,6 +7,7 @@ import os
 import vector_math
 from abc import ABC, abstractmethod
 from neat import DefaultGenome
+from cars.car_ray import CarRay
 
 CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
 
@@ -26,13 +27,9 @@ class Car(ABC):
         self.acceleration = 0.3
         self.back_acceleration_multiplier: float = 1 / 3
         self.lines: List[CarRay] = []
-        self.dead = False
         self.last_gate = None
         self.direction = None
         self.rect: pg.Rect = pg.Rect(x, y, CAR_WIDTH, CAR_HEIGHT)
-
-    def die(self):
-        self.dead = True
 
     def check_if_in_next_gate(self, gates):
         if self.last_gate is None:
@@ -52,24 +49,20 @@ class Car(ABC):
     def get_shortest_last_distance(self) -> float:
         return min([line.last_distance for line in self.lines])            
 
-    def calculate_line_distances(self, walls) -> list[float]:        
-        results = []
-
+    def calculate_line_distances(self, walls) -> None:      
         for line in self.lines:
             lowest_distance: float = line.length
-            lowest_point: Vector2 | None = None
+            closest_point: Vector2 | None = None
             for wall in walls:
                 _, point, distance = line.find_distance_to_wall(wall)
                 if distance < lowest_distance:                    
                     lowest_distance = distance
-                    lowest_point = point
-                
-            results.append(lowest_distance / line.length)    
+                    closest_point = point
+                                                
+            line.set_last_distance(lowest_distance)                            
+            line.set_last_point(closest_point)      
             
-            line.set_last_distance(lowest_distance)      
-            line.set_last_point(lowest_point)      
-                
-        return results
+            line.set_last_distance(lowest_distance)       
     
     @abstractmethod    
     def get_reward(self, reward: float):
@@ -95,9 +88,9 @@ class Car(ABC):
 
         self.speed += normalized_force * self.acceleration * (1 if force >= 0 else self.back_acceleration_multiplier)
 
-    def generate_rays(self, ray_count, ray_length) -> None:
+    def generate_rays(self, ray_count, ray_length, processing_function) -> None:
         for i in range(0, 360, 360 // ray_count):
-            self.lines.append(CarRay(self, i, ray_length))
+            self.lines.append(CarRay(self, i, ray_length, processing_function))
 
     def steer(self, way):
         wheel_turn_coefficient = math.sqrt(abs(self.speed))
@@ -137,7 +130,7 @@ class AICar(Car):
         self.neural_net = neural_net
     
     def get_desired_movement(self) -> Vector2:      
-        inputs: List[float] = [ray.last_distance for ray in self.lines]  
+        inputs: List[float] = [ray.last_distance for ray in self.lines] + [self.speed]
         outputs = self.neural_net.activate(inputs)
         
         return outputs
@@ -177,42 +170,4 @@ class HumanCar(Car):
     
     def get_score(self):
         return self.score
-
-class CarRay:
-    def __init__(self, car: Car, angle_bias: float, length: float) -> None:
-        self.car: Car = car
-        self.angle_bias: float = angle_bias
-        self.length: float = length
-        self.color = pg.Color(0, 0, 0, 255)
-        self.last_distance: float = 0
-        self.last_point: Vector2 | None = None
-
-    def get_origin_position(self):
-        return self.car.get_centre_position()
-    
-    def get_end_position(self):
-        return self.get_origin_position() + vector_math.position_from_length_and_angle(-self.car.angle + self.angle_bias, self.length)
-
-    def find_distance_to_wall(self, wall) -> tuple[bool, Vector2, float]:
-        point: Vector2 = vector_math.find_lines_intersection(self.get_origin_position(), self.get_end_position(), wall.start_position, wall.end_position)
-
-        distance: float = self.length if point is None else point.distance_to(self.get_origin_position())
-
-        return point is not None, point, distance
-    
-    def draw_debug(self, win) -> None:       
-        pg.draw.line(win, self.color, self.get_origin_position(), self.last_point if self.last_point is not None else self.get_end_position(), 3)
-    
-    def set_debug_color(self) -> None:        
-        color_value = int(255 * (self.last_distance / self.length))
-        self.color = pg.Color(255, color_value, color_value)  
-
-    def set_last_distance(self, distance: float) -> None:
-        self.last_distance: float = distance
-        
-    def set_last_point(self, point: Vector2) -> None:
-        self.last_point = point
-        
-    def draw(self, win) -> None:      
-        pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)
         

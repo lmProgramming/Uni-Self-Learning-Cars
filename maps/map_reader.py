@@ -3,6 +3,8 @@ from pygame import Vector2
 from map import Wall, Gate
 from typing import List
 import re
+import os
+
 class Mode(enum.Enum):
     STARTING_READING = "starting_reading"
     WALLS = "walls"
@@ -43,6 +45,11 @@ def read_map_txt(filename="map.txt") -> tuple[list, list, Vector2]:
                     gates.append(Gate(num, x1, x2, y1, y2))
     
     return walls, gates, starting_point
+
+def get_map_names() -> List[str]:
+    map_folder = 'maps'
+    filenames: List[str] = os.listdir(map_folder)
+    return filenames
             
 if __name__ == "__main__":
     walls, gates, starting_point = read_map_txt()

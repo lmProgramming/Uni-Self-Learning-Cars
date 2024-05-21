@@ -4,7 +4,8 @@ from pygame import Vector2
 from pygame.surface import Surface
 from map import Wall, Gate
 
-from map_reader import read_map_txt
+from maps.map_reader import read_map_txt
+from py_input_field import InputBox
 
 pg.font.init()
 
@@ -20,23 +21,34 @@ CAR_HEIGHT: int = CAR_IMG.get_height()
 
 BG_IMG: Surface = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
-def draw_window(win, walls, gates, starting_point, bg_img) -> None:
+def draw_window(win, walls, gates, starting_point, bg_img, map_name) -> None:
     win.blit(bg_img, (0, 0))
-
+        
     for wall in walls:
         wall.draw(win)
 
     for gate in gates:
-        gate.draw(win)
-
-    pg.draw.circle(win, (0, 255, 0), starting_point, 10)
+        gate.draw(win)      
+    
+    pg.draw.circle(win, (0, 255, 0), starting_point, 10)     
+    
+    topbar_rect = pg.Rect(0, 0, WIDTH, 40)
+    pg.draw.rect(win, (255, 255, 255), topbar_rect)    
+        
+    map_name.draw(win)
 
     pg.display.update()
-
+    
+def create_map_name_input(x_centre, y_centre, width, height, text) -> InputBox:
+    x = x_centre - width // 2
+    y = y_centre - height // 2
+    return InputBox(x, y, width, height, text)
 
 def main() -> None:       
     win = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
+    
+    map_name = create_map_name_input(WIDTH // 2, 20, 140, 32, 'map')
 
     if READ_MAP:
         walls, gates, starting_point = read_map_txt()
@@ -79,39 +91,45 @@ def main() -> None:
             if event.type == pg.QUIT:
                 run = False
                 pg.quit()
-                save_data_to_file(walls, gates, starting_point, backup=True)
-            if event.type == pg.KEYDOWN and event.key == pg.K_z and len(walls) > 0:
-                walls.pop()
-            if event.type == pg.KEYDOWN and event.key == pg.K_x and len(gates) > 0:
-                gates.pop()
+                save_data_to_file(walls, gates, starting_point, map_name.text)
+            if not map_name.active:
+                if event.type == pg.KEYDOWN and event.key == pg.K_z and len(walls) > 0:
+                    walls.pop()
+                if event.type == pg.KEYDOWN and event.key == pg.K_x and len(gates) > 0:
+                    gates.pop()
+            map_name.handle_event(event)            
 
-        if keys[pg.K_ESCAPE]:
-            run = False
-            pg.quit()
-            save_data_to_file(walls, gates, starting_point, backup=True)
-        
-        if keys[pg.K_s]:
-            run = False
-            pg.quit()
-            save_data_to_file(walls, gates, starting_point)
+        if not map_name.active:
+            if keys[pg.K_ESCAPE]:
+                run = False
+                pg.quit()
+                save_data_to_file(walls, gates, starting_point, map_name.text)
+            
+            if keys[pg.K_s]:
+                run = False
+                pg.quit()
+                save_data_to_file(walls, gates, starting_point, map_name.text)
 
-        if keys[pg.K_SPACE]:
-            starting_point = Vector2(m_x, m_y)
+            if keys[pg.K_SPACE]:
+                starting_point = Vector2(m_x, m_y)
 
-        draw_window(win, walls, gates, starting_point, BG_IMG)
+        draw_window(win, walls, gates, starting_point, BG_IMG, map_name)
 
-def save_data_to_file(walls, gates, starting_point, backup=False):
-    with open('maps/map.txt' if not backup else 'maps/backup.txt', 'w+') as f:
+def save_data_to_file(walls, gates, starting_point, map_name: str):
+    if map_name == "":
+        raise ValueError("Map name cannot be empty")
+    
+    if not map_name.endswith(".txt"):
+        map_name += ".txt"
+            
+    with open(os.path.join("maps", map_name), 'w+') as f:
         f.write("walls: x1;x2;y1;y2\n")
         for wall in walls:
             line_text = (str(wall.start_position) + ";" + str(wall.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
-            print(line_text, end=None)
             f.write(line_text)  
         f.write("\ngates: num;x1;x2;y1;y2\n")
         for gate in gates:
             line_text = (str(gate.num) + ";" + str(gate.start_position) + ";" + str(gate.end_position) + "\n").replace("[", "").replace("]", "").replace(" ", "")
-
-            print(line_text, end=None)
             f.write(line_text)  
         f.write("\nstart: " + str(int(starting_point[0])) + ";" + str(int(starting_point[1])))
     quit()

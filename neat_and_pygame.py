@@ -1,22 +1,25 @@
 import neat # type: ignore
 import os
-from neat.nn.feed_forward import FeedForwardNetwork
+from neat.nn.feed_forward import FeedForwardNetwork # type: ignore
 import pygame as pg
 from pygame.font import Font
 from pygame.key import ScancodeWrapper
 from pygame.math import Vector2
 import random
-from typing import List, Sequence
+from typing import List, Sequence, Callable
+from processing_functions import Linear, Quadratic
 
 from pygame.surface import Surface
-from car import Car, AICar, HumanCar
+from cars.car import Car, AICar, HumanCar
 from map import Wall, Gate
 import time
 import visualize
 
-from map_reader import read_map_txt
+from maps.map_reader import read_map_txt
 
 pg.font.init()
+
+pg.display.set_caption("Simulation")
 
 WIDTH = 1280
 HEIGHT = 960
@@ -38,6 +41,8 @@ RAY_DISTANCE_KILL = 10
 
 RAY_COUNT = 8
 RAY_LENGTH = 200
+
+NON_RAY_INPUTS = 1
 
 '''
 Do funkcjonalności chciałbym dodać jeszcze możliwość modyfikacji pliku konfiguracyjnego NEAT za pomocą GUI. 
@@ -122,20 +127,20 @@ def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config):
     
     simulation(cars, walls, gates, config, False)
     
-def test_drive() -> None:
+def test_drive(processing_function: Callable[[float, float], float]=Linear) -> None:
     walls, gates, starting_point = setup_map()
-        
+            
     while True:        
-        cars: List[Car] = spawn_player_cars(starting_point)
+        cars: List[Car] = spawn_player_cars(starting_point, processing_function)
         
-        simulation(cars, walls, gates, True)
-        time.sleep(1)
+        simulation(cars, walls, gates, infinite_time=True)
+        time.sleep(0.1)
     
 def setup_map() -> tuple[list, list, Vector2]:
     walls, gates, starting_point = read_map_txt()
     return walls, gates, starting_point
     
-def setup_generation(genomes: List[neat.DefaultGenome], config) -> tuple[list[Car], list, list]:
+def setup_generation(genomes: List[neat.DefaultGenome], config, processing_function=Quadratic) -> tuple[list[Car], list, list]:
     cars: List[Car] = []
     
     walls: List[Wall]
@@ -149,11 +154,11 @@ def setup_generation(genomes: List[neat.DefaultGenome], config) -> tuple[list[Ca
         gates = []
         starting_point = STARTING_CAR_POSITION
  
-    cars = spawn_ai_cars(genomes, config, starting_point)
+    cars = spawn_ai_cars(genomes, config, starting_point, processing_function)
             
     return cars, walls, gates
 
-def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starting_point=STARTING_CAR_POSITION) -> List[Car]:
+def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starting_point, processing_function) -> List[Car]:
     cars: List[Car] = []
     
     for _, genome in genomes:
@@ -165,18 +170,18 @@ def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starti
         new_car.set_neural_net(neural_net)
         
         new_car.genome = genome
-        new_car.generate_rays(RAY_COUNT, RAY_LENGTH)
+        new_car.generate_rays(RAY_COUNT, RAY_LENGTH, processing_function)
         cars.append(new_car)
         
     return cars
 
-def spawn_player_cars(starting_point=STARTING_CAR_POSITION, count: int=1) -> List[Car]:
+def spawn_player_cars(starting_point, processing_function, count: int=1) -> List[Car]:
     cars: List[Car] = []
     
     for _ in range(count):
         human_car: HumanCar = HumanCar(starting_point.x, starting_point.y, random.randrange(-180, 180))
         
-        human_car.generate_rays(RAY_COUNT, RAY_LENGTH)
+        human_car.generate_rays(RAY_COUNT, RAY_LENGTH, processing_function)
         cars.append(human_car)
         
     return cars
@@ -193,7 +198,7 @@ def handle_car_selection(cars: List[Car], mouse_pos: Vector2, config, win) -> No
         visualize.draw_net(config, selected.genome, view=False, filename="neural_net", fmt="png")  
     draw_neural_network(win, "neural_net.png")            
 
-def simulation(cars: List[Car], walls, gates, config, infinite_time: bool=False, ) -> None:
+def simulation(cars: List[Car], walls, gates, config=None, infinite_time: bool=False) -> None:
     win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
 
@@ -203,7 +208,6 @@ def simulation(cars: List[Car], walls, gates, config, infinite_time: bool=False,
         clock.tick(60)        
 
         score = max([car.get_score() for car in cars])
-        draw_window(win, cars, walls, gates, BG_IMG, score, GEN, True)
                     
         if check_if_quit():
             pg.quit()
@@ -212,7 +216,7 @@ def simulation(cars: List[Car], walls, gates, config, infinite_time: bool=False,
         mouse_position = Vector2(pg.mouse.get_pos())
         mouse_pressed: Sequence[bool] = pg.mouse.get_pressed()
 
-        if mouse_pressed[0]:
+        if mouse_pressed[0] and config is not None:
             handle_car_selection(cars, mouse_position, config, win)
 
         # keys: ScancodeWrapper = pg.key.get_pressed()
@@ -228,15 +232,12 @@ def simulation(cars: List[Car], walls, gates, config, infinite_time: bool=False,
             car.steer(outputs[1])    
 
             if car.check_if_in_next_gate(gates):
-                car.get_reward(10)
+                car.get_reward(100)
 
             car.get_reward(car.speed / 60)
             
             if car.get_shortest_last_distance() < RAY_DISTANCE_KILL:
-                car.die()               
-                
-            if car.dead:
-                car.get_reward(-10)
+                car.get_reward(-5)
 
                 cars.pop(i)
             else:
@@ -246,7 +247,9 @@ def simulation(cars: List[Car], walls, gates, config, infinite_time: bool=False,
             car.move()
 
         frames += 1
-
+        
+        draw_window(win, cars, walls, gates, BG_IMG, score, GEN, True)
+        
 def run(config_path) -> None:
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                 neat.DefaultStagnation, config_path)
@@ -264,7 +267,7 @@ def get_ray_count_from_config() -> int:
     with open('config', 'r') as f:
         for line in f:
             if line.startswith("num_inputs"):
-                return int(line.strip().split(" = ")[1])
+                return int(line.strip().split(" = ")[1]) - NON_RAY_INPUTS
     return 0
 
 def main() -> None:
