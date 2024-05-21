@@ -1,13 +1,18 @@
 import neat # type: ignore
 import os
+from neat.nn.feed_forward import FeedForwardNetwork
 import pygame as pg
 from pygame.font import Font
+from pygame.key import ScancodeWrapper
 from pygame.math import Vector2
 import random
 from typing import List, Sequence
 
 from pygame.surface import Surface
 from car import Car, AICar, HumanCar
+from map import Wall, Gate
+import time
+import visualize
 
 from map_reader import read_map_txt
 
@@ -21,9 +26,9 @@ LOAD_MAP = True
 
 GEN = 0
 
-BG_IMG: Surface = pg.image.load(os.path.join("imgs", "bg_img.png"))
+BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
-STAT_FONT: Font = pg.font.SysFont("comic sans", 25)
+STAT_FONT = pg.font.SysFont("comic sans", 25)
 
 WHEEL_TURN_SPEED = 3
 
@@ -62,12 +67,13 @@ def draw_window(win, cars: List[Car], walls, gates, bg_img, score, gen, debug=Fa
     text: pg.surface.Surface
 
     for car in cars:
-        car.draw(win)
         if debug:
             for line in car.lines:
                 line.set_debug_color()
-                line.draw(win)
-            text = STAT_FONT.render(str(int(car.genome.fitness)), True, (255, 255, 255))
+                line.draw_debug(win)
+        car.draw(win)        
+        if debug:
+            text = STAT_FONT.render(str(int(car.get_score())), True, (255, 255, 255))
             win.blit(text, car.get_centre_position())
 
     for wall in walls:
@@ -86,6 +92,11 @@ def draw_window(win, cars: List[Car], walls, gates, bg_img, score, gen, debug=Fa
     win.blit(text, (10, 10))
 
     pg.display.update()
+    
+def draw_neural_network(win: Surface, filename: str) -> None:
+    neural_net_image = pg.image.load(filename)
+    
+    win.blit(neural_net_image, (100, 100))
     
 def check_if_quit() -> bool:
     keys: Sequence[bool] = pg.key.get_pressed()
@@ -107,14 +118,29 @@ def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config):
     global GEN
     GEN += 1
     
-    nets, ges, cars, walls, gates = setup_generation(genomes, config)
+    cars, walls, gates = setup_generation(genomes, config)
     
-    simulation(nets, ges, cars, walls, gates)
+    simulation(cars, walls, gates, config, False)
     
-def setup_generation(genomes, config) -> tuple[list, list, list[Car], list, list]:
-    nets = []
-    ges = []
+def test_drive() -> None:
+    walls, gates, starting_point = setup_map()
+        
+    while True:        
+        cars: List[Car] = spawn_player_cars(starting_point)
+        
+        simulation(cars, walls, gates, True)
+        time.sleep(1)
+    
+def setup_map() -> tuple[list, list, Vector2]:
+    walls, gates, starting_point = read_map_txt()
+    return walls, gates, starting_point
+    
+def setup_generation(genomes: List[neat.DefaultGenome], config) -> tuple[list[Car], list, list]:
     cars: List[Car] = []
+    
+    walls: List[Wall]
+    gates: List[Gate]
+    starting_point: Vector2
 
     if LOAD_MAP:
         walls, gates, starting_point = read_map_txt()
@@ -122,52 +148,79 @@ def setup_generation(genomes, config) -> tuple[list, list, list[Car], list, list
         walls = []
         gates = []
         starting_point = STARTING_CAR_POSITION
+ 
+    cars = spawn_ai_cars(genomes, config, starting_point)
+            
+    return cars, walls, gates
 
-    if PLAYER_ONLY:
-        human_car: HumanCar = HumanCar(starting_point.x, starting_point.y, random.randrange(-180, 180))
-        _, genome = genomes[0]
+def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starting_point=STARTING_CAR_POSITION) -> List[Car]:
+    cars: List[Car] = []
+    
+    for _, genome in genomes:
         genome.fitness = 0
-        human_car.genome = genome
+        new_car = AICar(starting_point.x, starting_point.y, random.randrange(-180, 180))
+        
+        neural_net: FeedForwardNetwork = FeedForwardNetwork.create(genome, config)
+        
+        new_car.set_neural_net(neural_net)
+        
+        new_car.genome = genome
+        new_car.generate_rays(RAY_COUNT, RAY_LENGTH)
+        cars.append(new_car)
+        
+    return cars
+
+def spawn_player_cars(starting_point=STARTING_CAR_POSITION, count: int=1) -> List[Car]:
+    cars: List[Car] = []
+    
+    for _ in range(count):
+        human_car: HumanCar = HumanCar(starting_point.x, starting_point.y, random.randrange(-180, 180))
+        
         human_car.generate_rays(RAY_COUNT, RAY_LENGTH)
         cars.append(human_car)
         
-        ges.append(genomes[0][1])
-        nets.append(neat.nn.FeedForwardNetwork.create(genomes[0][1], config))
-    else:    
-        for _, genome in genomes:
-            genome.fitness = 0
-            ges.append(genome)
-            nets.append(neat.nn.FeedForwardNetwork.create(genome, config))
-            
-            new_car = AICar(starting_point.x, starting_point.y, random.randrange(-180, 180))
-            new_car.genome = genome
-            new_car.generate_rays(RAY_COUNT, RAY_LENGTH)
-            new_car.set_neural_net(nets[-1])
-            cars.append(new_car)
-            
-    return nets, ges, cars, walls, gates
-    
-def simulation(nets: List[neat.nn.FeedForwardNetwork], ges: List[neat.DefaultGenome], cars: List[Car], walls, gates) -> None:
+    return cars
+
+def selected_car(cars: List[Car], mouse_pos: Vector2) -> Car | None:
+    for car in cars:
+        if car.rect.collidepoint(mouse_pos):
+            return car
+    return None
+
+def handle_car_selection(cars: List[Car], mouse_pos: Vector2, config, win) -> None:
+    selected: Car | None = selected_car(cars, mouse_pos)
+    if selected and isinstance(selected, AICar):
+        visualize.draw_net(config, selected.genome, view=False, filename="neural_net", fmt="png")  
+    draw_neural_network(win, "neural_net.png")            
+
+def simulation(cars: List[Car], walls, gates, config, infinite_time: bool=False, ) -> None:
     win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
 
     score = 0
-    run = True
     frames = 0
-    while run:
-        clock.tick(60)
+    while len(cars) > 0 and (frames < 60 * (10 + GEN) or infinite_time):
+        clock.tick(60)        
+
+        score = max([car.get_score() for car in cars])
+        draw_window(win, cars, walls, gates, BG_IMG, score, GEN, True)
                     
         if check_if_quit():
-            run = False
             pg.quit()
             quit()
             
+        mouse_position = Vector2(pg.mouse.get_pos())
+        mouse_pressed: Sequence[bool] = pg.mouse.get_pressed()
+
+        if mouse_pressed[0]:
+            handle_car_selection(cars, mouse_position, config, win)
+
+        # keys: ScancodeWrapper = pg.key.get_pressed()
+            
         i = 0
         while i < len(cars):
-            genome: neat.DefaultGenome
-            car: Car
-            genome, car = ges[i], cars[i]
-
+            car: Car = cars[i]
+            
             car.calculate_line_distances(walls)
             outputs: Vector2 = car.get_desired_movement()
 
@@ -175,34 +228,26 @@ def simulation(nets: List[neat.nn.FeedForwardNetwork], ges: List[neat.DefaultGen
             car.steer(outputs[1])    
 
             if car.check_if_in_next_gate(gates):
-                genome.fitness += 10
+                car.get_reward(10)
 
-            genome.fitness += car.speed / 60
+            car.get_reward(car.speed / 60)
             
             if car.get_shortest_last_distance() < RAY_DISTANCE_KILL:
-                car.die()
+                car.die()               
                 
             if car.dead:
-                genome.fitness -= 10
+                car.get_reward(-10)
 
-                nets.pop(i)
-                ges.pop(i)
                 cars.pop(i)
             else:
-                i += 1
+                i += 1                
                 
         for car in cars:
             car.move()
 
-        if len(cars) == 0 or frames > 60 * (10 + GEN):
-            return
-
-        score = max([car.genome.fitness for car in cars])
-        draw_window(win, cars, walls, gates, BG_IMG, score, GEN, True)
-
         frames += 1
 
-def run(config_path):
+def run(config_path) -> None:
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                 neat.DefaultStagnation, config_path)
     p = neat.Population(config)
@@ -215,7 +260,7 @@ def run(config_path):
 
     print(winner)
     
-def get_ray_count_from_config():
+def get_ray_count_from_config() -> int:
     with open('config', 'r') as f:
         for line in f:
             if line.startswith("num_inputs"):
@@ -226,8 +271,8 @@ def main() -> None:
     global RAY_COUNT
     RAY_COUNT = get_ray_count_from_config()
     
-    local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, "config")
+    local_dir: str = os.path.dirname(__file__)
+    config_path: str = os.path.join(local_dir, "config")
     run(config_path)
         
 if __name__ == "__main__":    

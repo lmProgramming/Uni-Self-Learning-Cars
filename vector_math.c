@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "SelfLearningCars.vector_math",
+        "name": "vector_math",
         "sources": [
             "vector_math.pyx"
         ]
     },
-    "module_name": "SelfLearningCars.vector_math"
+    "module_name": "vector_math"
 }
 END: Cython Metadata */
 
@@ -1228,8 +1228,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__SelfLearningCars__vector_math
-#define __PYX_HAVE_API__SelfLearningCars__vector_math
+#define __PYX_HAVE__vector_math
+#define __PYX_HAVE_API__vector_math
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -2079,14 +2079,14 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* #### Code section: module_declarations ### */
 
-/* Module declarations from "SelfLearningCars.vector_math" */
+/* Module declarations from "vector_math" */
 /* #### Code section: typeinfo ### */
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "SelfLearningCars.vector_math"
-extern int __pyx_module_is_main_SelfLearningCars__vector_math;
-int __pyx_module_is_main_SelfLearningCars__vector_math = 0;
+#define __Pyx_MODULE_NAME "vector_math"
+extern int __pyx_module_is_main_vector_math;
+int __pyx_module_is_main_vector_math = 0;
 
-/* Implementation of "SelfLearningCars.vector_math" */
+/* Implementation of "vector_math" */
 /* #### Code section: global_var ### */
 /* #### Code section: string_decls ### */
 static const char __pyx_k_[] = ".";
@@ -2128,6 +2128,7 @@ static const char __pyx_k_t_numer[] = "t_numer";
 static const char __pyx_k_line_end[] = "line_end";
 static const char __pyx_k_line_start[] = "line_start";
 static const char __pyx_k_pygame_math[] = "pygame.math";
+static const char __pyx_k_vector_math[] = "vector_math";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_cross_product[] = "cross_product";
@@ -2137,12 +2138,11 @@ static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_find_lines_intersection[] = "find_lines_intersection";
 static const char __pyx_k_point_left_or_right_of_line[] = "point_left_or_right_of_line";
-static const char __pyx_k_SelfLearningCars_vector_math[] = "SelfLearningCars.vector_math";
 static const char __pyx_k_position_from_length_and_angle[] = "position_from_length_and_angle";
 /* #### Code section: decls ### */
-static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersection(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_A, PyObject *__pyx_v_B, PyObject *__pyx_v_C, PyObject *__pyx_v_D); /* proto */
-static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_of_line(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_line_start, PyObject *__pyx_v_line_end, PyObject *__pyx_v_point); /* proto */
-static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length_and_angle(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_angle, float __pyx_v_length); /* proto */
+static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_A, PyObject *__pyx_v_B, PyObject *__pyx_v_C, PyObject *__pyx_v_D); /* proto */
+static PyObject *__pyx_pf_11vector_math_2point_left_or_right_of_line(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_line_start, PyObject *__pyx_v_line_end, PyObject *__pyx_v_point); /* proto */
+static PyObject *__pyx_pf_11vector_math_4position_from_length_and_angle(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_angle, float __pyx_v_length); /* proto */
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 typedef struct {
@@ -2177,7 +2177,6 @@ typedef struct {
   PyObject *__pyx_n_s_B;
   PyObject *__pyx_n_s_C;
   PyObject *__pyx_n_s_D;
-  PyObject *__pyx_n_s_SelfLearningCars_vector_math;
   PyObject *__pyx_n_s_Vector2;
   PyObject *__pyx_n_s__2;
   PyObject *__pyx_n_s__9;
@@ -2219,6 +2218,7 @@ typedef struct {
   PyObject *__pyx_n_s_t;
   PyObject *__pyx_n_s_t_numer;
   PyObject *__pyx_n_s_test;
+  PyObject *__pyx_n_s_vector_math;
   PyObject *__pyx_kp_s_vector_math_pyx;
   PyObject *__pyx_n_s_x;
   PyObject *__pyx_n_s_y;
@@ -2278,7 +2278,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_B);
   Py_CLEAR(clear_module_state->__pyx_n_s_C);
   Py_CLEAR(clear_module_state->__pyx_n_s_D);
-  Py_CLEAR(clear_module_state->__pyx_n_s_SelfLearningCars_vector_math);
   Py_CLEAR(clear_module_state->__pyx_n_s_Vector2);
   Py_CLEAR(clear_module_state->__pyx_n_s__2);
   Py_CLEAR(clear_module_state->__pyx_n_s__9);
@@ -2320,6 +2319,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_t);
   Py_CLEAR(clear_module_state->__pyx_n_s_t_numer);
   Py_CLEAR(clear_module_state->__pyx_n_s_test);
+  Py_CLEAR(clear_module_state->__pyx_n_s_vector_math);
   Py_CLEAR(clear_module_state->__pyx_kp_s_vector_math_pyx);
   Py_CLEAR(clear_module_state->__pyx_n_s_x);
   Py_CLEAR(clear_module_state->__pyx_n_s_y);
@@ -2357,7 +2357,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_B);
   Py_VISIT(traverse_module_state->__pyx_n_s_C);
   Py_VISIT(traverse_module_state->__pyx_n_s_D);
-  Py_VISIT(traverse_module_state->__pyx_n_s_SelfLearningCars_vector_math);
   Py_VISIT(traverse_module_state->__pyx_n_s_Vector2);
   Py_VISIT(traverse_module_state->__pyx_n_s__2);
   Py_VISIT(traverse_module_state->__pyx_n_s__9);
@@ -2399,6 +2398,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_t);
   Py_VISIT(traverse_module_state->__pyx_n_s_t_numer);
   Py_VISIT(traverse_module_state->__pyx_n_s_test);
+  Py_VISIT(traverse_module_state->__pyx_n_s_vector_math);
   Py_VISIT(traverse_module_state->__pyx_kp_s_vector_math_pyx);
   Py_VISIT(traverse_module_state->__pyx_n_s_x);
   Py_VISIT(traverse_module_state->__pyx_n_s_y);
@@ -2446,7 +2446,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_B __pyx_mstate_global->__pyx_n_s_B
 #define __pyx_n_s_C __pyx_mstate_global->__pyx_n_s_C
 #define __pyx_n_s_D __pyx_mstate_global->__pyx_n_s_D
-#define __pyx_n_s_SelfLearningCars_vector_math __pyx_mstate_global->__pyx_n_s_SelfLearningCars_vector_math
 #define __pyx_n_s_Vector2 __pyx_mstate_global->__pyx_n_s_Vector2
 #define __pyx_n_s__2 __pyx_mstate_global->__pyx_n_s__2
 #define __pyx_n_s__9 __pyx_mstate_global->__pyx_n_s__9
@@ -2488,6 +2487,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_t __pyx_mstate_global->__pyx_n_s_t
 #define __pyx_n_s_t_numer __pyx_mstate_global->__pyx_n_s_t_numer
 #define __pyx_n_s_test __pyx_mstate_global->__pyx_n_s_test
+#define __pyx_n_s_vector_math __pyx_mstate_global->__pyx_n_s_vector_math
 #define __pyx_kp_s_vector_math_pyx __pyx_mstate_global->__pyx_kp_s_vector_math_pyx
 #define __pyx_n_s_x __pyx_mstate_global->__pyx_n_s_x
 #define __pyx_n_s_y __pyx_mstate_global->__pyx_n_s_y
@@ -2502,7 +2502,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_codeobj__8 __pyx_mstate_global->__pyx_codeobj__8
 /* #### Code section: module_code ### */
 
-/* "SelfLearningCars/vector_math.pyx":4
+/* "vector_math.pyx":4
  * import math
  * 
  * def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):             # <<<<<<<<<<<<<<
@@ -2511,15 +2511,15 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_16SelfLearningCars_11vector_math_1find_lines_intersection(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_11vector_math_1find_lines_intersection(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_16SelfLearningCars_11vector_math_1find_lines_intersection = {"find_lines_intersection", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_16SelfLearningCars_11vector_math_1find_lines_intersection, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_16SelfLearningCars_11vector_math_1find_lines_intersection(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_11vector_math_1find_lines_intersection = {"find_lines_intersection", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_11vector_math_1find_lines_intersection, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11vector_math_1find_lines_intersection(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -2634,11 +2634,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("SelfLearningCars.vector_math.find_lines_intersection", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("vector_math.find_lines_intersection", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersection(__pyx_self, __pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_D);
+  __pyx_r = __pyx_pf_11vector_math_find_lines_intersection(__pyx_self, __pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_D);
 
   /* function exit code */
   {
@@ -2651,7 +2651,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersection(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_A, PyObject *__pyx_v_B, PyObject *__pyx_v_C, PyObject *__pyx_v_D) {
+static PyObject *__pyx_pf_11vector_math_find_lines_intersection(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_A, PyObject *__pyx_v_B, PyObject *__pyx_v_C, PyObject *__pyx_v_D) {
   float __pyx_v_s10_x;
   float __pyx_v_s10_y;
   float __pyx_v_s32_x;
@@ -2681,7 +2681,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("find_lines_intersection", 1);
 
-  /* "SelfLearningCars/vector_math.pyx":5
+  /* "vector_math.pyx":5
  * 
  * def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
  *     cdef float s10_x = B[0] - A[0]             # <<<<<<<<<<<<<<
@@ -2700,7 +2700,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_s10_x = __pyx_t_4;
 
-  /* "SelfLearningCars/vector_math.pyx":6
+  /* "vector_math.pyx":6
  * def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
  *     cdef float s10_x = B[0] - A[0]
  *     cdef float s10_y = B[1] - A[1]             # <<<<<<<<<<<<<<
@@ -2719,7 +2719,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_s10_y = __pyx_t_4;
 
-  /* "SelfLearningCars/vector_math.pyx":7
+  /* "vector_math.pyx":7
  *     cdef float s10_x = B[0] - A[0]
  *     cdef float s10_y = B[1] - A[1]
  *     cdef float s32_x = D[0] - C[0]             # <<<<<<<<<<<<<<
@@ -2738,7 +2738,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_s32_x = __pyx_t_4;
 
-  /* "SelfLearningCars/vector_math.pyx":8
+  /* "vector_math.pyx":8
  *     cdef float s10_y = B[1] - A[1]
  *     cdef float s32_x = D[0] - C[0]
  *     cdef float s32_y = D[1] - C[1]             # <<<<<<<<<<<<<<
@@ -2757,7 +2757,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_s32_y = __pyx_t_4;
 
-  /* "SelfLearningCars/vector_math.pyx":10
+  /* "vector_math.pyx":10
  *     cdef float s32_y = D[1] - C[1]
  * 
  *     cdef float denom = s10_x * s32_y - s32_x * s10_y             # <<<<<<<<<<<<<<
@@ -2766,7 +2766,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   __pyx_v_denom = ((__pyx_v_s10_x * __pyx_v_s32_y) - (__pyx_v_s32_x * __pyx_v_s10_y));
 
-  /* "SelfLearningCars/vector_math.pyx":12
+  /* "vector_math.pyx":12
  *     cdef float denom = s10_x * s32_y - s32_x * s10_y
  * 
  *     if denom == 0:             # <<<<<<<<<<<<<<
@@ -2776,7 +2776,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __pyx_t_5 = (__pyx_v_denom == 0.0);
   if (__pyx_t_5) {
 
-    /* "SelfLearningCars/vector_math.pyx":13
+    /* "vector_math.pyx":13
  * 
  *     if denom == 0:
  *         return None             # <<<<<<<<<<<<<<
@@ -2787,7 +2787,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "SelfLearningCars/vector_math.pyx":12
+    /* "vector_math.pyx":12
  *     cdef float denom = s10_x * s32_y - s32_x * s10_y
  * 
  *     if denom == 0:             # <<<<<<<<<<<<<<
@@ -2796,7 +2796,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":15
+  /* "vector_math.pyx":15
  *         return None
  * 
  *     cdef bint denom_is_positive = denom > 0             # <<<<<<<<<<<<<<
@@ -2805,7 +2805,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   __pyx_v_denom_is_positive = (__pyx_v_denom > 0.0);
 
-  /* "SelfLearningCars/vector_math.pyx":17
+  /* "vector_math.pyx":17
  *     cdef bint denom_is_positive = denom > 0
  * 
  *     cdef float s02_x = A[0] - C[0]             # <<<<<<<<<<<<<<
@@ -2824,7 +2824,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_s02_x = __pyx_t_4;
 
-  /* "SelfLearningCars/vector_math.pyx":18
+  /* "vector_math.pyx":18
  * 
  *     cdef float s02_x = A[0] - C[0]
  *     cdef float s02_y = A[1] - C[1]             # <<<<<<<<<<<<<<
@@ -2843,7 +2843,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_s02_y = __pyx_t_4;
 
-  /* "SelfLearningCars/vector_math.pyx":20
+  /* "vector_math.pyx":20
  *     cdef float s02_y = A[1] - C[1]
  * 
  *     cdef float s_numer = s10_x * s02_y - s10_y * s02_x             # <<<<<<<<<<<<<<
@@ -2852,7 +2852,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   __pyx_v_s_numer = ((__pyx_v_s10_x * __pyx_v_s02_y) - (__pyx_v_s10_y * __pyx_v_s02_x));
 
-  /* "SelfLearningCars/vector_math.pyx":22
+  /* "vector_math.pyx":22
  *     cdef float s_numer = s10_x * s02_y - s10_y * s02_x
  * 
  *     if (s_numer < 0) == denom_is_positive:             # <<<<<<<<<<<<<<
@@ -2862,7 +2862,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __pyx_t_5 = ((__pyx_v_s_numer < 0.0) == __pyx_v_denom_is_positive);
   if (__pyx_t_5) {
 
-    /* "SelfLearningCars/vector_math.pyx":23
+    /* "vector_math.pyx":23
  * 
  *     if (s_numer < 0) == denom_is_positive:
  *         return None             # <<<<<<<<<<<<<<
@@ -2873,7 +2873,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "SelfLearningCars/vector_math.pyx":22
+    /* "vector_math.pyx":22
  *     cdef float s_numer = s10_x * s02_y - s10_y * s02_x
  * 
  *     if (s_numer < 0) == denom_is_positive:             # <<<<<<<<<<<<<<
@@ -2882,7 +2882,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":25
+  /* "vector_math.pyx":25
  *         return None
  * 
  *     cdef float t_numer = s32_x * s02_y - s32_y * s02_x             # <<<<<<<<<<<<<<
@@ -2891,7 +2891,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   __pyx_v_t_numer = ((__pyx_v_s32_x * __pyx_v_s02_y) - (__pyx_v_s32_y * __pyx_v_s02_x));
 
-  /* "SelfLearningCars/vector_math.pyx":27
+  /* "vector_math.pyx":27
  *     cdef float t_numer = s32_x * s02_y - s32_y * s02_x
  * 
  *     if (t_numer < 0) == denom_is_positive:             # <<<<<<<<<<<<<<
@@ -2901,7 +2901,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __pyx_t_5 = ((__pyx_v_t_numer < 0.0) == __pyx_v_denom_is_positive);
   if (__pyx_t_5) {
 
-    /* "SelfLearningCars/vector_math.pyx":28
+    /* "vector_math.pyx":28
  * 
  *     if (t_numer < 0) == denom_is_positive:
  *         return None             # <<<<<<<<<<<<<<
@@ -2912,7 +2912,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "SelfLearningCars/vector_math.pyx":27
+    /* "vector_math.pyx":27
  *     cdef float t_numer = s32_x * s02_y - s32_y * s02_x
  * 
  *     if (t_numer < 0) == denom_is_positive:             # <<<<<<<<<<<<<<
@@ -2921,7 +2921,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":30
+  /* "vector_math.pyx":30
  *         return None
  * 
  *     if (s_numer > denom) == denom_is_positive or (t_numer > denom) == denom_is_positive:             # <<<<<<<<<<<<<<
@@ -2939,7 +2939,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_5) {
 
-    /* "SelfLearningCars/vector_math.pyx":31
+    /* "vector_math.pyx":31
  * 
  *     if (s_numer > denom) == denom_is_positive or (t_numer > denom) == denom_is_positive:
  *          return None             # <<<<<<<<<<<<<<
@@ -2950,7 +2950,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "SelfLearningCars/vector_math.pyx":30
+    /* "vector_math.pyx":30
  *         return None
  * 
  *     if (s_numer > denom) == denom_is_positive or (t_numer > denom) == denom_is_positive:             # <<<<<<<<<<<<<<
@@ -2959,7 +2959,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":33
+  /* "vector_math.pyx":33
  *          return None
  * 
  *     cdef float t = t_numer / denom             # <<<<<<<<<<<<<<
@@ -2972,7 +2972,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   }
   __pyx_v_t = (__pyx_v_t_numer / __pyx_v_denom);
 
-  /* "SelfLearningCars/vector_math.pyx":35
+  /* "vector_math.pyx":35
  *     cdef float t = t_numer / denom
  * 
  *     point = Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))             # <<<<<<<<<<<<<<
@@ -3024,7 +3024,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __pyx_v_point = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":37
+  /* "vector_math.pyx":37
  *     point = Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
  * 
  *     return point             # <<<<<<<<<<<<<<
@@ -3036,7 +3036,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __pyx_r = __pyx_v_point;
   goto __pyx_L0;
 
-  /* "SelfLearningCars/vector_math.pyx":4
+  /* "vector_math.pyx":4
  * import math
  * 
  * def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):             # <<<<<<<<<<<<<<
@@ -3052,7 +3052,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_AddTraceback("SelfLearningCars.vector_math.find_lines_intersection", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("vector_math.find_lines_intersection", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_point);
@@ -3061,7 +3061,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
   return __pyx_r;
 }
 
-/* "SelfLearningCars/vector_math.pyx":39
+/* "vector_math.pyx":39
  *     return point
  * 
  * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
@@ -3070,15 +3070,15 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_find_lines_intersecti
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_16SelfLearningCars_11vector_math_3point_left_or_right_of_line(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_11vector_math_3point_left_or_right_of_line(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_16SelfLearningCars_11vector_math_3point_left_or_right_of_line = {"point_left_or_right_of_line", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_16SelfLearningCars_11vector_math_3point_left_or_right_of_line, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_16SelfLearningCars_11vector_math_3point_left_or_right_of_line(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_11vector_math_3point_left_or_right_of_line = {"point_left_or_right_of_line", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_11vector_math_3point_left_or_right_of_line, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11vector_math_3point_left_or_right_of_line(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -3178,11 +3178,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("SelfLearningCars.vector_math.point_left_or_right_of_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("vector_math.point_left_or_right_of_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_of_line(__pyx_self, __pyx_v_line_start, __pyx_v_line_end, __pyx_v_point);
+  __pyx_r = __pyx_pf_11vector_math_2point_left_or_right_of_line(__pyx_self, __pyx_v_line_start, __pyx_v_line_end, __pyx_v_point);
 
   /* function exit code */
   {
@@ -3195,7 +3195,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_of_line(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_line_start, PyObject *__pyx_v_line_end, PyObject *__pyx_v_point) {
+static PyObject *__pyx_pf_11vector_math_2point_left_or_right_of_line(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_line_start, PyObject *__pyx_v_line_end, PyObject *__pyx_v_point) {
   PyObject *__pyx_v_cross_product = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3210,7 +3210,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("point_left_or_right_of_line", 1);
 
-  /* "SelfLearningCars/vector_math.pyx":40
+  /* "vector_math.pyx":40
  * 
  * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)             # <<<<<<<<<<<<<<
@@ -3264,7 +3264,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   __pyx_v_cross_product = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":42
+  /* "vector_math.pyx":42
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
  * 
  *     if cross_product > 0:             # <<<<<<<<<<<<<<
@@ -3276,7 +3276,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   if (__pyx_t_6) {
 
-    /* "SelfLearningCars/vector_math.pyx":43
+    /* "vector_math.pyx":43
  * 
  *     if cross_product > 0:
  *         return -1             # <<<<<<<<<<<<<<
@@ -3289,7 +3289,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
     __pyx_r = ((PyObject*)__pyx_int_neg_1);
     goto __pyx_L0;
 
-    /* "SelfLearningCars/vector_math.pyx":42
+    /* "vector_math.pyx":42
  *     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
  * 
  *     if cross_product > 0:             # <<<<<<<<<<<<<<
@@ -3298,7 +3298,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":44
+  /* "vector_math.pyx":44
  *     if cross_product > 0:
  *         return -1
  *     elif cross_product < 0:             # <<<<<<<<<<<<<<
@@ -3310,7 +3310,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   if (__pyx_t_6) {
 
-    /* "SelfLearningCars/vector_math.pyx":45
+    /* "vector_math.pyx":45
  *         return -1
  *     elif cross_product < 0:
  *         return 1             # <<<<<<<<<<<<<<
@@ -3323,7 +3323,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
     __pyx_r = ((PyObject*)__pyx_int_1);
     goto __pyx_L0;
 
-    /* "SelfLearningCars/vector_math.pyx":44
+    /* "vector_math.pyx":44
  *     if cross_product > 0:
  *         return -1
  *     elif cross_product < 0:             # <<<<<<<<<<<<<<
@@ -3332,7 +3332,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
  */
   }
 
-  /* "SelfLearningCars/vector_math.pyx":47
+  /* "vector_math.pyx":47
  *         return 1
  *     else:
  *         return 0             # <<<<<<<<<<<<<<
@@ -3347,7 +3347,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
     goto __pyx_L0;
   }
 
-  /* "SelfLearningCars/vector_math.pyx":39
+  /* "vector_math.pyx":39
  *     return point
  * 
  * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
@@ -3362,7 +3362,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("SelfLearningCars.vector_math.point_left_or_right_of_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("vector_math.point_left_or_right_of_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_cross_product);
@@ -3371,7 +3371,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
   return __pyx_r;
 }
 
-/* "SelfLearningCars/vector_math.pyx":49
+/* "vector_math.pyx":49
  *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
@@ -3380,15 +3380,15 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_2point_left_or_right_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_16SelfLearningCars_11vector_math_5position_from_length_and_angle(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_11vector_math_5position_from_length_and_angle(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_16SelfLearningCars_11vector_math_5position_from_length_and_angle = {"position_from_length_and_angle", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_16SelfLearningCars_11vector_math_5position_from_length_and_angle, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_16SelfLearningCars_11vector_math_5position_from_length_and_angle(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_11vector_math_5position_from_length_and_angle = {"position_from_length_and_angle", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_11vector_math_5position_from_length_and_angle, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11vector_math_5position_from_length_and_angle(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -3473,11 +3473,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("SelfLearningCars.vector_math.position_from_length_and_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("vector_math.position_from_length_and_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16SelfLearningCars_11vector_math_4position_from_length_and_angle(__pyx_self, __pyx_v_angle, __pyx_v_length);
+  __pyx_r = __pyx_pf_11vector_math_4position_from_length_and_angle(__pyx_self, __pyx_v_angle, __pyx_v_length);
 
   /* function exit code */
   {
@@ -3490,7 +3490,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length_and_angle(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_angle, float __pyx_v_length) {
+static PyObject *__pyx_pf_11vector_math_4position_from_length_and_angle(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_angle, float __pyx_v_length) {
   float __pyx_v_delta_y;
   float __pyx_v_delta_x;
   PyObject *__pyx_r = NULL;
@@ -3509,7 +3509,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("position_from_length_and_angle", 1);
 
-  /* "SelfLearningCars/vector_math.pyx":50
+  /* "vector_math.pyx":50
  * 
  * def position_from_length_and_angle(float angle, float length):
  *     cdef float delta_y = length * math.cos(math.radians(angle))             # <<<<<<<<<<<<<<
@@ -3584,7 +3584,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_delta_y = __pyx_t_9;
 
-  /* "SelfLearningCars/vector_math.pyx":51
+  /* "vector_math.pyx":51
  * def position_from_length_and_angle(float angle, float length):
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))             # <<<<<<<<<<<<<<
@@ -3659,7 +3659,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_delta_x = __pyx_t_9;
 
-  /* "SelfLearningCars/vector_math.pyx":53
+  /* "vector_math.pyx":53
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  * 
  *     return Vector2(delta_x, delta_y)             # <<<<<<<<<<<<<<
@@ -3699,7 +3699,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "SelfLearningCars/vector_math.pyx":49
+  /* "vector_math.pyx":49
  *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
@@ -3716,7 +3716,7 @@ static PyObject *__pyx_pf_16SelfLearningCars_11vector_math_4position_from_length
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("SelfLearningCars.vector_math.position_from_length_and_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("vector_math.position_from_length_and_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3745,7 +3745,6 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_B, __pyx_k_B, sizeof(__pyx_k_B), 0, 0, 1, 1},
     {&__pyx_n_s_C, __pyx_k_C, sizeof(__pyx_k_C), 0, 0, 1, 1},
     {&__pyx_n_s_D, __pyx_k_D, sizeof(__pyx_k_D), 0, 0, 1, 1},
-    {&__pyx_n_s_SelfLearningCars_vector_math, __pyx_k_SelfLearningCars_vector_math, sizeof(__pyx_k_SelfLearningCars_vector_math), 0, 0, 1, 1},
     {&__pyx_n_s_Vector2, __pyx_k_Vector2, sizeof(__pyx_k_Vector2), 0, 0, 1, 1},
     {&__pyx_n_s__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 1, 1},
     {&__pyx_n_s__9, __pyx_k__9, sizeof(__pyx_k__9), 0, 0, 1, 1},
@@ -3787,6 +3786,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_t, __pyx_k_t, sizeof(__pyx_k_t), 0, 0, 1, 1},
     {&__pyx_n_s_t_numer, __pyx_k_t_numer, sizeof(__pyx_k_t_numer), 0, 0, 1, 1},
     {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+    {&__pyx_n_s_vector_math, __pyx_k_vector_math, sizeof(__pyx_k_vector_math), 0, 0, 1, 1},
     {&__pyx_kp_s_vector_math_pyx, __pyx_k_vector_math_pyx, sizeof(__pyx_k_vector_math_pyx), 0, 0, 1, 0},
     {&__pyx_n_s_x, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
     {&__pyx_n_s_y, __pyx_k_y, sizeof(__pyx_k_y), 0, 0, 1, 1},
@@ -3804,7 +3804,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "SelfLearningCars/vector_math.pyx":4
+  /* "vector_math.pyx":4
  * import math
  * 
  * def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):             # <<<<<<<<<<<<<<
@@ -3816,7 +3816,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__3);
   __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_find_lines_intersection, 4, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 4, __pyx_L1_error)
 
-  /* "SelfLearningCars/vector_math.pyx":39
+  /* "vector_math.pyx":39
  *     return point
  * 
  * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
@@ -3828,7 +3828,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__5);
   __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vector_math_pyx, __pyx_n_s_point_left_or_right_of_line, 39, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 39, __pyx_L1_error)
 
-  /* "SelfLearningCars/vector_math.pyx":49
+  /* "vector_math.pyx":49
  *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
@@ -4178,14 +4178,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_SelfLearningCars__vector_math) {
+  if (__pyx_module_is_main_vector_math) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "SelfLearningCars.vector_math")) {
-      if (unlikely((PyDict_SetItemString(modules, "SelfLearningCars.vector_math", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "vector_math")) {
+      if (unlikely((PyDict_SetItemString(modules, "vector_math", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -4206,7 +4206,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "SelfLearningCars/vector_math.pyx":1
+  /* "vector_math.pyx":1
  * from pygame.math import Vector2             # <<<<<<<<<<<<<<
  * import math
  * 
@@ -4225,7 +4225,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":2
+  /* "vector_math.pyx":2
  * from pygame.math import Vector2
  * import math             # <<<<<<<<<<<<<<
  * 
@@ -4236,7 +4236,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_math, __pyx_t_3) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":4
+  /* "vector_math.pyx":4
  * import math
  * 
  * def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):             # <<<<<<<<<<<<<<
@@ -4249,14 +4249,14 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_B, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_C, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_D, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_16SelfLearningCars_11vector_math_1find_lines_intersection, 0, __pyx_n_s_find_lines_intersection, NULL, __pyx_n_s_SelfLearningCars_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11vector_math_1find_lines_intersection, 0, __pyx_n_s_find_lines_intersection, NULL, __pyx_n_s_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_3);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_lines_intersection, __pyx_t_2) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":39
+  /* "vector_math.pyx":39
  *     return point
  * 
  * def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:             # <<<<<<<<<<<<<<
@@ -4269,26 +4269,26 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_line_end, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_point, __pyx_n_s_Vector2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_s_int) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_16SelfLearningCars_11vector_math_3point_left_or_right_of_line, 0, __pyx_n_s_point_left_or_right_of_line, NULL, __pyx_n_s_SelfLearningCars_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11vector_math_3point_left_or_right_of_line, 0, __pyx_n_s_point_left_or_right_of_line, NULL, __pyx_n_s_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_point_left_or_right_of_line, __pyx_t_3) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":49
+  /* "vector_math.pyx":49
  *         return 0
  * 
  * def position_from_length_and_angle(float angle, float length):             # <<<<<<<<<<<<<<
  *     cdef float delta_y = length * math.cos(math.radians(angle))
  *     cdef float delta_x = length * math.sin(math.radians(angle))
  */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_16SelfLearningCars_11vector_math_5position_from_length_and_angle, 0, __pyx_n_s_position_from_length_and_angle, NULL, __pyx_n_s_SelfLearningCars_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11vector_math_5position_from_length_and_angle, 0, __pyx_n_s_position_from_length_and_angle, NULL, __pyx_n_s_vector_math, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_position_from_length_and_angle, __pyx_t_3) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "SelfLearningCars/vector_math.pyx":1
+  /* "vector_math.pyx":1
  * from pygame.math import Vector2             # <<<<<<<<<<<<<<
  * import math
  * 
@@ -4306,7 +4306,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_3);
   if (__pyx_m) {
     if (__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init SelfLearningCars.vector_math", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init vector_math", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -4320,7 +4320,7 @@ if (!__Pyx_RefNanny) {
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init SelfLearningCars.vector_math");
+    PyErr_SetString(PyExc_ImportError, "init vector_math");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

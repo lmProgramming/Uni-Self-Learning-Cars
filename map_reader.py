@@ -5,7 +5,7 @@ from typing import List
 import re
 class Mode(enum.Enum):
     STARTING_READING = "starting_reading"
-    WALLS = "borders"
+    WALLS = "walls"
     GATES = "gates"
     STARTING_POINT = "start"
 
@@ -33,13 +33,13 @@ def read_map_txt(filename="map.txt") -> tuple[list, list, Vector2]:
                 if line == "\n":
                     mode = Mode.STARTING_READING
                 else:
-                    x1, x2, y1, y2 = tuple(map(int, line.strip().split(";")))
+                    x1, x2, y1, y2 = tuple(map(int, re.split(';|,', line.strip())))
                     walls.append(Wall(x1, x2, y1, y2))
             elif mode == Mode.GATES:
                 if line == "\n":
                     mode = Mode.STARTING_READING
                 else:
-                    num, x1, x2, y1, y2 = tuple(map(int, line.strip().split(";")))
+                    num, x1, x2, y1, y2 = tuple(map(int, re.split(';|,', line.strip())))
                     gates.append(Gate(num, x1, x2, y1, y2))
     
     return walls, gates, starting_point

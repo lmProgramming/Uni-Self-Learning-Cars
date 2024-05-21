@@ -17,7 +17,7 @@ mapie, by je przetestować.
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QTextEdit, QPushButton, QLabel, QDateTimeEdit, QCheckBox, QFrame
 from typing import Optional
-from neat_and_pygame import main as start_simulation
+from neat_and_pygame import main as start_simulation, test_drive
 
 WIDTH = 900
 HEIGHT = 800
@@ -54,8 +54,11 @@ class MainMenu(QMainWindow):
         self.start_simulation_button.clicked.connect(self.start_simulation)
         main_layout.addWidget(self.start_simulation_button)
 
+        self.test_drive_button = QPushButton("Test Drive", self)
+        self.test_drive_button.clicked.connect(self.test_drive)
+        main_layout.addWidget(self.test_drive_button)
+                
         self.make_map_button = QPushButton("Make Map", self)
-        self.make_map_button.move(0, 50)
         self.make_map_button.clicked.connect(self.make_map)
         main_layout.addWidget(self.make_map_button)
                 
@@ -66,6 +69,9 @@ class MainMenu(QMainWindow):
 
     def make_map(self) -> None:
         print("Making map...")
+        
+    def test_drive(self) -> None:
+        test_drive()
     
     def create_text_with_label(self, label_text):
         layout = QVBoxLayout()
