@@ -2,10 +2,10 @@ import pygame as pg
 from pygame.math import Vector2
 from typing import List, Callable
 import vector_math
-from map import Wall
+from maps.map import Wall
 
 class CarRay:
-    def __init__(self, car, angle_bias: float, length: float, processing_function: Callable[[float], float]) -> None:
+    def __init__(self, car, angle_bias: float, length: float, processing_function: Callable[[float, float], float]) -> None:
         self.car = car
         self.angle_bias: float = angle_bias
         self.length: float = length

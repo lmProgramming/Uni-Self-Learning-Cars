@@ -11,7 +11,7 @@ from processing_functions import Linear, Quadratic
 
 from pygame.surface import Surface
 from cars.car import Car, AICar, HumanCar
-from map import Wall, Gate
+from maps.map import Wall, Gate
 import time
 import visualize
 
@@ -33,22 +33,19 @@ BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
 STAT_FONT = pg.font.SysFont("comic sans", 25)
 
-WHEEL_TURN_SPEED = 3
-
 STARTING_CAR_POSITION = Vector2(450, HEIGHT - 472)
 
-RAY_DISTANCE_KILL = 10
+RAY_DISTANCE_KILL: float = 10
 
-RAY_COUNT = 8
-RAY_LENGTH = 200
+RAY_COUNT: int = 8
+RAY_LENGTH: float = 200
 
-NON_RAY_INPUTS = 1
+NON_RAY_INPUTS: int = 1
 
 '''
 Do funkcjonalności chciałbym dodać jeszcze możliwość modyfikacji pliku konfiguracyjnego NEAT za pomocą GUI. 
 GUI pozwalałoby na szeroką interakcję z mapami: dodanie nowej mapy, a także modyfikacja lub usunięcie istniejącej. 
-Mapy planuję zapisać w formacie JSON lub CSV i przechowują pozycje ścian, pozycję startową oraz pozycje "bramek", które nagradzają 
-samochód za przejechanie przez nie. Planuję dodać zbieranie i wizualizowanie statystyk agentów: np. zależność między fitness a czasem trenowania 
+Planuję dodać zbieranie i wizualizowanie statystyk agentów: np. zależność między fitness a czasem trenowania 
 czy zależność między fitness a wielkością sieci neuronowej. Potrzebne więc będą moduły NumPy i Matplotlib. Lider każdej generacji byłby oznaczony 
 podczas jazdy po mapie. Przy tworzeniu nowej symulacji, można podać parę parametrów, na przykład to, czy wszystkie samochody startują z punktu 
 startowego pod tym samym kątem albo to, czy mapy zmieniają się co parę generacji, by ograniczyć overfitting.
@@ -56,9 +53,6 @@ Spróbuję użyć Cythona lub CPythona do optymalizacji wykrywania odległości 
 Tryb konsolowy pozwoli zrobić wszystko, co jest dostępne w głównym menu GUI (w którym można zmienić parametry symulacji, uruchomić ją, wczytać 
 zapis sieci neuronowych poprzednio wytrenowanych). W menu GUI podczas gry będzie można przejrzeć statystyki i wrócić do menu głównego, a także 
 kliknąć samochód, by w rogu zobaczyć jego sieć neuronową z wartościami aktualizowanymi na żywo.
-Dodatkowo użyję Regexa, by sparsować na przykład nazwę pliku zawierającego poprzednie dane treningowe, by wyciągnąć z tego na przykład datę zapisu.
-Użyję modułu abc, by stworzyć abstrakcyjną klasę Car oraz klasy dziedziczące PlayerCar i ComputerCar - będzie można więc przejechać się samochodem po 
-mapie, by je przetestować.
 '''
 
 def draw_line(position, angle, line_length, line_width, color, screen) -> None:

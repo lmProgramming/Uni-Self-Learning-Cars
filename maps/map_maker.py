@@ -2,7 +2,7 @@ import os
 import pygame as pg
 from pygame import Vector2
 from pygame.surface import Surface
-from map import Wall, Gate
+from maps.map import Wall, Gate
 
 from maps.map_reader import read_map_txt
 from py_input_field import InputBox
@@ -121,6 +121,9 @@ def save_data_to_file(walls, gates, starting_point, map_name: str):
     
     if not map_name.endswith(".txt"):
         map_name += ".txt"
+        
+    if len(gates) == 0:
+        raise ValueError("Map must have at least one gate")
             
     with open(os.path.join("maps", map_name), 'w+') as f:
         f.write("walls: x1;x2;y1;y2\n")
