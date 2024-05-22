@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLa
 
 from scrollable_gallery import ScrollableGallery
 from maps.map_manager import rename_map, delete_map
-from maps.map_maker import create_edit_map as create_new_map
+from maps.map_reader import read_map_txt
+from maps.map_maker import create_edit_map
 
 class MapGallery(ScrollableGallery):
     def __init__(self, dimensions):
@@ -33,7 +34,7 @@ class MapGallery(ScrollableGallery):
     def renameMap(self, mapLabel):
         new_name, ok = QInputDialog.getText(self, 'Rename Map', 'Enter new name:')
         if ok and new_name:
-            rename_map(mapLabel.text(), new_name)
+            new_name = rename_map(mapLabel.text(), new_name)
             mapLabel.setText(new_name)
 
     def deleteMap(self, mapLabel):
@@ -45,7 +46,7 @@ class MapGallery(ScrollableGallery):
             rowWidget.setParent(None)
 
     def editMap(self, map_name):
-        QMessageBox.information(self, 'Edit Map', f'Editing map: {map_name}')
+        create_edit_map(*read_map_txt(map_name), map_name)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

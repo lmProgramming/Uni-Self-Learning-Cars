@@ -92,6 +92,9 @@ class UiMain(QtWidgets.QWidget):
         self.starting_map_label = QtWidgets.QLabel("Starting Map")
         options_layout.addWidget(self.starting_map_label, 3, 1)
         
+        self.starting_map_dropdown = QtWidgets.QComboBox()
+        
+        
         layout.addLayout(options_layout)  
         
         self.parameters_menu.setLayout(layout)    
