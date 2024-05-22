@@ -1,9 +1,9 @@
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QLayout, QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QLayout, QHBoxLayout, QPushButton, QLabel, QInputDialog
 from maps.map_manager import get_map_names, rename_map, delete_map
-from maps.map_maker import main as create_new_map
+from maps.map_maker import create_edit_map as create_new_map
 from typing import List
-from scrollable_gallery import WidgetGallery
+from map_gallery import MapGallery
 
 class UiMain(QtWidgets.QWidget):
     def __init__(self):
@@ -115,21 +115,13 @@ class UiMain(QtWidgets.QWidget):
         map_layout = QGridLayout()
         self.map_gallery.setLayout(map_layout)
 
-        # Get the list of map names
-        map_names = get_map_names()
+        map_names: List[str] = get_map_names()
 
-        # Create buttons for each map
-        WidgetGallery().create_gallery(map_layout, map_names, 2, 0)
-        for i, map_name in enumerate(map_names):
-            rename_button = QtWidgets.QPushButton(f"Rename Map {i+1}")
-            delete_button = QtWidgets.QPushButton(f"Delete Map {i+1}")
-
-            map_layout.addWidget(rename_button, i, 0)
-            map_layout.addWidget(delete_button, i, 1)
-
-            # Connect the buttons to their respective functions
-            rename_button.clicked.connect(lambda _, name=map_name: rename_map(name))
-            delete_button.clicked.connect(lambda _, name=map_name: delete_map(name))
+        map_gallery_dimensions = [10, dimensions[1] // 2, dimensions[0] * 9 // 10, dimensions[1] // 2]
+        self.map_gallery = MapGallery(map_gallery_dimensions)
+        self.map_gallery.populateGallery(map_names)
+            
+        layout.addWidget(self.map_gallery)
         
         self.map_menu.setLayout(layout)
         

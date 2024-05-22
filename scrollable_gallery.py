@@ -1,14 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QScrollArea, QFrame, QMainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QScrollArea, QMainWindow, QInputDialog, QMessageBox
 
 class ScrollableGallery(QMainWindow):
-    def __init__(self):
+    def __init__(self, dimensions):
         super().__init__()
-        self.initUI()
+        self.initUI(dimensions)
 
-    def initUI(self):
-        self.setWindowTitle('Scrollable Gallery of Widgets')
-        self.setGeometry(100, 100, 800, 600)
+    def initUI(self, dimensions) -> None:
+        self.setGeometry(*dimensions)
         
         # Create a central widget and set layout
         centralWidget = QWidget()
@@ -24,35 +23,16 @@ class ScrollableGallery(QMainWindow):
         # Create a container widget and set a layout for it
         container = QWidget()
         scrollArea.setWidget(container)
-        containerLayout = QVBoxLayout(container)
-        
-        # Add a stretch at the end to push all widgets to the top
-        containerLayout.addStretch()
-        
-    def createRow(self, map_name):
+        self.containerLayout = QVBoxLayout(container)
+                
+    def createRow(self, widgets):
         rowWidget = QWidget()
         rowLayout = QHBoxLayout(rowWidget)
         
-        # Map Name
-        mapLabel = QLabel(map_name)
-        rowLayout.addWidget(mapLabel)
+        for widget in widgets:
+            rowLayout.addWidget(widget)      
         
-        # Rename Button
-        renameButton = QPushButton('Rename')
-        rowLayout.addWidget(renameButton)
-        
-        # Delete Button
-        deleteButton = QPushButton('Delete')
-        rowLayout.addWidget(deleteButton)
-        
-        # Edit Button
-        editButton = QPushButton('Edit')
-        rowLayout.addWidget(editButton)
-        
-        return rowWidget
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    gallery = ScrollableGallery()
-    gallery.show()
-    sys.exit(app.exec_())
+        self.containerLayout.addWidget(rowWidget)
+    
+    def stretch_items(self) -> None:        
+        self.containerLayout.addStretch()

@@ -12,13 +12,6 @@ pg.font.init()
 WIDTH = 1280
 HEIGHT = 960
 
-READ_MAP = False
-
-CAR_IMG: Surface = pg.image.load(os.path.join("imgs", "car_img.png"))
-
-CAR_WIDTH: int = CAR_IMG.get_width()
-CAR_HEIGHT: int = CAR_IMG.get_height()
-
 BG_IMG: Surface = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
 def draw_window(win, walls, gates, starting_point, bg_img, map_name) -> None:
@@ -44,18 +37,17 @@ def create_map_name_input(x_centre, y_centre, width, height, text) -> InputBox:
     y = y_centre - height // 2
     return InputBox(x, y, width, height, text)
 
-def main() -> None:       
+def create_blank_map():
+    walls = []
+    gates = []
+    starting_point = Vector2(0, 0)
+    return walls, gates, starting_point
+
+def create_edit_map(walls, gates, starting_point, map_filename="") -> None:       
     win = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
     
-    map_name = create_map_name_input(WIDTH // 2, 20, 140, 32, 'map')
-
-    if READ_MAP:
-        walls, gates, starting_point = read_map_txt()
-    else:
-        walls = []
-        gates = []
-        starting_point = Vector2(0, 0)
+    map_name_input = create_map_name_input(WIDTH // 2, 20, 140, 32, 'map')
 
     run = True
     placing_wall = False
@@ -91,29 +83,29 @@ def main() -> None:
             if event.type == pg.QUIT:
                 run = False
                 pg.quit()
-                save_data_to_file(walls, gates, starting_point, map_name.text)
-            if not map_name.active:
+                save_data_to_file(walls, gates, starting_point, map_name_input.text)
+            if not map_name_input.active:
                 if event.type == pg.KEYDOWN and event.key == pg.K_z and len(walls) > 0:
                     walls.pop()
                 if event.type == pg.KEYDOWN and event.key == pg.K_x and len(gates) > 0:
                     gates.pop()
-            map_name.handle_event(event)            
+            map_name_input.handle_event(event)            
 
-        if not map_name.active:
+        if not map_name_input.active:
             if keys[pg.K_ESCAPE]:
                 run = False
                 pg.quit()
-                save_data_to_file(walls, gates, starting_point, map_name.text)
+                save_data_to_file(walls, gates, starting_point, map_name_input.text)
             
             if keys[pg.K_s]:
                 run = False
                 pg.quit()
-                save_data_to_file(walls, gates, starting_point, map_name.text)
+                save_data_to_file(walls, gates, starting_point, map_name_input.text)
 
             if keys[pg.K_SPACE]:
                 starting_point = Vector2(m_x, m_y)
 
-        draw_window(win, walls, gates, starting_point, BG_IMG, map_name)
+        draw_window(win, walls, gates, starting_point, BG_IMG, map_name_input)
 
 def save_data_to_file(walls, gates, starting_point, map_name: str):
     if map_name == "":
@@ -138,4 +130,4 @@ def save_data_to_file(walls, gates, starting_point, map_name: str):
     quit()
 
 if __name__ == "__main__":
-    main()
+    create_edit_map()
