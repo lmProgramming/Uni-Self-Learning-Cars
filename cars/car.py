@@ -20,27 +20,27 @@ WHEEL_TURN = 60
 WHEEL_TURN_SPEED = 3    
 
 ACCELERATION = 0.3
-BACK_ACCELERATION_MULTIPLIER = 1 / 3
+BACK_ACCELERATION_MULTIPLIER = 0.3
 
 class Car(ABC):
-    def __init__(self, x, y, starting_angle) -> None:
+    def __init__(self, x, y, starting_angle: float) -> None:
         self.position = Vector2(x, y)
-        self.angle = starting_angle
+        self.angle: float = starting_angle
         self._speed = 0
         self.rays: List[CarRay] = []
         self.last_gate: int
         self.direction: int = 0
         self.rect: pg.Rect = pg.Rect(x, y, CAR_WIDTH, CAR_HEIGHT)
         
-    def next_gate_index(self, gates) -> int:
+    def _next_gate_index(self, gates) -> int:
         return ((self.last_gate) + self.direction) % len(gates)
 
-    def check_if_in_next_gate(self, gates):
+    def check_if_in_next_gate(self, gates) -> bool:
         if self.direction == 0:
-            return self.check_if_in_gate(gates, 0, dir=1) or self.check_if_in_gate(gates, -1, dir=-1)
-        return self.check_if_in_gate(gates, self.next_gate_index(gates), self.direction)
+            return self._check_if_in_gate(gates, 0, dir=1) or self._check_if_in_gate(gates, -1, dir=-1)
+        return self._check_if_in_gate(gates, self._next_gate_index(gates), self.direction)
 
-    def check_if_in_gate(self, gates, gate_num, dir):
+    def _check_if_in_gate(self, gates, gate_num, dir) -> bool:
         gate = gates[gate_num]
 
         if gate.check_if_inside(self.get_centre_position()):
@@ -96,11 +96,11 @@ class Car(ABC):
         for i in range(0, 360, 360 // ray_count):
             self.rays.append(CarRay(self, i, ray_length, processing_function))
             
-    def calculate_wheel_turn_coefficient(self):
+    def _calculate_wheel_turn_coefficient(self):
         return math.sqrt(abs(self._speed))
 
     def steer(self, way):
-        wheel_turn_coefficient = self.calculate_wheel_turn_coefficient()
+        wheel_turn_coefficient = self._calculate_wheel_turn_coefficient()
 
         if way < 0.5:
             self.angle -= WHEEL_TURN_SPEED * (0.5 - way) * wheel_turn_coefficient * (1 if self._speed >= 0 else -1)

@@ -11,11 +11,11 @@ from gui_main import UiMain
 class Main(QMainWindow):
     def __init__(self, app) -> None:
         super().__init__()
-               
-        self.ui = UiMain()   
-                
+        
+        self.ui = UiMain()
+        
         self.setCentralWidget(self.ui)
-                    
+        
         self.ui.setupUi(self, dimensions=(800, 600))
         
         self.ui.default_simulation_button.clicked.connect(start_simulation)
@@ -48,5 +48,5 @@ class Main(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     showMain = Main(app)
-    showMain.show()  # Ensure the main window is shown
+    showMain.show()
     sys.exit(app.exec_())
