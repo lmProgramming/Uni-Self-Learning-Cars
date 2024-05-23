@@ -5,7 +5,7 @@ from player_test import test_drive
 import sys
 import os
 
-from gui_main import UiMain
+from gui.gui_main import UiMain
 
 class Main(QMainWindow):
     def __init__(self, app) -> None:

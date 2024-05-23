@@ -6,7 +6,7 @@ COLOR_INACTIVE = pg.Color('gray')
 COLOR_ACTIVE = pg.Color('black')
 FONT = pg.font.Font(None, 32)
 
-class InputBox:
+class PyInputBox:
     def __init__(self, x, y, w, h, text='') -> None:
         self.rect = pg.Rect(x, y, w, h)
         self.color: pg.Color = COLOR_INACTIVE
@@ -46,3 +46,29 @@ class InputBox:
         screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
         # Blit the rect.
         pg.draw.rect(screen, self.color, self.rect, 2)
+        
+class PyButton:
+    def __init__(self, text, x, y, width, height, color, hover_color, font_color):
+        self.text = text
+        self.rect = pg.Rect(x, y, width, height)
+        self.color = color
+        self.hover_color = hover_color
+        self.font_color = font_color
+        self.font = pg.font.SysFont(None, 40)
+    
+    def draw(self, surface):
+        mouse_pos = pg.mouse.get_pos()
+        if self.rect.collidepoint(mouse_pos):
+            pg.draw.rect(surface, self.hover_color, self.rect)
+        else:
+            pg.draw.rect(surface, self.color, self.rect)
+        
+        text_surface = self.font.render(self.text, True, self.font_color)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        surface.blit(text_surface, text_rect)
+    
+    def is_clicked(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos):
+                return True
+        return False

@@ -8,7 +8,7 @@ from pygame.math import Vector2
 import random
 from typing import List, Sequence, Callable
 from processing_functions import Linear, Quadratic
-from simulation import simulation_loop
+from simulation import Simulation
 from simulation_setup import setup_generation
 from simulation_config import SimulationConfig
 
@@ -66,13 +66,15 @@ def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config) -
     global GEN
     GEN += 1
     
-    cars, walls, gates = setup_generation(genomes, config, get_ray_count_from_config())
+    cars, walls, gates = setup_generation(genomes, config, get_ray_count_from_config(), config.random_angle)
     
-    simulation_loop(cars, walls, gates, config, False)
+    simulation = Simulation(cars, walls, gates, config, False)
+    simulation.simulation_loop()    
     
 def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
     config.pop_size = simulation_config.initial_population
     config.genome_config.num_hidden = simulation_config.hidden_layers
+    config.random_angle = simulation_config.random_angle
     if simulation_config.ray_count is not None:
         config.genome_config.num_inputs = simulation_config.ray_count + NON_RAY_INPUTS
 

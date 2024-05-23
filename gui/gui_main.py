@@ -2,13 +2,10 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QHBoxLayout, QBoxLayout
 from map_scripts.map_tools import get_map_names
 from neat_and_pygame import main as start_simulation
-from player_test import test_drive
-from map_scripts.map_maker import create_edit_map
-from player_test import test_drive
 from map_scripts.map_maker import create_edit_map as create_new_map
 from simulation_config import SimulationConfig
 from typing import List
-from map_gallery import MapGallery
+from gui.map_gallery import MapGallery
 from checkable_combo_box import CheckableComboBox
 
 class UiMain(QtWidgets.QWidget):
@@ -92,7 +89,7 @@ class MapMenu(QtWidgets.QWidget):
         self.setLayout(layout)
         
     def create_new_map(self) -> None:
-        create_edit_map()
+        create_new_map()
 
 class UiParametersMenu(QtWidgets.QWidget):
     def __init__(self, top_bar_layout, dimensions) -> None:
@@ -121,11 +118,12 @@ class UiParametersMenu(QtWidgets.QWidget):
         self.hidden_layers_count_slider.setValue(1)        
         options_layout.addWidget(self.hidden_layers_count_label, 1, 0)
 
-        self.change_maps_button = QCheckBox()
-        options_layout.addWidget(self.change_maps_button, 2, 1)
-        options_layout.setAlignment(self.change_maps_button, QtCore.Qt.AlignmentFlag.AlignRight)
-        self.change_maps_label = QtWidgets.QLabel("Change Maps")
-        options_layout.addWidget(self.change_maps_label, 2, 0)        
+        self.random_angle = QCheckBox()
+        self.random_angle.setChecked(True)
+        options_layout.addWidget(self.random_angle, 2, 1)
+        options_layout.setAlignment(self.random_angle, QtCore.Qt.AlignmentFlag.AlignRight)
+        self.random_angle_label = QtWidgets.QLabel("Random Angle")
+        options_layout.addWidget(self.random_angle_label, 2, 0)        
 
         self.map_pool = CheckableComboBox()
         
@@ -154,6 +152,7 @@ class UiParametersMenu(QtWidgets.QWidget):
             num_iterations=100, 
             map_pool=self.map_pool.currentData(), 
             hidden_layers=self.hidden_layers_count_slider.value(), 
+            random_angle=self.random_angle.isChecked(),
             ray_count=8,
             initial_population=self.car_count_slider.value())
         start_simulation(config)

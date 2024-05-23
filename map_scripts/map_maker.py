@@ -5,7 +5,7 @@ from pygame.surface import Surface
 from map_scripts.map import Wall, Gate
 from map_scripts.map_reader import read_map_txt
 from map_scripts.map_tools import format_map_name
-from py_input_field import InputBox
+from pygame_input import PyInputBox
 
 pg.font.init()
 
@@ -32,10 +32,10 @@ def draw_window(win, walls, gates, starting_point, bg_img, map_name) -> None:
 
     pg.display.update()
     
-def create_map_name_input(x_centre, y_centre, width, height, text) -> InputBox:
+def create_map_name_input(x_centre, y_centre, width, height, text) -> PyInputBox:
     x = x_centre - width // 2
     y = y_centre - height // 2
-    return InputBox(x, y, width, height, text)
+    return PyInputBox(x, y, width, height, text)
 
 def create_blank_map():
     walls = []
