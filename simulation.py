@@ -49,7 +49,7 @@ def draw_window(win, cars: List[Car], walls, gates, bg_img, score, gen, debug=Fa
 
     for car in cars:
         if debug:
-            for line in car.lines:
+            for line in car.rays:
                 line.set_debug_color()
                 line.draw_debug(win)
         car.draw(win)        
@@ -111,12 +111,12 @@ def simulation(cars: List[Car], walls, gates, config=None, infinite_time: bool=F
     win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
 
-    score = 0
+    score: float = 0
     frames = 0
     while len(cars) > 0 and (frames < 60 * (10 + GEN) or infinite_time):
         clock.tick(60)        
 
-        score = max([car.get_score() for car in cars])
+        score = max([score] + [car.get_score() for car in cars])
                     
         if check_if_quit():
             pg.quit()
@@ -143,7 +143,7 @@ def simulation(cars: List[Car], walls, gates, config=None, infinite_time: bool=F
             if car.check_if_in_next_gate(gates):
                 car.get_reward(100)
 
-            car.get_reward(car.speed / 60)
+            car.get_reward(car._speed / 60)
             
             if car.get_shortest_last_distance() < RAY_DISTANCE_KILL:
                 car.get_reward(-5)

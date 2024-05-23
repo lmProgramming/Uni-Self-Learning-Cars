@@ -1,20 +1,13 @@
 import neat # type: ignore
-import os
 from neat.nn.feed_forward import FeedForwardNetwork # type: ignore
-import pygame as pg
-from pygame.font import Font
-from pygame.key import ScancodeWrapper
 from pygame.math import Vector2
 import random
-from typing import List, Sequence, Callable
+from typing import List
 from processing_functions import Linear, Quadratic
 from maps.map_reader import read_map_txt
 
-from pygame.surface import Surface
 from cars.car import Car, AICar, HumanCar
 from maps.map import Wall, Gate
-import time
-import visualize
 
 RAY_LENGTH: float = 200
 NON_RAY_INPUTS: int = 1

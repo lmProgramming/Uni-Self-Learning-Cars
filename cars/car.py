@@ -8,6 +8,7 @@ import vector_math
 from abc import ABC, abstractmethod
 from neat import DefaultGenome
 from cars.car_ray import CarRay
+from neat.nn import FeedForwardNetwork
 
 CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
 
@@ -19,22 +20,26 @@ RAY_DISTANCE_KILL = 10
 WHEEL_TURN = 60
 WHEEL_TURN_SPEED = 3    
 
+ACCELERATION = 0.3
+BACK_ACCELERATION_MULTIPLIER = 1 / 3
+
 class Car(ABC):
     def __init__(self, x, y, starting_angle) -> None:
         self.position = Vector2(x, y)
         self.angle = starting_angle
-        self.speed = 0
-        self.acceleration = 0.3
-        self.back_acceleration_multiplier: float = 1 / 3
-        self.lines: List[CarRay] = []
+        self._speed = 0
+        self.rays: List[CarRay] = []
         self.last_gate = None
         self.direction = None
         self.rect: pg.Rect = pg.Rect(x, y, CAR_WIDTH, CAR_HEIGHT)
+        
+    def next_gate_index(self, gates) -> int:
+        return ((self.last_gate) + self.direction) % len(gates)
 
     def check_if_in_next_gate(self, gates):
         if self.last_gate is None:
             return self.check_if_in_gate(gates, 0, dir=1) or self.check_if_in_gate(gates, -1, dir=-1)
-        return self.check_if_in_gate(gates, (abs(self.last_gate) + self.direction) % len(gates), dir)
+        return self.check_if_in_gate(gates, self.next_gate_index(gates), self.direction)
 
     def check_if_in_gate(self, gates, gate_num, dir):
         gate = gates[gate_num]
@@ -47,10 +52,10 @@ class Car(ABC):
         return False
     
     def get_shortest_last_distance(self) -> float:
-        return min([line.last_distance for line in self.lines])            
+        return min([line.last_distance for line in self.rays])            
 
     def calculate_line_distances(self, walls) -> None:      
-        for line in self.lines:
+        for line in self.rays:
             lowest_distance: float = line.length
             closest_point: Vector2 | None = None
             for wall in walls:
@@ -73,7 +78,7 @@ class Car(ABC):
         ...
     
     def check_if_hit_wall(self):
-        if min([line.last_distance for line in self.lines]) < RAY_DISTANCE_KILL:
+        if min([line.last_distance for line in self.rays]) < RAY_DISTANCE_KILL:
             self.die()
     
     @abstractmethod
@@ -86,34 +91,37 @@ class Car(ABC):
     def move_forward(self, force):
         normalized_force = force * 2 - 1
 
-        self.speed += normalized_force * self.acceleration * (1 if force >= 0 else self.back_acceleration_multiplier)
+        self._speed += normalized_force * ACCELERATION * (1 if force >= 0 else BACK_ACCELERATION_MULTIPLIER)
 
     def generate_rays(self, ray_count, ray_length, processing_function) -> None:
         for i in range(0, 360, 360 // ray_count):
-            self.lines.append(CarRay(self, i, ray_length, processing_function))
+            self.rays.append(CarRay(self, i, ray_length, processing_function))
+            
+    def calculate_wheel_turn_coefficient(self):
+        return math.sqrt(abs(self._speed))
 
     def steer(self, way):
-        wheel_turn_coefficient = math.sqrt(abs(self.speed))
+        wheel_turn_coefficient = self.calculate_wheel_turn_coefficient()
 
         if way < 0.5:
-            self.angle -= WHEEL_TURN_SPEED * (0.5 - way) * wheel_turn_coefficient
+            self.angle -= WHEEL_TURN_SPEED * (0.5 - way) * wheel_turn_coefficient * (1 if self._speed >= 0 else -1)
         if way > 0.5:
-            self.angle += WHEEL_TURN_SPEED * (way - 0.5) * wheel_turn_coefficient
+            self.angle += WHEEL_TURN_SPEED * (way - 0.5) * wheel_turn_coefficient * (1 if self._speed >= 0 else -1)
 
     def move(self):
-        self.speed *= 0.94
+        self._speed *= 0.94
 
         if self.angle < -180:
             self.angle = 180
         if self.angle > 180:
             self.angle = -180
         
-        delta_y = -self.speed * math.cos(math.radians(self.angle))
-        delta_x = self.speed * math.sin(math.radians(self.angle))
+        delta_y = -self._speed * math.cos(math.radians(self.angle))
+        delta_x = self._speed * math.sin(math.radians(self.angle))
 
         self.position += Vector2(delta_x, delta_y)
 
-    def check_intersections(self, walls, win):
+    def check_intersections(self, walls):
         ...
 
     def draw(self, win):
@@ -125,12 +133,13 @@ class AICar(Car):
     def __init__(self, *args) -> None:
         super().__init__(*args)
         self.genome: DefaultGenome
+        self.neural_net: FeedForwardNetwork
         
     def set_neural_net(self, neural_net):
         self.neural_net = neural_net
     
     def get_desired_movement(self) -> Vector2:      
-        inputs: List[float] = [ray.last_distance for ray in self.lines] + [self.speed]
+        inputs: List[float] = [ray.last_distance for ray in self.rays] + [self._speed]
         outputs = self.neural_net.activate(inputs)
         
         return outputs
@@ -144,7 +153,7 @@ class AICar(Car):
 class HumanCar(Car):
     def __init__(self, *args):
         super().__init__(*args)
-        self.score = 0
+        self._score = 0
         
     def get_desired_movement(self) -> Vector2:
         keys: ScancodeWrapper = pg.key.get_pressed()
@@ -162,12 +171,9 @@ class HumanCar(Car):
             
         return outputs
     
-    def get_reward(self, reward: float):
-        if reward > 1:
-            print("high reward")
-            
-        self.score += reward
+    def get_reward(self, reward: float) -> None:            
+        self._score += reward
     
-    def get_score(self):
-        return self.score
+    def get_score(self) -> int:
+        return self._score
         

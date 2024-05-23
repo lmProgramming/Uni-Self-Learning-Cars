@@ -49,13 +49,12 @@ Planuję dodać zbieranie i wizualizowanie statystyk agentów: np. zależność 
 czy zależność między fitness a wielkością sieci neuronowej. Potrzebne więc będą moduły NumPy i Matplotlib. Lider każdej generacji byłby oznaczony 
 podczas jazdy po mapie. Przy tworzeniu nowej symulacji, można podać parę parametrów, na przykład to, czy wszystkie samochody startują z punktu 
 startowego pod tym samym kątem albo to, czy mapy zmieniają się co parę generacji, by ograniczyć overfitting.
-Spróbuję użyć Cythona lub CPythona do optymalizacji wykrywania odległości do ścian przez samochody (podstawa ich poruszania się).
 Tryb konsolowy pozwoli zrobić wszystko, co jest dostępne w głównym menu GUI (w którym można zmienić parametry symulacji, uruchomić ją, wczytać 
 zapis sieci neuronowych poprzednio wytrenowanych). W menu GUI podczas gry będzie można przejrzeć statystyki i wrócić do menu głównego, a także 
 kliknąć samochód, by w rogu zobaczyć jego sieć neuronową z wartościami aktualizowanymi na żywo.
 '''  
 
-def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config):    
+def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config) -> None:    
     global GEN
     GEN += 1
     
@@ -66,6 +65,7 @@ def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config):
 def run(config_path) -> None:
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                 neat.DefaultStagnation, config_path)
+    config.genome_config.num_inputs = RAY_COUNT + NON_RAY_INPUTS + 10
     p = neat.Population(config)
 
     p.add_reporter(neat.StdOutReporter(True))

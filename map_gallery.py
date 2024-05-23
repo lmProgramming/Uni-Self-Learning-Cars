@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QScrollArea, QMainWindow, QInputDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QInputDialog, QMessageBox
 
 from scrollable_gallery import ScrollableGallery
 from maps.map_manager import rename_map, delete_map
