@@ -4,7 +4,6 @@ from pygame.math import Vector2
 import math
 from typing import List
 import os
-import vector_math
 from abc import ABC, abstractmethod
 from neat import DefaultGenome
 from cars.car_ray import CarRay
@@ -29,15 +28,15 @@ class Car(ABC):
         self.angle = starting_angle
         self._speed = 0
         self.rays: List[CarRay] = []
-        self.last_gate = None
-        self.direction = None
+        self.last_gate: int
+        self.direction: int = 0
         self.rect: pg.Rect = pg.Rect(x, y, CAR_WIDTH, CAR_HEIGHT)
         
     def next_gate_index(self, gates) -> int:
         return ((self.last_gate) + self.direction) % len(gates)
 
     def check_if_in_next_gate(self, gates):
-        if self.last_gate is None:
+        if self.direction == 0:
             return self.check_if_in_gate(gates, 0, dir=1) or self.check_if_in_gate(gates, -1, dir=-1)
         return self.check_if_in_gate(gates, self.next_gate_index(gates), self.direction)
 
@@ -45,7 +44,7 @@ class Car(ABC):
         gate = gates[gate_num]
 
         if gate.check_if_inside(self.get_centre_position()):
-            if self.direction is None:
+            if self.direction == 0:
                 self.direction = dir
             self.last_gate = gate.num
             return True

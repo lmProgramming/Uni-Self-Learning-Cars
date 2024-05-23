@@ -66,6 +66,7 @@ def run(config_path) -> None:
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                 neat.DefaultStagnation, config_path)
     config.genome_config.num_inputs = RAY_COUNT + NON_RAY_INPUTS + 10
+    config.pop_size = 1000
     p = neat.Population(config)
 
     p.add_reporter(neat.StdOutReporter(True))

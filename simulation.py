@@ -92,7 +92,7 @@ def handle_car_selection(cars: List[Car], mouse_pos: Vector2, config, win) -> No
     selected: Car | None = selected_car(cars, mouse_pos)
     if selected and isinstance(selected, AICar):
         visualize.draw_net(config, selected.genome, view=False, filename="neural_net", fmt="png")  
-    draw_neural_network(win, "neural_net.png")            
+        draw_neural_network(win, "neural_net.png")            
 
 def simulation(cars: List[Car], walls, gates, config=None, infinite_time: bool=False) -> None:
     win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
@@ -133,7 +133,7 @@ def simulation(cars: List[Car], walls, gates, config=None, infinite_time: bool=F
             car.get_reward(car._speed / 60)
             
             if car.get_shortest_last_distance() < RAY_DISTANCE_KILL:
-                car.get_reward(-5)
+                car.get_reward(-50)
 
                 cars.pop(i)
             else:
