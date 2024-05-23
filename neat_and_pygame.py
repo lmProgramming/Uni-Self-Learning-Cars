@@ -62,6 +62,12 @@ def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config) -
     cars, walls, gates = setup_generation(genomes, config)
     
     simulation_loop(cars, walls, gates, config, False)
+    
+def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
+    config.pop_size = simulation_config.initial_population
+    config.genome_config.num_hidden = simulation_config.hidden_layers
+    if simulation_config.ray_count is not None:
+        config.genome_config.num_inputs = simulation_config.ray_count + NON_RAY_INPUTS
 
 def run(config_path, simulation_config: SimulationConfig | None=None) -> None:
     print(simulation_config)
@@ -69,9 +75,7 @@ def run(config_path, simulation_config: SimulationConfig | None=None) -> None:
                                 neat.DefaultStagnation, config_path)
     
     if simulation_config is not None:        
-        config.pop_size = simulation_config.initial_population
-        if simulation_config.ray_count is not None:
-            config.genome_type.num_inputs = simulation_config.ray_count + NON_RAY_INPUTS
+        inject_simulation_config(config, simulation_config)
     p = neat.Population(config)
 
     p.add_reporter(neat.StdOutReporter(True))

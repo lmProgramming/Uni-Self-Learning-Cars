@@ -104,7 +104,7 @@ class UiParametersMenu(QtWidgets.QWidget):
 
         self.car_count_slider = QtWidgets.QSlider(orientation=QtCore.Qt.Orientation.Horizontal)
         options_layout.addWidget(self.car_count_slider, 0, 1)
-        self.car_count_slider.setRange(1, 200)        
+        self.car_count_slider.setRange(2, 200)        
         self.car_count_label = QtWidgets.QLabel()       
         self.car_count_slider.valueChanged.connect(self.update_car_count_label)
         self.car_count_slider.setValue(50)
@@ -135,6 +135,7 @@ class UiParametersMenu(QtWidgets.QWidget):
         layout.addLayout(options_layout)  
         
         self.start_parameters_simulation_button = QtWidgets.QPushButton("Start Simulation")
+        self.start_parameters_simulation_button.clicked.connect(self.start_simulation_with_parameters)
         layout.addWidget(self.start_parameters_simulation_button)
         
         self.setLayout(layout)    
