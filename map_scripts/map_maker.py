@@ -52,6 +52,8 @@ def create_edit_map(walls=[], gates=[], starting_point=Vector2(0,0), map_filenam
     run = True
     placing_wall = False
     placing_gate = False
+    
+    print(walls)
 
     while run:
         clock.tick(60)
