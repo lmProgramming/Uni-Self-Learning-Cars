@@ -15,8 +15,14 @@ NON_RAY_INPUTS: int = 1
 def setup_map() -> tuple[list, list, Vector2]:
     walls, gates, starting_point = read_map_txt()
     return walls, gates, starting_point
+
+def find_angle_to_first_gate(position: Vector2, gates: List[Gate]) -> float:
+    if gates:
+        return position.angle_to(gates[0].get_centre_position())
+    else:
+        return 0.0
     
-def setup_generation(genomes: List[neat.DefaultGenome], config, ray_count, processing_function=Quadratic) -> tuple[list[Car], list, list]:
+def setup_generation(genomes: List[neat.DefaultGenome], config, ray_count, random_angle: bool=True, processing_function=Quadratic) -> tuple[list[Car], list, list]:
     cars: List[Car] = []
     
     walls: List[Wall]
@@ -24,35 +30,46 @@ def setup_generation(genomes: List[neat.DefaultGenome], config, ray_count, proce
     starting_point: Vector2
 
     walls, gates, starting_point = read_map_txt()
+    
+    intended_angle: float | None = find_angle_to_first_gate(starting_point, gates) if not random_angle else None
  
-    cars = spawn_ai_cars(genomes, config, starting_point, processing_function, ray_count)
+    cars = spawn_ai_cars(genomes, config, starting_point, intended_angle) 
+    generate_rays(cars, ray_count, processing_function)
             
     return cars, walls, gates
 
-def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starting_point, processing_function, ray_count) -> List[Car]:
+def generate_rays(cars: list[Car], ray_count, processing_function) -> None:
+    for car in cars:        
+        car.generate_rays(ray_count, RAY_LENGTH, processing_function)
+
+def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starting_point: Vector2, default_angle=None) -> List[Car]:
     cars: List[Car] = []
     
     for _, genome in genomes:
         genome.fitness = 0
-        new_car = AICar(starting_point.x, starting_point.y, random.randrange(-180, 180))
+        new_car = AICar(
+            starting_point.x, 
+            starting_point.y, 
+            random.randrange(-180, 180) if default_angle is None else default_angle)
         
         neural_net: FeedForwardNetwork = FeedForwardNetwork.create(genome, config)
         
         new_car.set_neural_net(neural_net)
         
         new_car.genome = genome
-        new_car.generate_rays(ray_count, RAY_LENGTH, processing_function)
         cars.append(new_car)
         
     return cars
 
-def spawn_player_cars(starting_point, processing_function, ray_count: int, count: int=1) -> List[Car]:
+def spawn_player_cars(starting_point: Vector2, default_angle=None, count: int=1) -> List[Car]:
     cars: List[Car] = []
     
     for _ in range(count):
-        human_car: HumanCar = HumanCar(starting_point.x, starting_point.y, random.randrange(-180, 180))
+        human_car: HumanCar = HumanCar(
+            starting_point.x, 
+            starting_point.y, 
+            random.randrange(-180, 180) if default_angle is None else default_angle)
         
-        human_car.generate_rays(ray_count, RAY_LENGTH, processing_function)
         cars.append(human_car)
         
-    return cars 
+    return cars
