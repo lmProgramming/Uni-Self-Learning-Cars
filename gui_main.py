@@ -146,10 +146,10 @@ class UiParametersMenu(QtWidgets.QWidget):
         self.hidden_layers_count_label.setText(f"Hidden Layers Count: {value}")
         
     def start_simulation_with_parameters(self) -> None:
-        SimulationConfig(
+        config = SimulationConfig(
             num_iterations=100, 
             map_pool=self.map_pool.currentData(), 
             hidden_layers=self.hidden_layers_count_slider.value(), 
             ray_count=8,
             initial_population=self.car_count_slider.value())
-        start_simulation()
+        start_simulation(config)

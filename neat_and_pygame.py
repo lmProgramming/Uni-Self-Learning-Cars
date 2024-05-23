@@ -10,6 +10,7 @@ from typing import List, Sequence, Callable
 from processing_functions import Linear, Quadratic
 from simulation import simulation_loop
 from simulation_setup import setup_generation
+from simulation_config import SimulationConfig
 
 from pygame.surface import Surface
 from cars.car import Car, AICar, HumanCar
@@ -62,11 +63,15 @@ def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config) -
     
     simulation_loop(cars, walls, gates, config, False)
 
-def run(config_path) -> None:
+def run(config_path, simulation_config: SimulationConfig | None=None) -> None:
+    print(simulation_config)
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                 neat.DefaultStagnation, config_path)
-    config.genome_config.num_inputs = RAY_COUNT + NON_RAY_INPUTS + 10
-    config.pop_size = 1000
+    
+    if simulation_config is not None:        
+        config.pop_size = simulation_config.initial_population
+        if simulation_config.ray_count is not None:
+            config.genome_type.num_inputs = simulation_config.ray_count + NON_RAY_INPUTS
     p = neat.Population(config)
 
     p.add_reporter(neat.StdOutReporter(True))
@@ -77,10 +82,10 @@ def run(config_path) -> None:
 
     print(winner)
 
-def main() -> None:    
+def main(simulation_config: SimulationConfig | None=None) -> None:    
     local_dir: str = os.path.dirname(__file__)
     config_path: str = os.path.join(local_dir, "config")
-    run(config_path)
+    run(config_path, simulation_config)
         
 if __name__ == "__main__":    
     main()

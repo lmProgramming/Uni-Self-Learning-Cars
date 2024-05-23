@@ -18,7 +18,7 @@ class Main(QMainWindow):
         
         self.ui.setupUi(self, dimensions=(800, 600))
         
-        self.ui.default_simulation_button.clicked.connect(start_simulation)
+        self.ui.default_simulation_button.clicked.connect(self.start_simulation)
         self.ui.parameters_simulation_button.clicked.connect(self.open_parameters_screen)
         self.ui.map_menu_button.clicked.connect(self.open_map_screen)
         
@@ -29,6 +29,9 @@ class Main(QMainWindow):
         self.open_main_menu_screen()
         
         self.setWindowIcon(QtGui.QIcon(os.path.join("imgs", "car_img.png")))
+        
+    def start_simulation(self) -> None:
+        start_simulation()
         
     def open_main_menu_screen(self) -> None:
         self.ui.QtStack.setCurrentIndex(0)
