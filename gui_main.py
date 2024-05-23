@@ -1,11 +1,11 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QHBoxLayout, QBoxLayout
-from maps.map_tools import get_map_names
+from map_scripts.map_tools import get_map_names
 from neat_and_pygame import main as start_simulation
 from player_test import test_drive
-from maps.map_maker import create_edit_map
+from map_scripts.map_maker import create_edit_map
 from player_test import test_drive
-from maps.map_maker import create_edit_map as create_new_map
+from map_scripts.map_maker import create_edit_map as create_new_map
 from simulation_config import SimulationConfig
 from typing import List
 from map_gallery import MapGallery

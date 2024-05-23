@@ -4,10 +4,10 @@ from pygame.math import Vector2
 import random
 from typing import List
 from processing_functions import Linear, Quadratic
-from maps.map_reader import read_map_txt
+from map_scripts.map_reader import read_map_txt
 
 from cars.car import Car, AICar, HumanCar
-from maps.map import Wall, Gate
+from map_scripts.map import Wall, Gate
 
 RAY_LENGTH: float = 200
 NON_RAY_INPUTS: int = 1

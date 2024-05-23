@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtGui
 from neat_and_pygame import main as start_simulation
 from player_test import test_drive
-from maps.map_maker import create_edit_map as create_new_map
 import sys
 import os
 

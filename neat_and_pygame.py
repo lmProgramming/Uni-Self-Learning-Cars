@@ -14,11 +14,11 @@ from simulation_config import SimulationConfig
 
 from pygame.surface import Surface
 from cars.car import Car, AICar, HumanCar
-from maps.map import Wall, Gate
+from map_scripts.map import Wall, Gate
 import time
 import visualize
 
-from maps.map_reader import read_map_txt
+from map_scripts.map_reader import read_map_txt
 
 pg.font.init()
 
