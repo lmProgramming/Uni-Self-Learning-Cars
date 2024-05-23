@@ -16,7 +16,7 @@ def setup_map() -> tuple[list, list, Vector2]:
     walls, gates, starting_point = read_map_txt()
     return walls, gates, starting_point
     
-def setup_generation(genomes: List[neat.DefaultGenome], config, processing_function=Quadratic) -> tuple[list[Car], list, list]:
+def setup_generation(genomes: List[neat.DefaultGenome], config, ray_count, processing_function=Quadratic) -> tuple[list[Car], list, list]:
     cars: List[Car] = []
     
     walls: List[Wall]
@@ -25,7 +25,7 @@ def setup_generation(genomes: List[neat.DefaultGenome], config, processing_funct
 
     walls, gates, starting_point = read_map_txt()
  
-    cars = spawn_ai_cars(genomes, config, starting_point, processing_function, get_ray_count_from_config())
+    cars = spawn_ai_cars(genomes, config, starting_point, processing_function, ray_count)
             
     return cars, walls, gates
 
@@ -55,11 +55,4 @@ def spawn_player_cars(starting_point, processing_function, ray_count: int, count
         human_car.generate_rays(ray_count, RAY_LENGTH, processing_function)
         cars.append(human_car)
         
-    return cars   
-
-def get_ray_count_from_config() -> int:
-    with open('config', 'r') as f:
-        for line in f:
-            if line.startswith("num_inputs"):
-                return int(line.strip().split(" = ")[1]) - NON_RAY_INPUTS
-    return 0
+    return cars 

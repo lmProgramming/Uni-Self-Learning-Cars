@@ -138,7 +138,7 @@ class AICar(Car):
         self.neural_net = neural_net
     
     def get_desired_movement(self) -> Vector2:      
-        inputs: List[float] = [ray.last_distance for ray in self.rays] + [self._speed]
+        inputs: List[float] = [ray.last_distance for ray in self.rays] + [self._speed, self._calculate_wheel_turn_coefficient()]
         outputs = self.neural_net.activate(inputs)
         
         return outputs

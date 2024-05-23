@@ -43,7 +43,7 @@ RAY_DISTANCE_KILL: float = 10
 RAY_COUNT: int = 8
 RAY_LENGTH: float = 200
 
-NON_RAY_INPUTS: int = 1
+NON_RAY_INPUTS: int = 2
 
 '''
 Planuję dodać zbieranie i wizualizowanie statystyk agentów: np. zależność między fitness a czasem trenowania 
@@ -55,11 +55,18 @@ zapis sieci neuronowych poprzednio wytrenowanych). W menu GUI podczas gry będzi
 kliknąć samochód, by w rogu zobaczyć jego sieć neuronową z wartościami aktualizowanymi na żywo.
 '''  
 
+def get_ray_count_from_config() -> int:
+    with open('config', 'r') as f:
+        for line in f:
+            if line.startswith("num_inputs"):
+                return int(line.strip().split(" = ")[1]) - NON_RAY_INPUTS
+    return 0
+
 def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config) -> None:    
     global GEN
     GEN += 1
     
-    cars, walls, gates = setup_generation(genomes, config)
+    cars, walls, gates = setup_generation(genomes, config, get_ray_count_from_config())
     
     simulation_loop(cars, walls, gates, config, False)
     
