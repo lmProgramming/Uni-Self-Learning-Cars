@@ -94,7 +94,7 @@ def handle_car_selection(cars: List[Car], mouse_pos: Vector2, config, win) -> No
         visualize.draw_net(config, selected.genome, view=False, filename="neural_net", fmt="png")  
         draw_neural_network(win, "neural_net.png")            
 
-def simulation(cars: List[Car], walls, gates, config=None, infinite_time: bool=False) -> None:
+def simulation_loop(cars: List[Car], walls, gates, config=None, infinite_time: bool=False) -> None:
     win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
 

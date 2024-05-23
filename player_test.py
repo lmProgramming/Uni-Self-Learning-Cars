@@ -1,6 +1,6 @@
 from typing import List, Callable
 from simulation_setup import setup_map, spawn_player_cars
-from simulation import simulation
+from simulation import simulation_loop
 from cars.car import Car
 from time import sleep
 from processing_functions import Linear
@@ -14,7 +14,7 @@ def test_drive(processing_function=Linear) -> None:
     while True:        
         cars: List[Car] = spawn_player_cars(starting_point, processing_function, RAY_COUNT, PLAYER_CAR_COUNT)
         
-        simulation(cars, walls, gates, infinite_time=True)
+        simulation_loop(cars, walls, gates, infinite_time=True)
         sleep(0.1)
         
 if __name__ == "__main__":
