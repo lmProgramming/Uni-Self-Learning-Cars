@@ -4,6 +4,9 @@ from maps.map_tools import get_map_names
 from neat_and_pygame import main as start_simulation
 from player_test import test_drive
 from maps.map_maker import create_edit_map
+from player_test import test_drive
+from maps.map_maker import create_edit_map as create_new_map
+from simulation_config import SimulationConfig
 from typing import List
 from map_gallery import MapGallery
 from checkable_combo_box import CheckableComboBox
@@ -45,7 +48,7 @@ class UiMain(QtWidgets.QWidget):
         
         self.main_menu.setLayout(layout)
         
-    def create_top_bar(self, layout: QBoxLayout, title: str):
+    def create_top_bar(self, layout: QBoxLayout, title: str) -> QBoxLayout:
         back_button = QtWidgets.QPushButton("Back")  
         back_button.clicked.connect(self.open_main_menu_screen)             
         title_label = QtWidgets.QLabel(title)      
@@ -141,3 +144,12 @@ class UiParametersMenu(QtWidgets.QWidget):
         
     def update_hidden_layers_label(self, value) -> None:
         self.hidden_layers_count_label.setText(f"Hidden Layers Count: {value}")
+        
+    def start_simulation_with_parameters(self) -> None:
+        SimulationConfig(
+            num_iterations=100, 
+            map_pool=self.map_pool.currentData(), 
+            hidden_layers=self.hidden_layers_count_slider.value(), 
+            ray_count=8,
+            initial_population=self.car_count_slider.value())
+        start_simulation()
