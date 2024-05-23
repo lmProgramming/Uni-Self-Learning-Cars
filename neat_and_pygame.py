@@ -8,7 +8,7 @@ from pygame.math import Vector2
 import random
 from typing import List, Sequence, Callable
 from processing_functions import Linear, Quadratic
-from simulation import simulation
+from simulation import simulation_loop
 from simulation_setup import setup_generation
 
 from pygame.surface import Surface
@@ -60,7 +60,7 @@ def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config) -
     
     cars, walls, gates = setup_generation(genomes, config)
     
-    simulation(cars, walls, gates, config, False)
+    simulation_loop(cars, walls, gates, config, False)
 
 def run(config_path) -> None:
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
