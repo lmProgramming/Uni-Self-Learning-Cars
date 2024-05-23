@@ -5,6 +5,7 @@ from pygame.surface import Surface
 from maps.map import Wall, Gate
 
 from maps.map_reader import read_map_txt
+from maps.map_tools import format_map_name
 from py_input_field import InputBox
 
 pg.font.init()
@@ -43,11 +44,11 @@ def create_blank_map():
     starting_point = Vector2(0, 0)
     return walls, gates, starting_point
 
-def create_edit_map(walls, gates, starting_point, map_filename="") -> None:       
+def create_edit_map(walls=[], gates=[], starting_point=Vector2(0,0), map_filename="") -> None:       
     win = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
     
-    map_name_input = create_map_name_input(WIDTH // 2, 20, 140, 32, 'map')
+    map_name_input = create_map_name_input(WIDTH // 2, 20, 140, 32, map_filename)
 
     run = True
     placing_wall = False
@@ -60,20 +61,12 @@ def create_edit_map(walls, gates, starting_point, map_filename="") -> None:
         mouse_pressed = pg.mouse.get_pressed()
 
         if mouse_pressed[0]:
-            if not placing_wall:
-                placing_wall = True
-                walls.append(Wall(m_x, m_y, m_x, m_y, 6))
-
-            walls[-1].end_position = Vector2(m_x, m_y)
+            place_wall(walls, placing_wall, m_x, m_y)
         else:
             placing_wall = False
 
         if mouse_pressed[2]:
-            if not placing_gate:
-                placing_gate = True
-                gates.append(Gate(len(gates), m_x, m_y, m_x, m_y, 6))
-
-            gates[-1].end_position = Vector2(m_x, m_y)
+            place_gate(gates, placing_gate, m_x, m_y)
         else:
             placing_gate = False
 
@@ -91,12 +84,7 @@ def create_edit_map(walls, gates, starting_point, map_filename="") -> None:
                     gates.pop()
             map_name_input.handle_event(event)            
 
-        if not map_name_input.active:
-            if keys[pg.K_ESCAPE]:
-                run = False
-                pg.quit()
-                save_data_to_file(walls, gates, starting_point, map_name_input.text)
-            
+        if not map_name_input.active:            
             if keys[pg.K_s]:
                 run = False
                 pg.quit()
@@ -107,12 +95,25 @@ def create_edit_map(walls, gates, starting_point, map_filename="") -> None:
 
         draw_window(win, walls, gates, starting_point, BG_IMG, map_name_input)
 
+def place_gate(gates, placing_gate, m_x, m_y):
+    if not placing_gate:
+        placing_gate = True
+        gates.append(Gate(len(gates), m_x, m_y, m_x, m_y, 6))
+
+    gates[-1].end_position = Vector2(m_x, m_y)
+
+def place_wall(walls, placing_wall, m_x, m_y):
+    if not placing_wall:
+        placing_wall = True
+        walls.append(Wall(m_x, m_y, m_x, m_y, 6))
+
+    walls[-1].end_position = Vector2(m_x, m_y)
+
 def save_data_to_file(walls, gates, starting_point, map_name: str):
     if map_name == "":
         raise ValueError("Map name cannot be empty")
     
-    if not map_name.endswith(".txt"):
-        map_name += ".txt"
+    map_name = format_map_name(map_name)
         
     if len(gates) == 0:
         raise ValueError("Map must have at least one gate")

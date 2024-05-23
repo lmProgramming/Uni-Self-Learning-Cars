@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QInputDialog, QMessageBox
 
 from scrollable_gallery import ScrollableGallery
-from maps.map_manager import rename_map, delete_map
+from maps.map_tools import rename_map, delete_map
 from maps.map_reader import read_map_txt
 from maps.map_maker import create_edit_map
 

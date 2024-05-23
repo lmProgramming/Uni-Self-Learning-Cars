@@ -23,7 +23,6 @@ class Main(QMainWindow):
         self.ui.map_menu_button.clicked.connect(self.open_map_screen)
         
         self.ui.test_ride_button.clicked.connect(self.start_test_drive)
-        self.ui.create_new_map_button.clicked.connect(create_new_map)
                 
         self.resize(800, 600) 
         

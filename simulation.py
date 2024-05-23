@@ -24,19 +24,6 @@ STARTING_CAR_POSITION = Vector2(WIDTH // 2, HEIGHT // 2)
 
 RAY_DISTANCE_KILL: float = 10
 
-'''
-Do funkcjonalności chciałbym dodać jeszcze możliwość modyfikacji pliku konfiguracyjnego NEAT za pomocą GUI. 
-GUI pozwalałoby na szeroką interakcję z mapami: dodanie nowej mapy, a także modyfikacja lub usunięcie istniejącej. 
-Planuję dodać zbieranie i wizualizowanie statystyk agentów: np. zależność między fitness a czasem trenowania 
-czy zależność między fitness a wielkością sieci neuronowej. Potrzebne więc będą moduły NumPy i Matplotlib. Lider każdej generacji byłby oznaczony 
-podczas jazdy po mapie. Przy tworzeniu nowej symulacji, można podać parę parametrów, na przykład to, czy wszystkie samochody startują z punktu 
-startowego pod tym samym kątem albo to, czy mapy zmieniają się co parę generacji, by ograniczyć overfitting.
-Spróbuję użyć Cythona lub CPythona do optymalizacji wykrywania odległości do ścian przez samochody (podstawa ich poruszania się).
-Tryb konsolowy pozwoli zrobić wszystko, co jest dostępne w głównym menu GUI (w którym można zmienić parametry symulacji, uruchomić ją, wczytać 
-zapis sieci neuronowych poprzednio wytrenowanych). W menu GUI podczas gry będzie można przejrzeć statystyki i wrócić do menu głównego, a także 
-kliknąć samochód, by w rogu zobaczyć jego sieć neuronową z wartościami aktualizowanymi na żywo.
-'''
-
 def draw_line(position, angle, line_length, line_width, color, screen) -> None:
     vector = Vector2()
     vector.from_polar((line_length, angle))
