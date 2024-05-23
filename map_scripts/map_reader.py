@@ -1,6 +1,6 @@
 import enum
 from pygame import Vector2
-from maps.map import Wall, Gate
+from map_scripts.map import Wall, Gate
 from typing import List
 import re
 import os

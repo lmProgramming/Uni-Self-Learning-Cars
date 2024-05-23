@@ -2,10 +2,9 @@ import os
 import pygame as pg
 from pygame import Vector2
 from pygame.surface import Surface
-from maps.map import Wall, Gate
-
-from maps.map_reader import read_map_txt
-from maps.map_tools import format_map_name
+from map_scripts.map import Wall, Gate
+from map_scripts.map_reader import read_map_txt
+from map_scripts.map_tools import format_map_name
 from py_input_field import InputBox
 
 pg.font.init()
