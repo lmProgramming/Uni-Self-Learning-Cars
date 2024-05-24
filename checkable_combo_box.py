@@ -2,6 +2,14 @@ from PyQt5.QtWidgets import QComboBox, QStyledItemDelegate, QApplication, qApp
 from PyQt5.QtGui import QPalette, QFontMetrics, QStandardItem
 from PyQt5.QtCore import Qt, QEvent
 
+def call_selection_changed_if_true(func):
+    def wrapper(self, object, event):
+        result = func(self, object, event)
+        if result:
+            self.selectionChanged()
+        return result
+    return wrapper
+
 class CheckableComboBox(QComboBox):
 
     # Subclass Delegate to increase item height
@@ -31,23 +39,36 @@ class CheckableComboBox(QComboBox):
         # Hide and show popup when clicking the line edit
         self.lineEdit().installEventFilter(self)
         self.closeOnLineEditClick = False
-
+                
         # Prevent popup from closing when clicking on an item
         self.view().viewport().installEventFilter(self)
+        
+    @property
+    def on_selection_changed(self):
+        return self._on_selection_changed
+
+    @on_selection_changed.setter
+    def on_selection_changed(self, func):
+        self._on_selection_changed = func
+
+    def selectionChanged(self):
+        if hasattr(self, "_on_selection_changed"):
+            self._on_selection_changed(0)
 
     def resizeEvent(self, event):
         # Recompute text to elide as needed
         self.updateText()
         super().resizeEvent(event)
 
+    # Apply the decorator to the eventFilter function
+    @call_selection_changed_if_true
     def eventFilter(self, object, event):
-
         if object == self.lineEdit():
             if event.type() == QEvent.MouseButtonRelease:
                 if self.closeOnLineEditClick:
                     self.hidePopup()
                 else:
-                    self.showPopup()
+                    self.showPopup()                
                 return True
             return False
 
@@ -60,6 +81,7 @@ class CheckableComboBox(QComboBox):
                     item.setCheckState(Qt.Unchecked)
                 else:
                     item.setCheckState(Qt.Checked)
+                                                    
                 return True
         return False
 
@@ -118,3 +140,13 @@ class CheckableComboBox(QComboBox):
             if self.model().item(i).checkState() == Qt.Checked:
                 res.append(self.model().item(i).data())
         return res
+    
+if __name__ == "__main__":
+    import sys
+
+    app = QApplication(sys.argv)
+    combo = CheckableComboBox()
+    combo.addItems(["Item 1", "Item 2", "Item 3"])
+    combo.on_selection_changed = lambda index: print(combo.currentData())
+    combo.show()
+    sys.exit(app.exec_())

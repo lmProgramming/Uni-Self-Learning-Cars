@@ -130,16 +130,36 @@ class UiParametersMenu(QtWidgets.QWidget):
         options_layout.addWidget(self.map_pool, 3, 1)
         map_names: List[str] = get_map_names()
         self.map_pool.addItems(map_names)
+        self.map_pool.on_selection_changed = self.update_start_button_state
         self.map_pool_label = QtWidgets.QLabel("Map Pool")
         options_layout.addWidget(self.map_pool_label, 3, 0)
-                        
+                                
         layout.addLayout(options_layout)  
         
         self.start_parameters_simulation_button = QtWidgets.QPushButton("Start Simulation")
         self.start_parameters_simulation_button.clicked.connect(self.start_simulation_with_parameters)
         layout.addWidget(self.start_parameters_simulation_button)
+                
+        self.update_start_button_state()
+        print(self.maps)
         
         self.setLayout(layout)    
+        
+    @property
+    def maps(self) -> CheckableComboBox:
+        return self.map_pool.currentData()
+    
+    @property
+    def has_maps(self) -> bool:
+        return len(self.maps) > 0
+        
+    def update_start_button_state(self, *args) -> None:
+        has_maps = self.has_maps
+        self.start_parameters_simulation_button.setEnabled(has_maps)
+        if not has_maps:
+            self.start_parameters_simulation_button.setToolTip("Add at least one map to start the simulation.")
+        else:
+            self.start_parameters_simulation_button.setToolTip("")
     
     def update_car_count_label(self, value) -> None:
         self.car_count_label.setText(f"Car Count: {value}")
