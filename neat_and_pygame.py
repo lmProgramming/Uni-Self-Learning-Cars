@@ -6,6 +6,7 @@ from typing import List, Optional
 from simulation import Simulation
 from simulation_setup import setup_generation
 from simulation_config import SimulationConfig
+import random
 
 pg.font.init()
 
@@ -50,16 +51,23 @@ class NeatRun:
     @staticmethod        
     def get_ray_count_from_config(config) -> int:
         return config.genome_config.num_inputs - NON_RAY_INPUTS
+    
+    def pick_map(self) -> str:
+        if self.simulation_config is None:
+            return "default.txt"
+        return random.choice(self.simulation_config.map_pool)
 
     def run_new_generation(self, genomes: List[neat.DefaultGenome], config: neat.Config) -> None:
         self.gen += 1
 
         arguments = {
+            "map_name": self.pick_map(),
             "genomes": genomes, 
             "config": config, 
             "ray_count": NeatRun.get_ray_count_from_config(config)}
         if self.simulation_config is not None:
             arguments["random_angle"] = self.simulation_config.random_angle
+            
         cars, walls, gates = setup_generation(**arguments)
 
         simulation = Simulation(cars, walls, gates, self.gen, config, infinite_time=False)

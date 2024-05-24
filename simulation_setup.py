@@ -3,7 +3,7 @@ from neat.nn.feed_forward import FeedForwardNetwork # type: ignore
 from pygame.math import Vector2
 from math import degrees
 import random
-from typing import List
+from typing import List, Optional
 from processing_functions import Linear, Quadratic
 from map_scripts.map_reader import read_map_txt
 
@@ -13,10 +13,6 @@ from map_scripts.map import Wall, Gate
 RAY_LENGTH: float = 200
 NON_RAY_INPUTS: int = 1
 
-def setup_map() -> tuple[list, list, Vector2]:
-    walls, gates, starting_point = read_map_txt()
-    return walls, gates, starting_point
-
 def find_angle_to_first_gate(position: Vector2, gates: List[Gate]) -> float:
     if gates:
         print(position, gates[0].get_centre_position())
@@ -24,14 +20,14 @@ def find_angle_to_first_gate(position: Vector2, gates: List[Gate]) -> float:
     else:
         return 0.0
     
-def setup_generation(genomes: List[neat.DefaultGenome], config, ray_count, random_angle: bool=True, processing_function=Quadratic) -> tuple[list[Car], list, list]:
+def setup_generation(map_name: str, genomes: List[neat.DefaultGenome], config, ray_count, random_angle: bool=True, processing_function=Quadratic) -> tuple[list[Car], list, list]:
     cars: List[Car] = []
     
     walls: List[Wall]
     gates: List[Gate]
     starting_point: Vector2
 
-    walls, gates, starting_point = read_map_txt()
+    walls, gates, starting_point = read_map_txt(map_name)
     
     intended_angle: float | None = find_angle_to_first_gate(starting_point, gates) if not random_angle else None
     
