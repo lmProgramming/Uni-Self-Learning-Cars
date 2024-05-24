@@ -1,6 +1,7 @@
 import enum
 from pygame import Vector2
 from map_scripts.map import Wall, Gate
+from map_scripts.map_tools import DEFAULT_MAP
 from typing import List
 import re
 
@@ -46,7 +47,7 @@ def read_map_txt(filename: str) -> tuple[list, list, Vector2]:
     return walls, gates, starting_point
             
 if __name__ == "__main__":
-    walls, gates, starting_point = read_map_txt("map.txt")
+    walls, gates, starting_point = read_map_txt(DEFAULT_MAP)
     print(len(walls))
     print(len(gates))
     print(starting_point)

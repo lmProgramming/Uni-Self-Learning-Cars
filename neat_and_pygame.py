@@ -6,6 +6,7 @@ from typing import List, Optional
 from simulation import Simulation
 from simulation_setup import setup_generation
 from simulation_config import SimulationConfig
+from map_scripts.map_tools import DEFAULT_MAP
 import random
 
 pg.font.init()
@@ -54,7 +55,7 @@ class NeatRun:
     
     def pick_map(self) -> str:
         if self.simulation_config is None:
-            return "default.txt"
+            return DEFAULT_MAP
         return random.choice(self.simulation_config.map_pool)
 
     def run_new_generation(self, genomes: List[neat.DefaultGenome], config: neat.Config) -> None:

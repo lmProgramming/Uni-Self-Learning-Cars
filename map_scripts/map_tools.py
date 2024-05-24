@@ -3,6 +3,7 @@ from typing import List
 
 MAP_FOLDER: str = 'maps'
 MAP_EXTENSION: str = '.txt'
+DEFAULT_MAP: str = 'default.txt'
 
 def get_map_names() -> List[str]:
     map_folder = MAP_FOLDER

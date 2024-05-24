@@ -1,5 +1,7 @@
 from typing import List, Callable
-from simulation_setup import setup_map, spawn_player_cars, generate_rays, find_angle_to_first_gate
+from simulation_setup import spawn_player_cars, generate_rays, find_angle_to_first_gate
+from map_scripts.map_reader import read_map_txt as setup_map
+from map_scripts.map_tools import DEFAULT_MAP
 from simulation import Simulation
 from cars.car import Car
 from time import sleep
@@ -8,9 +10,10 @@ from processing_functions import Linear
 RAY_COUNT = 8
 PLAYER_CAR_COUNT = 1
 TEST_INTENDED_ANGLE = True
+TESTED_MAP = DEFAULT_MAP
 
 def test_drive(random_angle: bool=True, processing_function=Linear) -> None:
-    walls, gates, starting_point = setup_map()
+    walls, gates, starting_point = setup_map(TESTED_MAP)
     
     default_angle: float | None = find_angle_to_first_gate(starting_point, gates) if not random_angle else None
                 
