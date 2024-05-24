@@ -5,7 +5,7 @@ from map_scripts.map_tools import DEFAULT_MAP
 from simulation.simulation import Simulation
 from cars.car import Car
 from time import sleep
-from processing_functions import Linear
+from simulation.processing_functions import Linear
 
 RAY_COUNT = 8
 PLAYER_CAR_COUNT = 1

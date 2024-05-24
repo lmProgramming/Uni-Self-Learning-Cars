@@ -4,7 +4,7 @@ from pygame.math import Vector2
 from math import degrees
 import random
 from typing import List, Optional
-from processing_functions import Linear, Quadratic
+from simulation.processing_functions import Linear, Quadratic
 from map_scripts.map_reader import read_map_txt
 
 from cars.car import Car, AICar, HumanCar
