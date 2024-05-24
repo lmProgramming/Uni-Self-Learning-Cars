@@ -1,5 +1,0 @@
-walls: x1;x2;y1;y2
-
-gates: num;x1;x2;y1;y2
-
-start: 0;0

@@ -1,8 +1,8 @@
 from typing import List, Callable
-from simulation_setup import spawn_player_cars, generate_rays, find_angle_to_first_gate
+from simulation.simulation_setup import spawn_player_cars, generate_rays, find_angle_to_first_gate
 from map_scripts.map_reader import read_map_txt as setup_map
 from map_scripts.map_tools import DEFAULT_MAP
-from simulation import Simulation
+from simulation.simulation import Simulation
 from cars.car import Car
 from time import sleep
 from processing_functions import Linear

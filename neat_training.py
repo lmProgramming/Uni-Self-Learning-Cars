@@ -3,9 +3,9 @@ import os
 import pygame as pg
 from pygame.math import Vector2
 from typing import List, Optional
-from simulation import Simulation
-from simulation_setup import setup_generation
-from simulation_config import SimulationConfig
+from simulation.simulation import Simulation
+from simulation.simulation_setup import setup_generation
+from simulation.simulation_config import SimulationConfig
 from map_scripts.map_tools import DEFAULT_MAP
 import random
 
@@ -35,7 +35,7 @@ podczas jazdy po mapie. Tryb konsolowy pozwoli zrobić wszystko, co jest dostęp
 zapis sieci neuronowych poprzednio wytrenowanych). W menu GUI podczas gry będzie można przejrzeć statystyki i wrócić do menu głównego, a także 
 kliknąć samochód, by w rogu zobaczyć jego sieć neuronową z wartościami aktualizowanymi na żywo.
 '''
-class NeatRun:
+class NeatTrainingAttempt:
     def __init__(self, config_path, simulation_config: Optional[SimulationConfig] = None) -> None:
         self.gen: int = 0
 
@@ -45,7 +45,7 @@ class NeatRun:
         self.simulation_config: Optional[SimulationConfig] = None
         if simulation_config is not None:
             self.simulation_config: SimulationConfig = simulation_config
-            NeatRun.inject_simulation_config(self.config, simulation_config)
+            NeatTrainingAttempt.inject_simulation_config(self.config, simulation_config)
         
     @staticmethod        
     def get_ray_count_from_config(config) -> int:
@@ -63,7 +63,7 @@ class NeatRun:
             "map_name": self.pick_map(),
             "genomes": genomes, 
             "config": config, 
-            "ray_count": NeatRun.get_ray_count_from_config(config)}
+            "ray_count": NeatTrainingAttempt.get_ray_count_from_config(config)}
         if self.simulation_config is not None:
             arguments["random_angle"] = self.simulation_config.random_angle
             
@@ -94,7 +94,7 @@ def main(simulation_config: Optional[SimulationConfig] = None) -> None:
     local_dir: str = os.path.dirname(__file__)
     config_path: str = os.path.join(local_dir, "config")
     
-    neat_run = NeatRun(config_path, simulation_config)
+    neat_run = NeatTrainingAttempt(config_path, simulation_config)
     neat_run.run()
 
 if __name__ == "__main__":    

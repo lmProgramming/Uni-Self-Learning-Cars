@@ -5,7 +5,7 @@ from typing import List, Sequence
 from pygame_input import PyButton
 from pygame.surface import Surface
 from cars.car import Car, AICar
-import visualize
+import visualization.visualize as visualize
 
 pg.font.init()
 

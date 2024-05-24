@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtGui
-from neat_and_pygame import main as start_simulation
-from player_test import test_drive
+from neat_training import main as start_simulation
+from simulation.player_test import test_drive
 import sys
 import os
 
