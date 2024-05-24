@@ -1,4 +1,5 @@
 import pygame as pg
+from typing import Callable
 
 pg.font.init()
 
@@ -48,26 +49,36 @@ class PyInputBox:
         pg.draw.rect(screen, self.color, self.rect, 2)
         
 class PyButton:
-    def __init__(self, text, x, y, width, height, color, hover_color, font_color):
+    def __init__(self, text, x, y, width, height, color, hover_color, font_color) -> None:
         self.text = text
         self.rect = pg.Rect(x, y, width, height)
         self.color = color
         self.hover_color = hover_color
         self.font_color = font_color
         self.font = pg.font.SysFont(None, 40)
+        self.action: Callable[[], None]
     
-    def draw(self, surface):
+    def draw(self, surface) -> None:
         mouse_pos = pg.mouse.get_pos()
         if self.rect.collidepoint(mouse_pos):
             pg.draw.rect(surface, self.hover_color, self.rect)
         else:
             pg.draw.rect(surface, self.color, self.rect)
         
-        text_surface = self.font.render(self.text, True, self.font_color)
-        text_rect = text_surface.get_rect(center=self.rect.center)
+        text_surface: pg.Surface = self.font.render(self.text, True, self.font_color)
+        text_rect: pg.Rect = text_surface.get_rect(center=self.rect.center)
         surface.blit(text_surface, text_rect)
-    
-    def is_clicked(self, event):
+        
+    def connect(self, action) -> None:
+        self.action = action
+        
+    def check_if_clicked(self, event) -> None:
+        print(event)
+        print(self.is_clicked(event))
+        if self.is_clicked(event):
+            self.action()
+                
+    def is_clicked(self, event) -> bool:
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             if self.rect.collidepoint(event.pos):
                 return True

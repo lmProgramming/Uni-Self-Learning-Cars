@@ -19,6 +19,7 @@ def setup_map() -> tuple[list, list, Vector2]:
 
 def find_angle_to_first_gate(position: Vector2, gates: List[Gate]) -> float:
     if gates:
+        print(position, gates[0].get_centre_position())
         return degrees(position.angle_to(gates[0].get_centre_position()))
     else:
         return 0.0

@@ -16,13 +16,15 @@ def test_drive(random_angle: bool=True, processing_function=Linear) -> None:
                 
     print(default_angle)
                 
+    test_number: int = 0
     while True:        
         cars: List[Car] = spawn_player_cars(starting_point, default_angle, PLAYER_CAR_COUNT)
         generate_rays(cars, RAY_COUNT, processing_function)
         
-        simulation = Simulation(cars, walls, gates, infinite_time=True)
+        simulation = Simulation(cars, walls, gates, generation_number=test_number, infinite_time=True)
         simulation.simulation_loop()
         sleep(0.1)
+        test_number += 1
         
 if __name__ == "__main__":
     test_drive(not TEST_INTENDED_ANGLE)

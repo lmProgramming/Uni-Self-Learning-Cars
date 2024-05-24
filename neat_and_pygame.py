@@ -1,24 +1,11 @@
 import neat # type: ignore
 import os
-from neat.nn.feed_forward import FeedForwardNetwork # type: ignore
 import pygame as pg
-from pygame.font import Font
-from pygame.key import ScancodeWrapper
 from pygame.math import Vector2
-import random
-from typing import List, Sequence, Callable
-from processing_functions import Linear, Quadratic
+from typing import List, Optional
 from simulation import Simulation
 from simulation_setup import setup_generation
 from simulation_config import SimulationConfig
-
-from pygame.surface import Surface
-from cars.car import Car, AICar, HumanCar
-from map_scripts.map import Wall, Gate
-import time
-import visualize
-
-from map_scripts.map_reader import read_map_txt
 
 pg.font.init()
 
@@ -29,12 +16,6 @@ HEIGHT = 960
 
 PLAYER_ONLY = False
 LOAD_MAP = True
-
-GEN = 0
-
-BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
-
-STAT_FONT = pg.font.SysFont("comic sans", 25)
 
 STARTING_CAR_POSITION = Vector2(450, HEIGHT - 472)
 
@@ -54,51 +35,59 @@ Tryb konsolowy pozwoli zrobić wszystko, co jest dostępne w głównym menu GUI 
 zapis sieci neuronowych poprzednio wytrenowanych). W menu GUI podczas gry będzie można przejrzeć statystyki i wrócić do menu głównego, a także 
 kliknąć samochód, by w rogu zobaczyć jego sieć neuronową z wartościami aktualizowanymi na żywo.
 '''  
+class NeatRun:
+    def __init__(self, config_path, simulation_config: Optional[SimulationConfig] = None) -> None:
+        self.gen: int = 0
 
-def get_ray_count_from_config() -> int:
-    with open('config', 'r') as f:
-        for line in f:
-            if line.startswith("num_inputs"):
-                return int(line.strip().split(" = ")[1]) - NON_RAY_INPUTS
-    return 0
+        self.config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
+                                    neat.DefaultStagnation, config_path)
 
-def run_new_generation(genomes: List[neat.DefaultGenome], config: neat.Config) -> None:    
-    global GEN
-    GEN += 1
-    
-    cars, walls, gates = setup_generation(genomes, config, get_ray_count_from_config(), config.random_angle)
-    
-    simulation = Simulation(cars, walls, gates, config, False)
-    simulation.simulation_loop()    
-    
-def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
-    config.pop_size = simulation_config.initial_population
-    config.genome_config.num_hidden = simulation_config.hidden_layers
-    config.random_angle = simulation_config.random_angle
-    if simulation_config.ray_count is not None:
-        config.genome_config.num_inputs = simulation_config.ray_count + NON_RAY_INPUTS
+        if simulation_config is not None:
+            self.simulation_config: SimulationConfig = simulation_config
+            NeatRun.inject_simulation_config(self.config, simulation_config)
+        
+    @staticmethod        
+    def get_ray_count_from_config(config) -> int:
+        return config.genome_config.num_inputs - NON_RAY_INPUTS
 
-def run(config_path, simulation_config: SimulationConfig | None=None) -> None:
-    print(simulation_config)
-    config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
-                                neat.DefaultStagnation, config_path)
-    
-    if simulation_config is not None:        
-        inject_simulation_config(config, simulation_config)
-    p = neat.Population(config)
+    def run_new_generation(self, genomes: List[neat.DefaultGenome], config: neat.Config) -> None:
+        self.gen += 1
 
-    p.add_reporter(neat.StdOutReporter(True))
-    stats = neat.StatisticsReporter()
-    p.add_reporter(stats)
+        arguments = {
+            "genomes": genomes, 
+            "config": config, 
+            "ray_count": NeatRun.get_ray_count_from_config(config)}
+        if self.simulation_config is not None:
+            arguments["random_angle"] = self.simulation_config.random_angle
+        cars, walls, gates = setup_generation(**arguments)
 
-    winner = p.run(run_new_generation, 500)
+        simulation = Simulation(cars, walls, gates, self.gen, config, infinite_time=False)
+        simulation.simulation_loop()    
 
-    print(winner)
+    @staticmethod
+    def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
+        config.pop_size = simulation_config.initial_population
+        config.genome_config.num_hidden = simulation_config.hidden_layers
+        if simulation_config.ray_count is not None:
+            config.genome_config.num_inputs = simulation_config.ray_count + NON_RAY_INPUTS
 
-def main(simulation_config: SimulationConfig | None=None) -> None:    
+    def run(self) -> None:
+        p = neat.Population(self.config)
+
+        p.add_reporter(neat.StdOutReporter(True))
+        stats = neat.StatisticsReporter()
+        p.add_reporter(stats)
+
+        winner = p.run(self.run_new_generation, 500)
+
+        print(winner)
+
+def main(simulation_config: SimulationConfig) -> None:    
     local_dir: str = os.path.dirname(__file__)
     config_path: str = os.path.join(local_dir, "config")
-    run(config_path, simulation_config)
-        
+    
+    neat_run = NeatRun(config_path, simulation_config)
+    neat_run.run()
+
 if __name__ == "__main__":    
     main()

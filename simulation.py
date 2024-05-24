@@ -14,13 +14,9 @@ pg.display.set_caption("Simulation")
 WIDTH = 1280
 HEIGHT = 960
 
-GEN = 0
-
 BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
 
 STAT_FONT = pg.font.SysFont("arial", 25)
-
-STARTING_CAR_POSITION = Vector2(WIDTH // 2, HEIGHT // 2)
 
 RAY_DISTANCE_KILL: float = 10
 
@@ -29,14 +25,13 @@ class PySimulationUi:
         self.skip_generation_button: PyButton = skip_generation_button
         
     def handle_event(self, event) -> None:
-        if self.skip_generation_button.is_clicked(event):
-            ...
+        self.skip_generation_button.check_if_clicked(event)
 
     def draw(self, win: Surface) -> None:
         self.skip_generation_button.draw(win)
 
 class Simulation:
-    def __init__(self, cars: List[Car], walls, gates, config=None, infinite_time: bool=False):
+    def __init__(self, cars: List[Car], walls, gates, generation_number: int, config=None, infinite_time: bool=False):
         self.cars: List[Car] = cars
         self.walls = walls
         self.gates = gates
@@ -45,7 +40,25 @@ class Simulation:
         self.win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
         self.clock = pg.time.Clock()
         self.score: float = 0
-        self.frames = 0
+        self.frames: int = 0
+        self.generation_number: int = generation_number
+        self.simulation_ui: PySimulationUi
+        
+        self.create_simulation_ui()
+        
+    def draw_background(self, bg_img: Surface) -> None:
+        self.win.blit(bg_img, (0, 0))
+        
+    def refresh(self):      
+        pg.display.update()
+        
+    def end_simulation(self) -> None:
+        self.cars = []
+        
+    def create_simulation_ui(self) -> None:
+        skip_generation_button = PyButton("Skip generation", 10, 10, 100, 50, (0, 255, 0), (0, 200, 0), (100, 0, 0))
+        skip_generation_button.connect(self.end_simulation)
+        self.simulation_ui = PySimulationUi(skip_generation_button)        
         
     def draw_simulation(self, bg_img, gen, debug=False) -> None:
         self.win.blit(bg_img, (0, 0))
@@ -76,12 +89,6 @@ class Simulation:
 
         text = STAT_FONT.render("Gen: " + str(gen), True, (255, 255, 255))
         self.win.blit(text, (10, 10))
-
-        pg.display.update()
-        
-    def draw_ui(self, win: Surface, skip_generation_button: PyButton) -> None:
-        skip_generation_button.draw(win)
-        pg.display.update()
         
     def draw_neural_network(self, win: Surface, filename: str) -> None:
         neural_net_image = pg.image.load(filename)
@@ -116,6 +123,9 @@ class Simulation:
 
         if mouse_pressed[0] and config is not None:
             self.handle_car_selection(cars, mouse_position, config, win)
+            
+        for event in pg.event.get():
+            self.simulation_ui.handle_event(event)
 
     def handle_car_selection(self, cars: List[Car], mouse_pos: Vector2, config, win) -> None:
         selected: Car | None = self.selected_car(cars, mouse_pos)
@@ -129,8 +139,10 @@ class Simulation:
 
         score: float = 0
         frames = 0
-        while len(self.cars) > 0 and (frames < 60 * (10 + GEN) or self.infinite_time):
+        while len(self.cars) > 0 and (frames < 60 * (10 + self.generation_number) or self.infinite_time):
             clock.tick(60)        
+            
+            self.draw_background(BG_IMG)
 
             score = max([score] + [car.get_score() for car in self.cars])
                         
@@ -169,4 +181,7 @@ class Simulation:
 
             frames += 1
             
-            self.draw_simulation(BG_IMG, GEN, True)
+            self.draw_simulation(BG_IMG, self.generation_number, True)
+            self.simulation_ui.draw(win)
+            
+            self.refresh()
