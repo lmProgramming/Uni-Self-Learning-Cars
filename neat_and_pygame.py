@@ -42,6 +42,7 @@ class NeatRun:
         self.config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                     neat.DefaultStagnation, config_path)
 
+        self.simulation_config: Optional[SimulationConfig] = None
         if simulation_config is not None:
             self.simulation_config: SimulationConfig = simulation_config
             NeatRun.inject_simulation_config(self.config, simulation_config)
@@ -82,7 +83,7 @@ class NeatRun:
 
         print(winner)
 
-def main(simulation_config: SimulationConfig) -> None:    
+def main(simulation_config: Optional[SimulationConfig] = None) -> None:    
     local_dir: str = os.path.dirname(__file__)
     config_path: str = os.path.join(local_dir, "config")
     
