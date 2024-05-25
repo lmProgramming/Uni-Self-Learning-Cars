@@ -166,14 +166,14 @@ class HumanCar(Car):
         keys: ScancodeWrapper = pg.key.get_pressed()
         
         outputs = Vector2(0.5, 0.5)                    
-        if keys[pg.K_w]:
+        if keys[pg.K_w] or keys[pg.K_UP]:
             outputs.x += 0.5
-        if keys[pg.K_s]:
+        if keys[pg.K_s] or keys[pg.K_DOWN]:
             outputs.x -= 0.5
 
-        if keys[pg.K_a]:
+        if keys[pg.K_a] or keys[pg.K_LEFT]:
             outputs.y -= 0.5
-        if keys[pg.K_d]:
+        if keys[pg.K_d] or keys[pg.K_RIGHT]:
             outputs.y += 0.5
             
         return outputs

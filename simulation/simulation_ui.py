@@ -17,7 +17,8 @@ def lerp_color(color1: pg.Color, color2: pg.Color, t: float) -> pg.Color:
     r = int(color1.r + (color2.r - color1.r) * t)
     g = int(color1.g + (color2.g - color1.g) * t)
     b = int(color1.b + (color2.b - color1.b) * t)
-    return pg.Color(r, g, b)
+    a = int(color1.a + (color2.a - color1.a) * t)
+    return pg.Color(r, g, b, a)
 
 class PyDefaultUi:
     def __init__(self, win: Surface, go_back_action) -> None:

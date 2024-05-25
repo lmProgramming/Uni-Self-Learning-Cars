@@ -17,11 +17,13 @@ HEIGHT = 960
 
 USE_BG_IMG: bool = False
 BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
-BG_COLOR = pg.Color(128, 128, 128)
+BG_COLOR = pg.Color(0, 0, 0)
 
 STAT_FONT = pg.font.SysFont("arial", 25)
 
 RAY_DISTANCE_KILL: float = 10
+
+DEBUG_KEY = pg.K_r
 
 class Simulation:
     def __init__(self, cars: List[Car], walls, gates, generation_number: int, config=None, infinite_time: bool=False) -> None:
@@ -53,6 +55,12 @@ class Simulation:
             self.win.fill(BG_COLOR)
         
         text: pg.surface.Surface
+       
+        for gate in self.gates:
+            gate.draw(self.win)
+            if debug:
+                text = STAT_FONT.render(str(gate.num), True, (255, 255, 255))
+                self.win.blit(text, gate.get_centre_position())
 
         for car in self.cars:
             if debug:
@@ -66,12 +74,6 @@ class Simulation:
 
         for wall in self.walls:
             wall.draw(self.win)
-
-        for gate in self.gates:
-            gate.draw(self.win)
-            if debug:
-                text = STAT_FONT.render(str(gate.num), True, (255, 255, 255))
-                self.win.blit(text, gate.get_centre_position())
 
         text = STAT_FONT.render("Score: {:.2f}".format(self.score), True, (255, 255, 255))
         self.win.blit(text, (WIDTH - 10 - text.get_width(), 10))
@@ -125,7 +127,7 @@ class Simulation:
             self.draw_neural_network(win, "neural_net.png")            
 
     def simulation_loop(self) -> None:
-        win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
+        win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT), pg.SRCALPHA)
         clock = pg.time.Clock()
 
         score: float = 0
@@ -168,7 +170,8 @@ class Simulation:
 
             frames += 1
             
-            self.draw_simulation(BG_IMG, self.generation_number, True)
+            debug: bool = pg.key.get_pressed()[DEBUG_KEY]
+            self.draw_simulation(BG_IMG, self.generation_number, debug)
             self.simulation_ui.draw()
             
             self.refresh()

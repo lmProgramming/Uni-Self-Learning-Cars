@@ -2,8 +2,8 @@ import pygame as pg
 from pygame.math import Vector2
 from vector_math import point_left_or_right_of_line # type: ignore
 
-WALL_COLOR = pg.Color(64, 64, 64)
-GATE_COLOR = pg.Color(104, 104, 104)
+WALL_COLOR = pg.Color(79, 82, 178)
+GATE_COLOR = pg.Color(216, 216, 216)
 
 class Wall:
     def __init__(self, x1, y1, x2, y2, thickness=2) -> None:
