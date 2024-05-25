@@ -11,12 +11,19 @@ class SavedTrainingGallery(ScrollableGallery):
         super().__init__(dimensions)
         self.rows = []
 
-    def populateGallery(self, saved_training_filenames):
+    def populateGallery(self, saved_training_filenames) -> None:
+        self.clear_rows()
+        
         for saved_training_filename in saved_training_filenames:
             self.createSavedTrainingRow(saved_training_filename)
         self.stretch_items()
         
-    def createSavedTrainingRow(self, saved_training_filename):
+    def clear_rows(self):
+        for row in self.rows:
+            row[1].parentWidget().setParent(None)
+        self.rows.clear()
+        
+    def createSavedTrainingRow(self, saved_training_filename) -> None:
         saved_training_label = QLabel(saved_training_filename)
         deleteButton = QPushButton('Delete')
         loadButton = QPushButton('Load')
@@ -31,7 +38,7 @@ class SavedTrainingGallery(ScrollableGallery):
     def deleteCheckpoint(self, checkpointLabel) -> None:
         rowWidget = checkpointLabel.parentWidget()
         reply = QMessageBox.question(
-            self, 'Delete Map', 'Are you sure you want to delete this map?',
+            self, 'Delete Checkpoint', 'Are you sure you want to delete this training data?',
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             delete_checkpoint(checkpointLabel.text())
