@@ -1,5 +1,5 @@
 import pygame as pg
-from pyui_elements import PyButton, PyUiElement
+from pygame_extensions.pyui_elements import PyButton, PyUiElement
 from pygame.surface import Surface
 
 DEFAULT_BUTTON_COLOR = pg.Color(44, 45, 47)
@@ -34,7 +34,10 @@ class PyDefaultUi:
     def from_center_position_to_top_left(self, x_centre: float, y_centre: float, width: float, height: float) -> tuple:
         x: float = x_centre - width // 2
         y: float = y_centre - height // 2
-        return x, y
+        return x, y, width, height
+    
+    def bottom_left_to_top_left(self, x: float, y: float, width: float, height: float) -> tuple:
+        return x, y - height, width, height
     
 class PySimulationUi(PyDefaultUi):
     def __init__(self, win: Surface, go_back_action, skip_generation_action) -> None:
@@ -58,9 +61,12 @@ class NeatDiagram:
             self.win.blit(self.neural_net_image, (self.bottom_x, y))
             
 class PyNeatSimulationUi(PySimulationUi):
+    CLOSE_BUTTON_WIDTH = 200
+    
     def __init__(self, win: Surface, go_back_action, skip_generation_action) -> None:
         super().__init__(win, go_back_action, skip_generation_action)
         self.neat_diagram: NeatDiagram | None = None
+        self.close_button: PyButton | None = None
         
     def draw(self) -> None:
         super().draw()
@@ -69,6 +75,14 @@ class PyNeatSimulationUi(PySimulationUi):
         
     def create_neat_diagram(self, bottom_x: float, bottom_y: float, diagram_filename: str) -> None:
         self.neat_diagram = NeatDiagram(self.win, bottom_x, bottom_y, diagram_filename)
+        button_position = self.bottom_left_to_top_left(self.neat_diagram.bottom_x, self.neat_diagram.bottom_y, self.CLOSE_BUTTON_WIDTH, DEFAULT_BUTTON_HEIGHT)
+        self.close_button = self.create_button(*button_position, "Close")
+        self.close_button.connect(self.close)
+        self.ui_elements.append(self.close_button)
+        
+    def close(self):
+        self.neat_diagram = None        
+    
         
 #class HidableUi:
 #    def __init__(self, win: Surface, element_inside: PyUiElement, show_animation_duration: int = 500, hide_animation_duration: int = 500) -> None:

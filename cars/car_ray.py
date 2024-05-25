@@ -3,7 +3,7 @@ from pygame.math import Vector2
 from typing import List, Callable
 import vector_math
 from map_scripts.map import Wall
-from pygame_tools import lerp_color, aaline
+from pygame_extensions.pygame_tools import lerp_color, aaline
 
 CLOSE_COLOR = pg.Color(193, 0, 0, 255)
 FAR_COLOR = pg.Color(0, 0, 0, 0)

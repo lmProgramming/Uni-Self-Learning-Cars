@@ -1,16 +1,13 @@
 import os
 import pygame as pg
+from pygame.font import Font
 from pygame.math import Vector2
 from typing import List, Sequence
-from pyui_elements import PyButton
+from pygame_extensions.pyui_elements import PyButton
 from pygame.surface import Surface
 from cars.car import Car, AICar
 import visualization.visualize as visualize
 from simulation.simulation_ui import PySimulationUi, PyNeatSimulationUi
-
-pg.font.init()
-
-pg.display.set_caption("Simulation")
 
 WIDTH = 1280
 HEIGHT = 960
@@ -19,14 +16,15 @@ USE_BG_IMG: bool = False
 BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
 BG_COLOR = pg.Color(32, 32, 32)
 
-STAT_FONT = pg.font.SysFont("arial", 25)
-
 RAY_DISTANCE_KILL: float = 10
 
 DEBUG_KEY = pg.K_r
 
+class BreakTrainingException(Exception):
+    pass
+
 class Simulation:
-    def __init__(self, cars: List[Car], walls, gates, generation_number: int, config=None, infinite_time: bool=False) -> None:
+    def __init__(self, cars: List[Car], walls, gates, generation_number: int, config=None, infinite_time: bool=False) -> None:        
         self.cars: List[Car] = cars
         self.walls = walls
         self.gates = gates
@@ -39,12 +37,13 @@ class Simulation:
         self.generation_number: int = generation_number
         self.simulation_ui: PySimulationUi | PyNeatSimulationUi
         self.create_appropriate_ui()
-        
+        self.font: Font = pg.font.SysFont("arial", 25)
+                
     def create_appropriate_ui(self) -> None:
         if not self.is_neat_simulation:
-            self.simulation_ui = PySimulationUi(self.win, self.end_simulation, self.end_simulation)
+            self.simulation_ui = PySimulationUi(self.win, self.end_training, self.end_simulation)
         else:
-            self.simulation_ui = PyNeatSimulationUi(self.win, self.end_simulation, self.end_simulation)
+            self.simulation_ui = PyNeatSimulationUi(self.win, self.end_training, self.end_simulation)
             
     @property
     def is_neat_simulation(self) -> bool:
@@ -59,6 +58,9 @@ class Simulation:
     def end_simulation(self) -> None:
         self.cars = []     
         
+    def end_training(self):
+        raise BreakTrainingException("Training ended.")
+        
     def draw_simulation(self, bg_img, gen, debug=False) -> None:
         if USE_BG_IMG:
             self.win.blit(bg_img, (0, 0))
@@ -70,7 +72,7 @@ class Simulation:
         for gate in self.gates:
             gate.draw(self.win)
             if debug:
-                text = STAT_FONT.render(str(gate.num), True, (255, 255, 255))
+                text = self.font.render(str(gate.num), True, (255, 255, 255))
                 self.win.blit(text, gate.get_centre_position())
 
         for car in self.cars:
@@ -79,16 +81,16 @@ class Simulation:
                     line.draw_debug(self.win)
             car.draw(self.win)        
             if debug:
-                text = STAT_FONT.render(str(int(car.get_score())), True, (255, 255, 255))
+                text = self.font.render(str(int(car.get_score())), True, (255, 255, 255))
                 self.win.blit(text, car.get_centre_position())
 
         for wall in self.walls:
             wall.draw(self.win)
 
-        text = STAT_FONT.render("Score: {:.2f}".format(self.score), True, (255, 255, 255))
+        text = self.font.render("Score: {:.2f}".format(self.score), True, (255, 255, 255))
         self.win.blit(text, (WIDTH - 10 - text.get_width(), 10))
 
-        text = STAT_FONT.render("Gen: " + str(gen), True, (255, 255, 255))
+        text = self.font.render("Gen: " + str(gen), True, (255, 255, 255))
         self.win.blit(text, (10, 10))
         
     def check_if_quit(self, event) -> bool:
@@ -145,8 +147,6 @@ class Simulation:
             score = max([score] + [car.get_score() for car in self.cars])
                                         
             self.process_input(self.cars, self.config, win)
-
-            # keys: ScancodeWrapper = pg.key.get_pressed()
                 
             i = 0
             while i < len(self.cars):

@@ -3,15 +3,11 @@ import os
 import pygame as pg
 from pygame.math import Vector2
 from typing import List, Optional
-from simulation.simulation import Simulation
+from simulation.simulation import Simulation, BreakTrainingException
 from simulation.simulation_setup import setup_generation
 from simulation.simulation_config import SimulationConfig
 from map_scripts.map_tools import DEFAULT_MAP
 import random
-
-pg.font.init()
-
-pg.display.set_caption("Simulation")
 
 WIDTH = 1280
 HEIGHT = 960
@@ -31,8 +27,7 @@ NON_RAY_INPUTS: int = 2
 '''
 Statystyki podczas trenowania. Lider każdej generacji byłby oznaczony podczas jazdy po mapie. Tryb konsolowy pozwoli zrobić wszystko, co jest 
 dostępne w głównym menu GUI (w którym można zmienić parametry symulacji, uruchomić ją, wczytać 
-zapis sieci neuronowych poprzednio wytrenowanych). W menu GUI podczas gry będzie można przejrzeć statystyki i wrócić do menu głównego, a także 
-kliknąć samochód, by w rogu zobaczyć jego sieć neuronową z wartościami aktualizowanymi na żywo.
+zapis sieci neuronowych poprzednio wytrenowanych).
 '''
 
 class NeatTrainingAttempt:
@@ -44,7 +39,7 @@ class NeatTrainingAttempt:
 
         self.simulation_config: Optional[SimulationConfig] = None
         if simulation_config is not None:
-            self.simulation_config: SimulationConfig = simulation_config
+            self.simulation_config = simulation_config
             NeatTrainingAttempt.inject_simulation_config(self.config, simulation_config)
         
     @staticmethod        
@@ -70,7 +65,7 @@ class NeatTrainingAttempt:
         cars, walls, gates = setup_generation(**arguments)
 
         simulation = Simulation(cars, walls, gates, self.gen, config, infinite_time=False)
-        simulation.simulation_loop()    
+        simulation.simulation_loop()   
 
     @staticmethod
     def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
@@ -85,10 +80,18 @@ class NeatTrainingAttempt:
         p.add_reporter(neat.StdOutReporter(True))
         stats = neat.StatisticsReporter()
         p.add_reporter(stats)
+        
+        pg.init()
+        pg.font.init()    
+        pg.display.set_caption("Simulation - NEAT-Python")
 
-        winner = p.run(self.run_new_generation, 500)
+        try:
+            winner = p.run(self.run_new_generation, 500)
 
-        print(winner)
+            print(winner)
+        except BreakTrainingException:
+            print("Training ended.")
+            pg.quit()
 
 def main(simulation_config: Optional[SimulationConfig] = None) -> None:    
     local_dir: str = os.path.dirname(__file__)
