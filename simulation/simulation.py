@@ -6,7 +6,7 @@ from pyui_elements import PyButton
 from pygame.surface import Surface
 from cars.car import Car, AICar
 import visualization.visualize as visualize
-from simulation.simulation_ui import PySimulationUi
+from simulation.simulation_ui import PySimulationUi, PyNeatSimulationUi
 
 pg.font.init()
 
@@ -37,7 +37,18 @@ class Simulation:
         self.score: float = 0
         self.frames: int = 0
         self.generation_number: int = generation_number
-        self.simulation_ui: PySimulationUi = PySimulationUi(self.win, self.end_simulation, self.end_simulation)
+        self.simulation_ui: PySimulationUi | PyNeatSimulationUi
+        self.create_appropriate_ui()
+        
+    def create_appropriate_ui(self) -> None:
+        if not self.is_neat_simulation:
+            self.simulation_ui = PySimulationUi(self.win, self.end_simulation, self.end_simulation)
+        else:
+            self.simulation_ui = PyNeatSimulationUi(self.win, self.end_simulation, self.end_simulation)
+            
+    @property
+    def is_neat_simulation(self) -> bool:
+        return self.config is not None
         
     def draw_background(self, bg_img: Surface) -> None:
         self.win.blit(bg_img, (0, 0))
@@ -80,11 +91,6 @@ class Simulation:
         text = STAT_FONT.render("Gen: " + str(gen), True, (255, 255, 255))
         self.win.blit(text, (10, 10))
         
-    def draw_neural_network(self, win: Surface, filename: str) -> None:
-        neural_net_image = pg.image.load(filename)
-        
-        win.blit(neural_net_image, (100, 100))
-        
     def check_if_quit(self, event) -> bool:
         keys: Sequence[bool] = pg.key.get_pressed()
 
@@ -121,9 +127,9 @@ class Simulation:
 
     def handle_car_selection(self, cars: List[Car], mouse_pos: Vector2, config, win) -> None:
         selected: Car | None = self.selected_car(cars, mouse_pos)
-        if selected and isinstance(selected, AICar):
+        if selected and isinstance(self.simulation_ui, PyNeatSimulationUi) and isinstance(selected, AICar):
             visualize.draw_net(config, selected.genome, view=False, filename="neural_net", fmt="png")  
-            self.draw_neural_network(win, "neural_net.png")            
+            self.simulation_ui.create_neat_diagram(0, HEIGHT, "neural_net.png")            
 
     def simulation_loop(self) -> None:
         win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT), pg.SRCALPHA)

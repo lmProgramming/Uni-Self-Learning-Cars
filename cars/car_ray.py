@@ -48,8 +48,7 @@ class CarRay:
             self.length)
         return intersection_point, closest_distance
     
-    def draw_debug(self, win) -> None:       
-        print(self.get_debug_color())
+    def draw_debug(self, win) -> None:      
         aaline(win, self.get_debug_color(), self.get_origin_position(), self.last_point if self.last_point is not None else self.get_end_position(), RAY_WIDTH)
     
     def get_debug_color(self) -> pg.Color:    

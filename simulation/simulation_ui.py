@@ -43,3 +43,86 @@ class PySimulationUi(PyDefaultUi):
         self.skip_generation_button.action = skip_generation_action
         
         self.ui_elements.append(self.skip_generation_button)
+       
+class NeatDiagram:
+    def __init__(self, win: Surface, bottom_x: float, bottom_y: float, diagram_filename: str) -> None:
+        self.win: Surface = win
+        self.diagram_filename: str = diagram_filename
+        self.bottom_x: float = bottom_x
+        self.bottom_y: float = bottom_y
+        self.neural_net_image: Surface | None = pg.image.load(diagram_filename)    
+        
+    def draw(self) -> None:   
+        if self.neural_net_image is not None:     
+            y: float = self.bottom_y - self.neural_net_image.get_height()     
+            self.win.blit(self.neural_net_image, (self.bottom_x, y))
+            
+class PyNeatSimulationUi(PySimulationUi):
+    def __init__(self, win: Surface, go_back_action, skip_generation_action) -> None:
+        super().__init__(win, go_back_action, skip_generation_action)
+        self.neat_diagram: NeatDiagram | None = None
+        
+    def draw(self) -> None:
+        super().draw()
+        if self.neat_diagram is not None:
+            self.neat_diagram.draw()
+        
+    def create_neat_diagram(self, bottom_x: float, bottom_y: float, diagram_filename: str) -> None:
+        self.neat_diagram = NeatDiagram(self.win, bottom_x, bottom_y, diagram_filename)
+        
+#class HidableUi:
+#    def __init__(self, win: Surface, element_inside: PyUiElement, show_animation_duration: int = 500, hide_animation_duration: int = 500) -> None:
+#        self.show_animation_duration: int = show_animation_duration
+#        self.hide_animation_duration: int = hide_animation_duration
+#        
+#        self.is_visible = False
+#        self.animation_start_time = 0
+#        self.animation_end_time = 0
+#        
+#        self.win: Surface = win
+#        
+#        self.show_hide_button: PyButton = self.create_button(10, 10, 200, DEFAULT_BUTTON_HEIGHT, "Show")
+#        self.show_hide_button.action = self.show_hide_ui
+#        
+#        self.element_inside: PyUiElement = element_inside
+#        
+#        self.ui_elements: list[PyUiElement] = [self.show_hide_button, self.element_inside]
+#        
+#    def handle_event(self, event) -> None:
+#        for element in self.ui_elements:
+#            element.handle_event(event)
+#
+#    def draw(self) -> None:
+#        if self.is_visible:
+#            self.animate_ui()
+#        
+#        for element in self.ui_elements:
+#            element.draw(self.win)
+#        
+#    def create_button(self, x: float, y: float, width: float, height: float, text: str) -> PyButton:
+#        button = PyButton(text, x, y, width, height, DEFAULT_BUTTON_COLOR, DEFAULT_HOVER_COLOR, DEFAULT_FONT_COLOR, DEFAULT_FONT)
+#        return button
+#    
+#    def show_hide_ui(self) -> None:
+#        if not self.is_visible:
+#            self.is_visible = True
+#            self.animation_start_time = pg.time.get_ticks()
+#            self.animation_end_time = self.animation_start_time + self.show_animation_duration
+#    
+#    def hide_ui(self) -> None:
+#        if self.is_visible:
+#            self.is_visible = False
+#            self.animation_start_time = pg.time.get_ticks()
+#            self.animation_end_time = self.animation_start_time + self.hide_animation_duration
+#    
+#    def animate_ui(self) -> None:
+#        current_time = pg.time.get_ticks()
+#        if current_time < self.animation_end_time:
+#            progress = (current_time - self.animation_start_time) / (self.animation_end_time - self.animation_start_time)
+#            
+#            for element in self.ui_elements:
+#                element.rect.y = -element.rect.height + int(progress * element.rect.height)
+#        else:
+#            for element in self.ui_elements:
+#                element.rect.y = 10
+                
