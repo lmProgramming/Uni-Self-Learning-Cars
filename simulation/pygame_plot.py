@@ -6,20 +6,42 @@ import matplotlib.backends.backend_agg as agg
 
 import pylab
 
-def py_plot(y_values: list) -> pygame.Surface:
-	fig: pylab.Figure = pylab.figure(figsize=[4, 4], # Inches
-					dpi=100,        # 100 dots per inch, so the resulting buffer is 400x400 pixels
-					)
-	ax: pylab.Axes = fig.gca()
-	ax.plot(y_values)
+def py_plot(width, height, *y_values_packed) -> pygame.Surface:
+    if len(y_values_packed) == 0:
+        raise ValueError("No values to plot")
+    
+    dpi = 100
 
-	canvas = agg.FigureCanvasAgg(fig)
-	canvas.draw()
-	renderer = canvas.get_renderer()
-	raw_data = renderer.tostring_rgb()
+    fig: pylab.Figure = pylab.figure(figsize=[width // dpi, height // dpi], dpi=dpi)
+    ax: pylab.Axes = fig.gca()
 
-	size: tuple[int, int] = canvas.get_width_height()
+    for y_values in y_values_packed:
+        ax.plot(y_values)
 
-	surface: pygame.Surface = pygame.image.fromstring(raw_data, size, "RGB")
+    canvas = agg.FigureCanvasAgg(fig)
+    canvas.draw()
+    renderer = canvas.get_renderer()
+    raw_data: bytes = renderer.tostring_rgb()
+
+    size: tuple[int, int] = canvas.get_width_height()
+
+    surface: pygame.Surface = pygame.image.fromstring(raw_data, size, "RGB")
  
-	return surface
+    return surface
+
+if __name__ == "__main__":
+    pygame.init()
+    screen = pygame.display.set_mode((400, 400))
+
+    surface = py_plot(400, 400, [1, 2, 3], [4, 5, 6], [7, 8, 9])
+    screen.blit(surface, (0, 0))
+
+    pygame.display.flip()
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+    pygame.quit()

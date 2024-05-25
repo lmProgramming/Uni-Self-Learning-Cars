@@ -48,13 +48,13 @@ class Main(QMainWindow):
     def start_test_drive(self) -> None:
         test_drive()
         
-def set_dark_theme(app):
+def set_dark_theme(app) -> None:
     dark_palette = qdarktheme.load_palette()
     
     app.setStyle("Fusion")
     app.setPalette(dark_palette)
-        
-if __name__ == '__main__':
+    
+def open_main_menu():
     app = QApplication(sys.argv)
     
     set_dark_theme(app)
@@ -62,3 +62,6 @@ if __name__ == '__main__':
     showMain = Main(app)
     showMain.show()
     sys.exit(app.exec_())
+        
+if __name__ == '__main__':
+    open_main_menu()

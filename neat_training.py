@@ -69,7 +69,7 @@ class NeatTrainingAttempt:
         simulation.plot_values(self.statistics)
         simulation.simulation_loop()   
         
-        self.statistics += [simulation.get_statistics()]
+        self.statistics.append(simulation.get_statistics())
 
     @staticmethod
     def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:

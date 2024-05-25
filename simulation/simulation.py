@@ -48,7 +48,7 @@ class Simulation:
             self.simulation_ui = PyNeatSimulationUi(self.win, self.end_training, self.end_simulation)
                     
     def plot_values(self, values_to_plot: list[SimulationStatistics]) -> None:
-        self.simulation_ui.plot_values(values_to_plot)
+        self.simulation_ui.plot_values(WIDTH, HEIGHT, values_to_plot)
             
     @property
     def is_neat_simulation(self) -> bool:
@@ -66,7 +66,7 @@ class Simulation:
     def end_simulation(self) -> None:
         self.cars = []     
         
-    def end_training(self) -> os.NoReturn:
+    def end_training(self):
         raise BreakTrainingException("Training ended.")
         
     def draw_simulation(self, debug=False) -> None:        
@@ -180,7 +180,6 @@ class Simulation:
             self.draw_simulation(debug)
             self.simulation_ui.draw()
             self.simulation_ui.draw_simulation_info(*self.calculate_scores(), self.generation_number, WIDTH - 10)
-            self.simulation_ui.draw_plot(WIDTH, HEIGHT)
         
             self.process_input(self.cars, self.config, win)
             
