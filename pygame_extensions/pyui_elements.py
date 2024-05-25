@@ -5,10 +5,10 @@ from pygame.font import Font
 
 pg.font.init()
 
-COLOR_INACTIVE = pg.Color('gray')
-COLOR_ACTIVE = pg.Color('black')
+COLOR_INACTIVE = pg.Color(200, 200, 200)
+COLOR_ACTIVE = pg.Color(255, 255, 255)
 FONT = pg.font.Font(None, 32)
-TOOLTIP_COLOR = pg.Color(48, 48, 48)
+TOOLTIP_COLOR = pg.Color(150, 150, 150)
 
 BORDER_SIZE = 2
 

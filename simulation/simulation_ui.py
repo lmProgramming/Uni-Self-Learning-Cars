@@ -176,7 +176,6 @@ class PyMapMakerUi(PyDefaultUi):
         
     def draw(self) -> None:
         super().draw()
-        print("YEAS")
         
     @property    
     def map_name(self) -> str:
