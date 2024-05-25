@@ -31,7 +31,7 @@ class Simulation:
         self.config = config
         self.infinite_time: bool = infinite_time
         self.win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
-        self.max_score = 0
+        self.max_score: float = 0
         self.clock = pg.time.Clock()
         self.frames: int = 0
         self.generation_number: int = generation_number
@@ -126,25 +126,22 @@ class Simulation:
             self.simulation_ui.create_neat_diagram(0, HEIGHT, "neural_net.png")        
             
     def calculate_scores(self) -> tuple[float, float]:
-        self.max_score = max([self.max_score] + [car.get_score() for car in self.cars])
-        average_score = sum([car.get_score() for car in self.cars]) / len(self.cars)  
-        return self.max_score, average_score
+        try:
+            self.max_score = max([self.max_score] + [car.get_score() for car in self.cars])
+            average_score = sum([car.get_score() for car in self.cars]) / len(self.cars)  
+            return self.max_score, average_score
+        except ZeroDivisionError:
+            return self.max_score, 0
 
     def simulation_loop(self) -> None:
         win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT), pg.SRCALPHA)
         clock = pg.time.Clock()
 
-        score: float = 0
         frames = 0
         while len(self.cars) > 0 and (frames < 60 * (10 + self.generation_number) or self.infinite_time):
             clock.tick(60)        
             
             self.draw_background(BG_IMG)
-
-            score = max([score] + [car.get_score() for car in self.cars])
-            
-                                        
-            self.process_input(self.cars, self.config, win)
                 
             i = 0
             while i < len(self.cars):
@@ -177,5 +174,7 @@ class Simulation:
             self.draw_simulation(debug)
             self.simulation_ui.draw()
             self.simulation_ui.draw_simulation_info(*self.calculate_scores(), self.generation_number, WIDTH - 10)
+        
+            self.process_input(self.cars, self.config, win)
             
             self.refresh()

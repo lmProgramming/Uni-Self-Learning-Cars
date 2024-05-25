@@ -8,6 +8,7 @@ pg.font.init()
 COLOR_INACTIVE = pg.Color('gray')
 COLOR_ACTIVE = pg.Color('black')
 FONT = pg.font.Font(None, 32)
+TOOLTIP_COLOR = pg.Color(48, 48, 48)
 
 BORDER_SIZE = 2
 
@@ -24,17 +25,19 @@ class PyUiElement(ABC):
         ...
 
 class PyInputBox(PyUiElement):
-    def __init__(self, x, y, w, h, text='') -> None:
+    def __init__(self, x, y, w, h, tooltip='') -> None:
         self.rect = pg.Rect(x, y, w, h)
+        self.default_width = w
         self.color: pg.Color = COLOR_INACTIVE
-        self.text: str = text
-        self.txt_surface: pg.Surface = FONT.render(text, True, self.color)
+        self.tooltip: str = tooltip
+        self.text: str = ""
+        self.txt_surface: pg.Surface = FONT.render(tooltip, True, self.color)
         self.active: bool = False
         self.update()        
 
     def handle_event(self, event) -> bool:
         if event.type == pg.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
+            if self.mouse_over(event.pos):
                 self.set_active(not self.active)
             else:
                 self.set_active(False)
@@ -48,11 +51,24 @@ class PyInputBox(PyUiElement):
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
-                self.txt_surface = FONT.render(self.text, True, self.color)
+                self.render_text()
                 self.update()
                 return True
         
         return False
+    
+    def mouse_over(self, pos) -> bool:
+        return self.rect.collidepoint(pos)
+    
+    @property
+    def showing_tooltip(self) -> bool:
+        return self.text == ""
+    
+    def render_text(self):
+        if not self.showing_tooltip:
+            self.txt_surface = FONT.render(self.text, True, self.color)
+        else:
+            self.txt_surface = FONT.render(self.tooltip, True, TOOLTIP_COLOR)
                 
     def set_active(self, active: bool) -> None:
         self.active = active
@@ -60,7 +76,7 @@ class PyInputBox(PyUiElement):
         self.txt_surface = FONT.render(self.text, True, self.color)
 
     def update(self) -> None:
-        width: int = max(200, self.txt_surface.get_width()+10)
+        width: int = max(self.default_width, self.txt_surface.get_width()+10)
         self.rect.w = width
 
     def draw(self, screen) -> None:

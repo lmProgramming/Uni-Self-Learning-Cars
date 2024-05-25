@@ -1,5 +1,5 @@
 import pygame as pg
-from pygame_extensions.pyui_elements import PyButton, PyUiElement
+from pygame_extensions.pyui_elements import PyButton, PyUiElement, PyInputBox
 from pygame.surface import Surface
 
 DEFAULT_BUTTON_COLOR = pg.Color(44, 45, 47)
@@ -13,7 +13,7 @@ DEFAULT_SPACE_BETWEEN_BUTTONS = 20
 class PyDefaultUi:
     def __init__(self, win: Surface, go_back_action) -> None:
         self.back_button: PyButton = self.create_button(10, 10, 200, DEFAULT_BUTTON_HEIGHT, "Main Menu")
-        self.back_button.action = go_back_action
+        self.back_button.connect(go_back_action)
         
         self.ui_elements: list[PyUiElement] = [self.back_button]
         
@@ -157,4 +157,34 @@ class PyNeatSimulationUi(PySimulationUi):
 #        else:
 #            for element in self.ui_elements:
 #                element.rect.y = 10
-                
+
+class PyMapMakerUi(PyDefaultUi):
+    def __init__(self, win: Surface, go_back_action, save_map_action, map_width: float, map_height: float) -> None:
+        super().__init__(win, go_back_action)     
+          
+        self.map_name_input: PyInputBox = PyInputBox(*self.from_center_position_to_top_left(map_width // 2, 37, 300, 32), "Input map name here...") 
+        self.ui_elements.append(self.map_name_input)
+        
+        save_map_position: tuple[float, float, float, float] = self.from_center_position_to_top_left(
+            map_width // 2, 
+            map_height - DEFAULT_BUTTON_HEIGHT - 20, 
+            200, 
+            DEFAULT_BUTTON_HEIGHT)
+        self.save_map_button: PyButton = self.create_button(*save_map_position, "Save")
+        self.save_map_button.connect(save_map_action)        
+        self.ui_elements.append(self.save_map_button)
+        
+    def draw(self) -> None:
+        super().draw()
+        print("YEAS")
+        
+    @property    
+    def map_name(self) -> str:
+        return self.map_name_input.text
+    
+    @property
+    def map_name_input_active(self) -> bool:
+        return self.map_name_input.active
+    
+    def set_map_name(self, name: str) -> None:
+        self.map_name_input.text = name

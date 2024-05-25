@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QHBoxLayout, QBoxLayout, QWidget, QSpacerItem, QSizePolicy
 from map_scripts.map_tools import get_map_names
 from neat_training import main as start_simulation
-from map_scripts.map_maker import create_edit_map as create_new_map
+from map_scripts.map_maker import create_new_map as create_new_map
 from simulation.simulation_config import SimulationConfig
 from typing import List
 from gui.map_gallery import MapGallery

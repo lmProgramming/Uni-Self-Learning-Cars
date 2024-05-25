@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QInputDialog, QMe
 from gui.scrollable_gallery import ScrollableGallery
 from map_scripts.map_tools import rename_map, delete_map
 from map_scripts.map_reader import read_map_txt
-from map_scripts.map_maker import create_edit_map
+from map_scripts.map_maker import create_new_map
 
 class MapGallery(ScrollableGallery):
     def __init__(self, dimensions):
@@ -47,7 +47,7 @@ class MapGallery(ScrollableGallery):
             rowWidget.setParent(None)
 
     def editMap(self, map_name):
-        create_edit_map(*read_map_txt(map_name), map_name)
+        create_new_map(*read_map_txt(map_name), map_name)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
