@@ -9,6 +9,9 @@ from simulation.simulation_config import SimulationConfig
 from map_scripts.map_tools import DEFAULT_MAP
 import random
 from simulation.statistics import SimulationStatistics
+from datetime import datetime   
+import pickle
+from neat_save_load import save_config
 
 WIDTH = 1280
 HEIGHT = 960
@@ -24,10 +27,6 @@ RAY_COUNT: int = 8
 RAY_LENGTH: float = 200
 
 NON_RAY_INPUTS: int = 2
-
-'''
-Statystyki podczas trenowania. Lider każdej generacji byłby oznaczony podczas jazdy po mapie.
-'''
 
 class NeatTrainingAttempt:
     def __init__(self, config_path, simulation_config: Optional[SimulationConfig] = None) -> None:
@@ -70,6 +69,18 @@ class NeatTrainingAttempt:
         simulation.simulation_loop()   
         
         self.statistics.append(simulation.get_statistics())
+        
+    def get_simulation_config(self) -> SimulationConfig:
+        if self.simulation_config is not None:
+            return self.simulation_config
+        
+        return SimulationConfig(
+            500,
+            [DEFAULT_MAP],
+            self.config.genome_config.num_hidden, 
+            True,
+            self.config.genome_config.num_inputs - NON_RAY_INPUTS, 
+            self.config.pop_size)
 
     @staticmethod
     def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
@@ -80,8 +91,14 @@ class NeatTrainingAttempt:
 
     def run(self) -> None:
         p = neat.Population(self.config)
+        
+        cur_date: datetime = datetime.now()
+        filename_prefix: str = cur_date.strftime("%Y-%m-%d-%H-%M-%S-NEAT-")
 
         p.add_reporter(neat.StdOutReporter(True))
+        p.add_reporter(neat.Checkpointer(1, 1, filename_prefix))   
+        save_config(self.get_simulation_config(), filename_prefix)     
+         
         stats = neat.StatisticsReporter()
         p.add_reporter(stats)
         

@@ -46,8 +46,12 @@ class PyDefaultUi:
         return x, y - height, width, height
     
 class PySimulationUi(PyDefaultUi):
-    PLOT_WIDTH = 300
+    PLOT_WIDTH = 400
     PLOT_HEIGHT = 200
+    
+    CLOSE_BUTTON_WIDTH = 150
+    CLOSE_BUTTON_HEIGHT = 50
+    
     def __init__(self, win: Surface, go_back_action, skip_generation_action) -> None:
         super().__init__(win, go_back_action)
         self.skip_generation_button: PyButton = self.create_button(self.back_button.rect.bottomright[0] + DEFAULT_SPACE_BETWEEN_BUTTONS, 10, 200, DEFAULT_BUTTON_HEIGHT, "Skip Generation")
@@ -67,14 +71,53 @@ class PySimulationUi(PyDefaultUi):
         gen_text: Surface = self.font.render(f"Generation {generation_number}", True, (255, 255, 255))
         self.win.blit(gen_text, (right_x_position - gen_text.get_width(), 90))
                 
-    def plot_values(self, right_x: float, bottom_y: float, values_to_plot: list[SimulationStatistics]) -> None:
-        self.plot: Surface = PyPlot(right_x, bottom_y, self.PLOT_WIDTH, self.PLOT_HEIGHT, [value.max_score for value in values_to_plot], [value.average_score for value in values_to_plot])
-        self.ui_elements.append(self.plot)  
+    def plot_values(self, right_x: float, bottom_y: float, values_to_plot: list[SimulationStatistics], show_plot: bool = False) -> None:
+        self.plot: Surface = PyPlot(
+            right_x, 
+            bottom_y, 
+            self.PLOT_WIDTH, 
+            self.PLOT_HEIGHT, 
+            ("max score", [value.max_score for value in values_to_plot]), 
+            ("avg score", [value.average_score for value in values_to_plot]))
+        
+        button_position: tuple[float, float, float, float] = (
+            right_x - self.CLOSE_BUTTON_WIDTH - 3, 
+            bottom_y - self.PLOT_HEIGHT - self.CLOSE_BUTTON_HEIGHT - 3, 
+            self.CLOSE_BUTTON_WIDTH, 
+            self.CLOSE_BUTTON_HEIGHT)
+        
+        self.close_plot_button: PyButton = self.create_button(*button_position, text="Close")
+        self.close_plot_button.connect(self.close_plot)
+        
+        self.show_plot_button: PyButton = self.create_button(
+            right_x - self.CLOSE_BUTTON_WIDTH - 3, 
+            bottom_y - self.CLOSE_BUTTON_HEIGHT - 3, 
+            self.CLOSE_BUTTON_WIDTH, 
+            self.CLOSE_BUTTON_HEIGHT, 
+            "Show Plot")
+        
+        self.show_plot_button.connect(self.show_plot)
+        
+        if show_plot:
+            self.show_plot()
+        else:
+            self.close_plot()
+        
+    def close_plot(self) -> None:
+        if self.close_plot_button in self.ui_elements:
+            self.ui_elements.remove(self.close_plot_button)        
+            self.ui_elements.remove(self.plot)  
+          
+        self.ui_elements.append(self.show_plot_button)
+        
+    def show_plot(self) -> None:
+        self.ui_elements.append(self.plot)
+        self.ui_elements.append(self.close_plot_button)
+        
+        if self.show_plot_button in self.ui_elements:        
+            self.ui_elements.remove(self.show_plot_button)
             
-class PyNeatSimulationUi(PySimulationUi):
-    CLOSE_BUTTON_WIDTH = 100
-    CLOSE_BUTTON_HEIGHT = 50
-    
+class PyNeatSimulationUi(PySimulationUi):    
     def __init__(self, win: Surface, go_back_action, skip_generation_action) -> None:
         super().__init__(win, go_back_action, skip_generation_action)
         self.neat_diagram: PyImage | None = None
@@ -85,8 +128,8 @@ class PyNeatSimulationUi(PySimulationUi):
         self.ui_elements.append(self.neat_diagram) 
         
         button_position: tuple[float, float, float, float] = self.bottom_left_to_top_left(
-            self.neat_diagram.bottom_x, 
-            self.neat_diagram.bottom_y - self.neat_diagram.image.get_height(), 
+            self.neat_diagram.bottom_x + 3, 
+            self.neat_diagram.bottom_y - self.neat_diagram.image.get_height() - 3, 
             self.CLOSE_BUTTON_WIDTH, 
             self.CLOSE_BUTTON_HEIGHT)        
         
@@ -98,7 +141,6 @@ class PyNeatSimulationUi(PySimulationUi):
         self.ui_elements.remove(self.close_button)        
         self.ui_elements.remove(self.neat_diagram)        
         self.neat_diagram = None
-        self.close_button = None
 
 class PyMapMakerUi(PyDefaultUi):
     def __init__(self, win: Surface, go_back_action, save_map_action, map_width: float, map_height: float) -> None:

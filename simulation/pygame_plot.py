@@ -16,7 +16,10 @@ def py_plot(width, height, *y_values_packed) -> pygame.Surface:
     ax: pylab.Axes = fig.gca()
 
     for y_values in y_values_packed:
-        ax.plot(y_values)
+        label, values = y_values
+        ax.plot(values, label=label)
+        
+    ax.legend()
 
     canvas = agg.FigureCanvasAgg(fig)
     canvas.draw()
@@ -32,8 +35,10 @@ def py_plot(width, height, *y_values_packed) -> pygame.Surface:
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((400, 400))
+    
+    arguments = [("x", [1., 2., 3.]), ("x + 3", [4., 5., 6.])]
 
-    surface = py_plot(400, 400, [1, 2, 3], [4, 5, 6], [7, 8, 9])
+    surface = py_plot(400, 400, ("x", [1., 2., 3.]), ("x + 3", [4., 5., 6.]))
     screen.blit(surface, (0, 0))
 
     pygame.display.flip()

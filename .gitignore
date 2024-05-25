@@ -2,6 +2,8 @@
 neural_net
 neural_net.png
 vector_math.c
+*.pkl
+*-NEAT-*
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
