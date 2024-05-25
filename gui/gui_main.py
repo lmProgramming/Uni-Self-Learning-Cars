@@ -205,31 +205,30 @@ class UiParametersMenu(QtWidgets.QWidget):
         start_simulation(config)
         
 class UiLoadTraining(QtWidgets.QWidget):
-    def __init__(self, top_bar_layout, dimensions):
+    def __init__(self, top_bar_layout, dimensions) -> None:
         super().__init__()
         self.resize(*dimensions)
         
         layout = QVBoxLayout()    
         fixed_height_widget = FixedHeightWidget(BAR_HEIGHT)
+        
+        top_bar_layout.addStretch(1)
+        self.refresh_button = QtWidgets.QPushButton("Refresh")
+        self.refresh_button.clicked.connect(self.populate_gallery)
+        top_bar_layout.addWidget(self.refresh_button)
+        
         fixed_height_widget.setLayout(top_bar_layout)
         layout.addWidget(fixed_height_widget)
         
         training_gallery_dimensions = [10, dimensions[1] // 2, dimensions[0] * 9 // 10, dimensions[1] // 2]                             
         self.saved_training_gallery = SavedTrainingGallery(training_gallery_dimensions)
-        self.saved_training_gallery.populateGallery(get_saved_checkpoints())
+        self.populate_gallery()
         
         layout.addWidget(self.saved_training_gallery)
         self.setLayout(layout)    
-                
-    def start_simulation_with_parameters(self) -> None:
-        config = SimulationConfig(
-            num_iterations=100, 
-            map_pool=self.map_pool.currentData(), 
-            hidden_layers=self.hidden_layers_count_slider.value(), 
-            random_angle=self.random_angle.isChecked(),
-            ray_count=8,
-            initial_population=self.car_count_slider.value())
-        start_simulation(config)
+        
+    def populate_gallery(self) -> None:
+        self.saved_training_gallery.populateGallery(get_saved_checkpoints())
         
 def ui_element_with_label_hlayout(label: str, element: QWidget) -> QHBoxLayout:
     layout = QHBoxLayout()

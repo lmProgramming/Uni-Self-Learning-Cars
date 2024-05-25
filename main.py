@@ -53,7 +53,7 @@ class Main(QMainWindow):
         test_drive()
         
 def set_dark_theme(app) -> None:
-    dark_palette = qdarktheme.load_palette()
+    dark_palette: QtGui.QPalette = qdarktheme.load_palette()
     
     app.setStyle("Fusion")
     app.setPalette(dark_palette)
