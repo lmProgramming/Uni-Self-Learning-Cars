@@ -21,7 +21,7 @@ class Main(QMainWindow):
         self.ui.default_simulation_button.clicked.connect(self.start_simulation)
         self.ui.parameters_simulation_button.clicked.connect(self.open_parameters_screen)
         self.ui.map_menu_button.clicked.connect(self.open_map_screen)
-        
+        self.ui.load_saved_training_button.clicked.connect(self.open_load_saved_screen)        
         self.ui.test_ride_button.clicked.connect(self.start_test_drive)
                 
         self.resize(800, 600) 
@@ -44,6 +44,10 @@ class Main(QMainWindow):
     def open_map_screen(self) -> None:
         self.ui.QtStack.setCurrentIndex(2)
         self.setWindowTitle("Maps")
+        
+    def open_load_saved_screen(self) -> None:
+        self.ui.QtStack.setCurrentIndex(3)
+        self.setWindowTitle("Saved Training Data")
         
     def start_test_drive(self) -> None:
         test_drive()

@@ -3,9 +3,11 @@ from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QHBoxLayout, QB
 from map_scripts.map_tools import get_map_names
 from neat_training import main as start_simulation
 from map_scripts.map_maker import create_new_map as create_new_map
+from neat_save_load import get_saved_checkpoints
 from simulation.simulation_config import SimulationConfig
 from typing import List
 from gui.map_gallery import MapGallery
+from gui.saved_training_gallery import SavedTrainingGallery
 from gui.checkable_combo_box import CheckableComboBox
 
 class UiMain(QtWidgets.QWidget):
@@ -19,12 +21,14 @@ class UiMain(QtWidgets.QWidget):
         
         self.parameters_menu = UiParametersMenu(self.create_top_bar(QHBoxLayout(), "Parameters"), dimensions)
         self.map_menu = MapMenu(self.create_top_bar(QHBoxLayout(), "Maps"), dimensions)
+        self.saved_training_menu = UiLoadTraining(self.create_top_bar(QHBoxLayout(), "Saved Training"), dimensions)
 
         self.main_menu_Ui(dimensions)       
 
         self.QtStack.addWidget(self.main_menu)
         self.QtStack.addWidget(self.parameters_menu)
         self.QtStack.addWidget(self.map_menu)
+        self.QtStack.addWidget(self.saved_training_menu)
 
     def main_menu_Ui(self, dimensions) -> None:
         self.main_menu.resize(*dimensions)
@@ -39,6 +43,9 @@ class UiMain(QtWidgets.QWidget):
         
         self.map_menu_button = QtWidgets.QPushButton("Maps")
         layout.addWidget(self.map_menu_button)
+                
+        self.load_saved_training_button = QtWidgets.QPushButton("Load Saved Training Data")
+        layout.addWidget(self.load_saved_training_button)
         
         self.test_ride_button = QtWidgets.QPushButton("Solo Test")
         layout.addWidget(self.test_ride_button)
@@ -187,6 +194,33 @@ class UiParametersMenu(QtWidgets.QWidget):
     def update_hidden_layers_label(self, value) -> None:
         self.hidden_layers_count_label.setText(f"Hidden Layers Count: {value}")
         
+    def start_simulation_with_parameters(self) -> None:
+        config = SimulationConfig(
+            num_iterations=100, 
+            map_pool=self.map_pool.currentData(), 
+            hidden_layers=self.hidden_layers_count_slider.value(), 
+            random_angle=self.random_angle.isChecked(),
+            ray_count=8,
+            initial_population=self.car_count_slider.value())
+        start_simulation(config)
+        
+class UiLoadTraining(QtWidgets.QWidget):
+    def __init__(self, top_bar_layout, dimensions):
+        super().__init__()
+        self.resize(*dimensions)
+        
+        layout = QVBoxLayout()    
+        fixed_height_widget = FixedHeightWidget(BAR_HEIGHT)
+        fixed_height_widget.setLayout(top_bar_layout)
+        layout.addWidget(fixed_height_widget)
+        
+        training_gallery_dimensions = [10, dimensions[1] // 2, dimensions[0] * 9 // 10, dimensions[1] // 2]                             
+        self.saved_training_gallery = SavedTrainingGallery(training_gallery_dimensions)
+        self.saved_training_gallery.populateGallery(get_saved_checkpoints())
+        
+        layout.addWidget(self.saved_training_gallery)
+        self.setLayout(layout)    
+                
     def start_simulation_with_parameters(self) -> None:
         config = SimulationConfig(
             num_iterations=100, 

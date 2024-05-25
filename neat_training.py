@@ -10,8 +10,7 @@ from map_scripts.map_tools import DEFAULT_MAP
 import random
 from simulation.statistics import SimulationStatistics
 from datetime import datetime   
-import pickle
-from neat_save_load import save_config
+from neat_save_load import save_config, get_timestamp, NEAT_INFIX, get_config
 
 WIDTH = 1280
 HEIGHT = 960
@@ -83,18 +82,15 @@ class NeatTrainingAttempt:
             self.config.pop_size)
 
     @staticmethod
-    def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
+    def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> neat.Config:
         config.pop_size = simulation_config.initial_population
         config.genome_config.num_hidden = simulation_config.hidden_layers
         if simulation_config.ray_count is not None:
             config.genome_config.num_inputs = simulation_config.ray_count + NON_RAY_INPUTS
+            
+        return config
 
-    def run(self) -> None:
-        p = neat.Population(self.config)
-        
-        cur_date: datetime = datetime.now()
-        filename_prefix: str = cur_date.strftime("%Y-%m-%d-%H-%M-%S-NEAT-")
-
+    def run(self, p: neat.Population, filename_prefix: str) -> None:
         p.add_reporter(neat.StdOutReporter(True))
         p.add_reporter(neat.Checkpointer(1, 1, filename_prefix))   
         save_config(self.get_simulation_config(), filename_prefix)     
@@ -113,13 +109,39 @@ class NeatTrainingAttempt:
         except BreakTrainingException:
             print("Training ended.")
             pg.quit()
+            
+    def default_run(self) -> None:
+        p = neat.Population(self.config)
+        
+        cur_date: datetime = datetime.now()
+        filename_prefix: str = cur_date.strftime("%Y-%m-%d-%H-%M-%S") + NEAT_INFIX
+        
+        self.run(p, filename_prefix)        
+        
+    def load_run(self, checkpoint_filename: str) -> None:
+        p: neat.Population = neat.Checkpointer.restore_checkpoint(checkpoint_filename)
+        
+        timestamp: str = get_timestamp(checkpoint_filename)
+        filename_prefix: str = timestamp + NEAT_INFIX
+        simulation_config: SimulationConfig = get_config(timestamp)
+        
+        self.config = self.inject_simulation_config(p.config, simulation_config)
+        
+        self.run(p, filename_prefix)       
+
+def load_checkpoint(simulation_config: SimulationConfig, checkpoint_filename) -> None:    
+    local_dir: str = os.path.dirname(__file__)
+    config_path: str = os.path.join(local_dir, "config")
+    
+    neat_run = NeatTrainingAttempt(config_path, simulation_config)
+    neat_run.load_run(checkpoint_filename)
 
 def main(simulation_config: Optional[SimulationConfig] = None) -> None:    
     local_dir: str = os.path.dirname(__file__)
     config_path: str = os.path.join(local_dir, "config")
     
     neat_run = NeatTrainingAttempt(config_path, simulation_config)
-    neat_run.run()
+    neat_run.default_run()
 
 if __name__ == "__main__":    
     main()
