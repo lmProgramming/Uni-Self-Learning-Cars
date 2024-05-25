@@ -9,16 +9,6 @@ DEFAULT_FONT = pg.font.Font(None, 32)
 
 DEFAULT_BUTTON_HEIGHT = 64
 DEFAULT_SPACE_BETWEEN_BUTTONS = 20
-        
-def lerp_color(color1: pg.Color, color2: pg.Color, t: float) -> pg.Color:
-    if not 0 <= t <= 1:
-        raise ValueError("t must be between 0 and 1 (inclusive)")
-    
-    r = int(color1.r + (color2.r - color1.r) * t)
-    g = int(color1.g + (color2.g - color1.g) * t)
-    b = int(color1.b + (color2.b - color1.b) * t)
-    a = int(color1.a + (color2.a - color1.a) * t)
-    return pg.Color(r, g, b, a)
 
 class PyDefaultUi:
     def __init__(self, win: Surface, go_back_action) -> None:

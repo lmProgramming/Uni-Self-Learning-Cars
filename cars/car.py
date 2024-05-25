@@ -77,11 +77,11 @@ class Car(ABC):
             ray.set_last_point(closest_point)
     
     @abstractmethod    
-    def get_reward(self, reward: float):
+    def reward(self, reward_amount: float):
         ...
         
     @abstractmethod            
-    def get_score(self):
+    def get_score(self) -> float:
         ...
     
     def check_if_hit_wall(self):
@@ -151,7 +151,7 @@ class AICar(Car):
         
         return outputs
     
-    def get_reward(self, reward: float):
+    def reward(self, reward: float):
         self.genome.fitness += reward
         
     def get_score(self):
@@ -178,7 +178,7 @@ class HumanCar(Car):
             
         return outputs
     
-    def get_reward(self, reward: float) -> None:            
+    def reward(self, reward: float) -> None:            
         self._score += reward
     
     def get_score(self) -> int:

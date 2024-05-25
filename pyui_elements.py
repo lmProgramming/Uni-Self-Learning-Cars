@@ -1,6 +1,6 @@
 import pygame as pg
 from typing import Callable
-from abc import ABC
+from abc import ABC, abstractmethod
 from pygame.font import Font
 
 pg.font.init()
@@ -9,15 +9,19 @@ COLOR_INACTIVE = pg.Color('gray')
 COLOR_ACTIVE = pg.Color('black')
 FONT = pg.font.Font(None, 32)
 
-class PyUiElement(ABC):
+BORDER_SIZE = 2
+
+class PyUiElement(ABC):    
+    @abstractmethod    
     def draw(self, screen) -> None:
-        raise NotImplementedError
+        ...
         
+    @abstractmethod
     def handle_event(self, event) -> bool:
         '''
         Returns True if the event was handled, False otherwise.
         '''
-        raise NotImplementedError
+        ...
 
 class PyInputBox(PyUiElement):
     def __init__(self, x, y, w, h, text='') -> None:
@@ -56,20 +60,18 @@ class PyInputBox(PyUiElement):
         self.txt_surface = FONT.render(self.text, True, self.color)
 
     def update(self) -> None:
-        # Resize the box if the text is too long.
         width: int = max(200, self.txt_surface.get_width()+10)
         self.rect.w = width
 
     def draw(self, screen) -> None:
-        # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
-        # Blit the rect.
         pg.draw.rect(screen, self.color, self.rect, 2)
         
 class PyButton(PyUiElement):
     def __init__(self, text: str, x: float, y: float, width: float, height: float, color, hover_color, font_color, font: Font) -> None:
         self.text = text
         self.rect = pg.Rect(x, y, width, height)
+        self.rect_border = pg.Rect(x - BORDER_SIZE, y - BORDER_SIZE, width + 2 * BORDER_SIZE, height + 2 * BORDER_SIZE)
         self.color = color
         self.hover_color = hover_color
         self.font_color = font_color
@@ -78,6 +80,7 @@ class PyButton(PyUiElement):
     
     def draw(self, surface) -> None:
         mouse_pos = pg.mouse.get_pos()
+        pg.draw.rect(surface, self.color, self.rect_border, 2)
         if self.rect.collidepoint(mouse_pos):
             pg.draw.rect(surface, self.hover_color, self.rect)
         else:

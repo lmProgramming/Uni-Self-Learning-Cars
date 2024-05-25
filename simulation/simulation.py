@@ -65,7 +65,6 @@ class Simulation:
         for car in self.cars:
             if debug:
                 for line in car.rays:
-                    line.set_debug_color()
                     line.draw_debug(self.win)
             car.draw(self.win)        
             if debug:
@@ -154,12 +153,12 @@ class Simulation:
                 car.steer(outputs[1])    
 
                 if car.check_if_in_next_gate(self.gates):
-                    car.get_reward(100)
+                    car.reward(100)
 
-                car.get_reward(car._speed / 60)
+                car.reward(car._speed / 60)
                 
                 if car.get_shortest_last_distance() < RAY_DISTANCE_KILL:
-                    car.get_reward(-50)
+                    car.reward(-50)
 
                     self.cars.pop(i)
                 else:

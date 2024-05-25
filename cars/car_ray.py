@@ -3,10 +3,11 @@ from pygame.math import Vector2
 from typing import List, Callable
 import vector_math
 from map_scripts.map import Wall
-from simulation.simulation_ui import lerp_color
+from pygame_tools import lerp_color, aaline
 
-CLOSE_COLOR = pg.Color(193, 0, 0, 0)
+CLOSE_COLOR = pg.Color(193, 0, 0, 255)
 FAR_COLOR = pg.Color(0, 0, 0, 0)
+RAY_WIDTH = 3
 
 class CarRay:
     def __init__(self, car, angle_bias: float, length: float, processing_function: Callable[[float, float], float]) -> None:
@@ -48,10 +49,11 @@ class CarRay:
         return intersection_point, closest_distance
     
     def draw_debug(self, win) -> None:       
-        pg.draw.line(win, self.color, self.get_origin_position(), self.last_point if self.last_point is not None else self.get_end_position(), 3)
+        print(self.get_debug_color())
+        aaline(win, self.get_debug_color(), self.get_origin_position(), self.last_point if self.last_point is not None else self.get_end_position(), RAY_WIDTH)
     
-    def set_debug_color(self) -> None:    
-        self.color = lerp_color(CLOSE_COLOR, FAR_COLOR, self.processed_last_distance)
+    def get_debug_color(self) -> pg.Color:    
+        return lerp_color(CLOSE_COLOR, FAR_COLOR, self.processed_last_distance)
 
     def set_last_distance(self, distance: float) -> None:
         self.last_distance = distance
@@ -61,4 +63,4 @@ class CarRay:
         self.last_point = point
         
     def draw(self, win) -> None:      
-        pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), 3)
+        pg.draw.line(win, self.color, self.get_origin_position(), self.get_end_position(), RAY_WIDTH)
