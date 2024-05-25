@@ -141,7 +141,6 @@ class UiParametersMenu(QtWidgets.QWidget):
         layout.addWidget(self.start_parameters_simulation_button)
                 
         self.update_start_button_state()
-        print(self.maps)
         
         self.setLayout(layout)    
         

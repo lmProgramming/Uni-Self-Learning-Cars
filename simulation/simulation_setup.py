@@ -15,7 +15,6 @@ NON_RAY_INPUTS: int = 1
 
 def find_angle_to_first_gate(position: Vector2, gates: List[Gate]) -> float:
     if gates:
-        print(position, gates[0].get_centre_position())
         return degrees(position.angle_to(gates[0].get_centre_position()))
     else:
         return 0.0
@@ -30,9 +29,7 @@ def setup_generation(map_name: str, genomes: List[neat.DefaultGenome], config, r
     walls, gates, starting_point = read_map_txt(map_name)
     
     intended_angle: float | None = find_angle_to_first_gate(starting_point, gates) if not random_angle else None
-    
-    print(intended_angle)
- 
+     
     cars = spawn_ai_cars(genomes, config, starting_point, intended_angle) 
     generate_rays(cars, ray_count, processing_function)
             

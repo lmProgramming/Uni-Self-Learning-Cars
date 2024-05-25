@@ -16,9 +16,7 @@ def test_drive(random_angle: bool=True, processing_function=Linear) -> None:
     walls, gates, starting_point = setup_map(TESTED_MAP)
     
     default_angle: float | None = find_angle_to_first_gate(starting_point, gates) if not random_angle else None
-                
-    print(default_angle)
-                
+                                
     test_number: int = 0
     while True:        
         cars: List[Car] = spawn_player_cars(starting_point, default_angle, PLAYER_CAR_COUNT)

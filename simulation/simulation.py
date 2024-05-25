@@ -58,7 +58,6 @@ class Simulation:
     def create_simulation_ui(self) -> None:
         skip_generation_button = PyButton("Skip generation", 10, 10, 100, 50, (0, 255, 0), (0, 200, 0), (100, 0, 0))
         skip_generation_button.connect(self.end_simulation)
-        print(skip_generation_button.action)
         self.simulation_ui = PySimulationUi(skip_generation_button)        
         
     def draw_simulation(self, bg_img, gen, debug=False) -> None:
