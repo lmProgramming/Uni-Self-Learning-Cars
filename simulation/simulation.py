@@ -8,6 +8,7 @@ from pygame.surface import Surface
 from cars.car import Car, AICar
 import visualization.visualize as visualize
 from simulation.simulation_ui import PySimulationUi, PyNeatSimulationUi
+from simulation.statistics import SimulationStatistics
 
 WIDTH = 1280
 HEIGHT = 960
@@ -38,12 +39,16 @@ class Simulation:
         self.simulation_ui: PySimulationUi | PyNeatSimulationUi
         self.create_appropriate_ui()
         self.font: Font = pg.font.SysFont("arial", 25)
+        self.statistics: SimulationStatistics = SimulationStatistics()
                 
     def create_appropriate_ui(self) -> None:
         if not self.is_neat_simulation:
             self.simulation_ui = PySimulationUi(self.win, self.end_training, self.end_simulation)
         else:
             self.simulation_ui = PyNeatSimulationUi(self.win, self.end_training, self.end_simulation)
+                    
+    def plot_values(self, values_to_plot: list[SimulationStatistics]) -> None:
+        self.simulation_ui.plot_values(values_to_plot)
             
     @property
     def is_neat_simulation(self) -> bool:
@@ -55,16 +60,16 @@ class Simulation:
         else:
             self.win.fill(BG_COLOR)
         
-    def refresh(self):      
+    def refresh(self) -> None:      
         pg.display.update()
         
     def end_simulation(self) -> None:
         self.cars = []     
         
-    def end_training(self):
+    def end_training(self) -> os.NoReturn:
         raise BreakTrainingException("Training ended.")
         
-    def draw_simulation(self, gen, debug=False) -> None:        
+    def draw_simulation(self, debug=False) -> None:        
         text: pg.surface.Surface
        
         for gate in self.gates:
@@ -161,6 +166,7 @@ class Simulation:
                 if car.get_shortest_last_distance() < RAY_DISTANCE_KILL:
                     car.reward(-50)
 
+                    self.statistics.add_score(car.get_score())
                     self.cars.pop(i)
                 else:
                     i += 1                
@@ -174,7 +180,11 @@ class Simulation:
             self.draw_simulation(debug)
             self.simulation_ui.draw()
             self.simulation_ui.draw_simulation_info(*self.calculate_scores(), self.generation_number, WIDTH - 10)
+            self.simulation_ui.draw_plot(WIDTH, HEIGHT)
         
             self.process_input(self.cars, self.config, win)
             
             self.refresh()
+            
+    def get_statistics(self) -> SimulationStatistics:
+        return self.statistics

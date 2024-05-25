@@ -8,6 +8,7 @@ from simulation.simulation_setup import setup_generation
 from simulation.simulation_config import SimulationConfig
 from map_scripts.map_tools import DEFAULT_MAP
 import random
+from simulation.statistics import SimulationStatistics
 
 WIDTH = 1280
 HEIGHT = 960
@@ -25,9 +26,7 @@ RAY_LENGTH: float = 200
 NON_RAY_INPUTS: int = 2
 
 '''
-Statystyki podczas trenowania. Lider każdej generacji byłby oznaczony podczas jazdy po mapie. Tryb konsolowy pozwoli zrobić wszystko, co jest 
-dostępne w głównym menu GUI (w którym można zmienić parametry symulacji, uruchomić ją, wczytać 
-zapis sieci neuronowych poprzednio wytrenowanych).
+Statystyki podczas trenowania. Lider każdej generacji byłby oznaczony podczas jazdy po mapie.
 '''
 
 class NeatTrainingAttempt:
@@ -36,6 +35,8 @@ class NeatTrainingAttempt:
 
         self.config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                     neat.DefaultStagnation, config_path)
+        
+        self.statistics: List[SimulationStatistics] = []
 
         self.simulation_config: Optional[SimulationConfig] = None
         if simulation_config is not None:
@@ -65,7 +66,10 @@ class NeatTrainingAttempt:
         cars, walls, gates = setup_generation(**arguments)
 
         simulation = Simulation(cars, walls, gates, self.gen, config, infinite_time=False)
+        simulation.plot_values(self.statistics)
         simulation.simulation_loop()   
+        
+        self.statistics += [simulation.get_statistics()]
 
     @staticmethod
     def inject_simulation_config(config: neat.Config, simulation_config: SimulationConfig) -> None:
