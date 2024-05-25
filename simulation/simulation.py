@@ -31,8 +31,8 @@ class Simulation:
         self.config = config
         self.infinite_time: bool = infinite_time
         self.win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT))
+        self.max_score = 0
         self.clock = pg.time.Clock()
-        self.score: float = 0
         self.frames: int = 0
         self.generation_number: int = generation_number
         self.simulation_ui: PySimulationUi | PyNeatSimulationUi
@@ -50,7 +50,10 @@ class Simulation:
         return self.config is not None
         
     def draw_background(self, bg_img: Surface) -> None:
-        self.win.blit(bg_img, (0, 0))
+        if USE_BG_IMG:
+            self.win.blit(bg_img, (0, 0))
+        else:
+            self.win.fill(BG_COLOR)
         
     def refresh(self):      
         pg.display.update()
@@ -61,12 +64,7 @@ class Simulation:
     def end_training(self):
         raise BreakTrainingException("Training ended.")
         
-    def draw_simulation(self, bg_img, gen, debug=False) -> None:
-        if USE_BG_IMG:
-            self.win.blit(bg_img, (0, 0))
-        else:
-            self.win.fill(BG_COLOR)
-        
+    def draw_simulation(self, gen, debug=False) -> None:        
         text: pg.surface.Surface
        
         for gate in self.gates:
@@ -86,12 +84,6 @@ class Simulation:
 
         for wall in self.walls:
             wall.draw(self.win)
-
-        text = self.font.render("Score: {:.2f}".format(self.score), True, (255, 255, 255))
-        self.win.blit(text, (WIDTH - 10 - text.get_width(), 10))
-
-        text = self.font.render("Gen: " + str(gen), True, (255, 255, 255))
-        self.win.blit(text, (10, 10))
         
     def check_if_quit(self, event) -> bool:
         keys: Sequence[bool] = pg.key.get_pressed()
@@ -131,7 +123,12 @@ class Simulation:
         selected: Car | None = self.selected_car(cars, mouse_pos)
         if selected and isinstance(self.simulation_ui, PyNeatSimulationUi) and isinstance(selected, AICar):
             visualize.draw_net(config, selected.genome, view=False, filename="neural_net", fmt="png")  
-            self.simulation_ui.create_neat_diagram(0, HEIGHT, "neural_net.png")            
+            self.simulation_ui.create_neat_diagram(0, HEIGHT, "neural_net.png")        
+            
+    def calculate_scores(self) -> tuple[float, float]:
+        self.max_score = max([self.max_score] + [car.get_score() for car in self.cars])
+        average_score = sum([car.get_score() for car in self.cars]) / len(self.cars)  
+        return self.max_score, average_score
 
     def simulation_loop(self) -> None:
         win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT), pg.SRCALPHA)
@@ -145,6 +142,7 @@ class Simulation:
             self.draw_background(BG_IMG)
 
             score = max([score] + [car.get_score() for car in self.cars])
+            
                                         
             self.process_input(self.cars, self.config, win)
                 
@@ -176,7 +174,8 @@ class Simulation:
             frames += 1
             
             debug: bool = pg.key.get_pressed()[DEBUG_KEY]
-            self.draw_simulation(BG_IMG, self.generation_number, debug)
+            self.draw_simulation(debug)
             self.simulation_ui.draw()
+            self.simulation_ui.draw_simulation_info(*self.calculate_scores(), self.generation_number, WIDTH - 10)
             
             self.refresh()

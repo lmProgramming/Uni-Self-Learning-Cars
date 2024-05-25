@@ -18,6 +18,10 @@ class PyDefaultUi:
         self.ui_elements: list[PyUiElement] = [self.back_button]
         
         self.win: Surface = win
+        self.font = DEFAULT_FONT
+        
+    def set_font(self, font) -> None:
+        self.font = font
         
     def handle_event(self, event) -> None:
         for element in self.ui_elements:
@@ -31,12 +35,12 @@ class PyDefaultUi:
         button = PyButton(text, x, y, width, height, DEFAULT_BUTTON_COLOR, DEFAULT_HOVER_COLOR, DEFAULT_FONT_COLOR, DEFAULT_FONT)
         return button
 
-    def from_center_position_to_top_left(self, x_centre: float, y_centre: float, width: float, height: float) -> tuple:
+    def from_center_position_to_top_left(self, x_centre: float, y_centre: float, width: float, height: float) -> tuple[float, float, float, float]:
         x: float = x_centre - width // 2
         y: float = y_centre - height // 2
         return x, y, width, height
     
-    def bottom_left_to_top_left(self, x: float, y: float, width: float, height: float) -> tuple:
+    def bottom_left_to_top_left(self, x: float, y: float, width: float, height: float) -> tuple[float, float, float, float]:
         return x, y - height, width, height
     
 class PySimulationUi(PyDefaultUi):
@@ -46,6 +50,16 @@ class PySimulationUi(PyDefaultUi):
         self.skip_generation_button.action = skip_generation_action
         
         self.ui_elements.append(self.skip_generation_button)
+        
+    def draw_simulation_info(self, score, average_score, generation_number, right_x_position: float) -> None:
+        score_text: Surface = self.font.render("Highest Score - {:.2f}".format(score), True, (255, 255, 255))
+        self.win.blit(score_text, (right_x_position - score_text.get_width(), 10))
+        
+        score_text: Surface = self.font.render("Average Score - {:.2f}".format(average_score), True, (255, 255, 255))
+        self.win.blit(score_text, (right_x_position - score_text.get_width(), 50))
+
+        gen_text: Surface = self.font.render(f"Generation {generation_number}", True, (255, 255, 255))
+        self.win.blit(gen_text, (right_x_position - gen_text.get_width(), 90))
        
 class NeatDiagram:
     def __init__(self, win: Surface, bottom_x: float, bottom_y: float, diagram_filename: str) -> None:
@@ -53,15 +67,15 @@ class NeatDiagram:
         self.diagram_filename: str = diagram_filename
         self.bottom_x: float = bottom_x
         self.bottom_y: float = bottom_y
-        self.neural_net_image: Surface | None = pg.image.load(diagram_filename)    
+        self.neural_net_image: Surface = pg.image.load(diagram_filename)    
         
-    def draw(self) -> None:   
-        if self.neural_net_image is not None:     
-            y: float = self.bottom_y - self.neural_net_image.get_height()     
-            self.win.blit(self.neural_net_image, (self.bottom_x, y))
+    def draw(self) -> None:      
+        y: float = self.bottom_y - self.neural_net_image.get_height()     
+        self.win.blit(self.neural_net_image, (self.bottom_x, y))
             
 class PyNeatSimulationUi(PySimulationUi):
-    CLOSE_BUTTON_WIDTH = 200
+    CLOSE_BUTTON_WIDTH = 100
+    CLOSE_BUTTON_HEIGHT = 50
     
     def __init__(self, win: Surface, go_back_action, skip_generation_action) -> None:
         super().__init__(win, go_back_action, skip_generation_action)
@@ -69,20 +83,24 @@ class PyNeatSimulationUi(PySimulationUi):
         self.close_button: PyButton | None = None
         
     def draw(self) -> None:
-        super().draw()
+        super().draw()     
         if self.neat_diagram is not None:
             self.neat_diagram.draw()
         
     def create_neat_diagram(self, bottom_x: float, bottom_y: float, diagram_filename: str) -> None:
         self.neat_diagram = NeatDiagram(self.win, bottom_x, bottom_y, diagram_filename)
-        button_position = self.bottom_left_to_top_left(self.neat_diagram.bottom_x, self.neat_diagram.bottom_y, self.CLOSE_BUTTON_WIDTH, DEFAULT_BUTTON_HEIGHT)
-        self.close_button = self.create_button(*button_position, "Close")
+        button_position: tuple[float, float, float, float] = self.bottom_left_to_top_left(
+            self.neat_diagram.bottom_x, 
+            self.neat_diagram.bottom_y - self.neat_diagram.neural_net_image.get_height(), 
+            self.CLOSE_BUTTON_WIDTH, 
+            self.CLOSE_BUTTON_HEIGHT)
+        self.close_button = self.create_button(*button_position, text="Close")
         self.close_button.connect(self.close)
         self.ui_elements.append(self.close_button)
         
     def close(self):
-        self.neat_diagram = None        
-    
+        self.neat_diagram = None 
+        self.ui_elements.remove(self.close_button)        
         
 #class HidableUi:
 #    def __init__(self, win: Surface, element_inside: PyUiElement, show_animation_duration: int = 500, hide_animation_duration: int = 500) -> None:
