@@ -125,6 +125,8 @@ class NeatTrainingAttempt:
         filename_prefix: str = timestamp + NEAT_INFIX
         simulation_config: SimulationConfig = get_config(timestamp)
         
+        self.gen = p.generation
+        
         self.config = self.inject_simulation_config(p.config, simulation_config)
         
         self.run(p, filename_prefix)       
