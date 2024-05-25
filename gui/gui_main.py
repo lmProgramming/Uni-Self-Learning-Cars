@@ -46,13 +46,22 @@ class UiMain(QtWidgets.QWidget):
         self.main_menu.setLayout(layout)
         
     def create_top_bar(self, layout: QBoxLayout, title: str) -> QBoxLayout:
+        top_bar = QtWidgets.QWidget()
+        top_bar_layout = QHBoxLayout(top_bar)
+
         back_button = QtWidgets.QPushButton("Back")  
         back_button.clicked.connect(self.open_main_menu_screen)             
+
         title_label = QtWidgets.QLabel(title)      
-        
-        layout.addWidget(back_button, 100)
-        layout.addWidget(title_label, 500)
-        
+
+        top_bar_layout.addWidget(back_button, 100)
+        top_bar_layout.addWidget(title_label, 500)
+
+        top_bar.setFixedHeight(50)
+
+        layout.addWidget(top_bar)
+        layout.setStretch(0, 0)
+
         return layout
                 
     def open_main_menu_screen(self) -> None:

@@ -4,6 +4,7 @@ from neat_training import main as start_simulation
 from simulation.player_test import test_drive
 import sys
 import os
+import qdarktheme # type: ignore
 
 from gui.gui_main import UiMain
 
@@ -47,8 +48,17 @@ class Main(QMainWindow):
     def start_test_drive(self) -> None:
         test_drive()
         
+def set_dark_theme(app):
+    dark_palette = qdarktheme.load_palette()
+    
+    app.setStyle("Fusion")
+    app.setPalette(dark_palette)
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    
+    set_dark_theme(app)
+    
     showMain = Main(app)
     showMain.show()
     sys.exit(app.exec_())

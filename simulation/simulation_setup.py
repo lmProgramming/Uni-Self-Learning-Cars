@@ -17,7 +17,7 @@ def find_angle_to_first_gate(position: Vector2, gates: List[Gate]) -> float:
     if gates:
         return degrees(position.angle_to(gates[0].get_centre_position()))
     else:
-        return 0.0
+        raise ValueError("No gates found in the map")
     
 def setup_generation(map_name: str, genomes: List[neat.DefaultGenome], config, ray_count, random_angle: bool=True, processing_function=Quadratic) -> tuple[list[Car], list, list]:
     cars: List[Car] = []
