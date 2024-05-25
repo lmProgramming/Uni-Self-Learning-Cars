@@ -6,6 +6,7 @@ from pygame_input import PyButton
 from pygame.surface import Surface
 from cars.car import Car, AICar
 import visualization.visualize as visualize
+from simulation.simulation_ui import PySimulationUi
 
 pg.font.init()
 
@@ -14,24 +15,16 @@ pg.display.set_caption("Simulation")
 WIDTH = 1280
 HEIGHT = 960
 
+USE_BG_IMG: bool = False
 BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
+BG_COLOR = pg.Color(128, 128, 128)
 
 STAT_FONT = pg.font.SysFont("arial", 25)
 
 RAY_DISTANCE_KILL: float = 10
 
-class PySimulationUi:
-    def __init__(self, skip_generation_button: PyButton) -> None:
-        self.skip_generation_button: PyButton = skip_generation_button
-        
-    def handle_event(self, event) -> None:
-        self.skip_generation_button.handle_event(event)
-
-    def draw(self, win: Surface) -> None:
-        self.skip_generation_button.draw(win)
-
 class Simulation:
-    def __init__(self, cars: List[Car], walls, gates, generation_number: int, config=None, infinite_time: bool=False):
+    def __init__(self, cars: List[Car], walls, gates, generation_number: int, config=None, infinite_time: bool=False) -> None:
         self.cars: List[Car] = cars
         self.walls = walls
         self.gates = gates
@@ -42,9 +35,7 @@ class Simulation:
         self.score: float = 0
         self.frames: int = 0
         self.generation_number: int = generation_number
-        self.simulation_ui: PySimulationUi
-        
-        self.create_simulation_ui()
+        self.simulation_ui: PySimulationUi = PySimulationUi(self.win, self.end_simulation, self.end_simulation)
         
     def draw_background(self, bg_img: Surface) -> None:
         self.win.blit(bg_img, (0, 0))
@@ -53,15 +44,13 @@ class Simulation:
         pg.display.update()
         
     def end_simulation(self) -> None:
-        self.cars = []
-        
-    def create_simulation_ui(self) -> None:
-        skip_generation_button = PyButton("Skip generation", 10, 10, 100, 50, (0, 255, 0), (0, 200, 0), (100, 0, 0))
-        skip_generation_button.connect(self.end_simulation)
-        self.simulation_ui = PySimulationUi(skip_generation_button)        
+        self.cars = []     
         
     def draw_simulation(self, bg_img, gen, debug=False) -> None:
-        self.win.blit(bg_img, (0, 0))
+        if USE_BG_IMG:
+            self.win.blit(bg_img, (0, 0))
+        else:
+            self.win.fill(BG_COLOR)
         
         text: pg.surface.Surface
 
@@ -180,6 +169,6 @@ class Simulation:
             frames += 1
             
             self.draw_simulation(BG_IMG, self.generation_number, True)
-            self.simulation_ui.draw(win)
+            self.simulation_ui.draw()
             
             self.refresh()

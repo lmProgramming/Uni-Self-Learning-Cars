@@ -77,11 +77,13 @@ def create_edit_map(walls=[], gates=[], starting_point=Vector2(0,0), map_filenam
 
         if mouse_pressed[0]:
             place_wall(walls, placing_wall, m_x, m_y)
+            placing_wall = True            
         else:
             placing_wall = False
 
         if mouse_pressed[2]:
             place_gate(gates, placing_gate, m_x, m_y)
+            placing_gate = True
         else:
             placing_gate = False
 
@@ -114,14 +116,12 @@ def create_edit_map(walls=[], gates=[], starting_point=Vector2(0,0), map_filenam
 
 def place_gate(gates, placing_gate, m_x, m_y):
     if not placing_gate:
-        placing_gate = True
         gates.append(Gate(len(gates), m_x, m_y, m_x, m_y, 6))
 
     gates[-1].end_position = Vector2(m_x, m_y)
 
 def place_wall(walls, placing_wall, m_x, m_y):
     if not placing_wall:
-        placing_wall = True
         walls.append(Wall(m_x, m_y, m_x, m_y, 6))
 
     walls[-1].end_position = Vector2(m_x, m_y)

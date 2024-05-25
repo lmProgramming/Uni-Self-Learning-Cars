@@ -1,5 +1,7 @@
 import pygame as pg
 from typing import Callable
+from abc import ABC
+from pygame.font import Font
 
 pg.font.init()
 
@@ -7,7 +9,17 @@ COLOR_INACTIVE = pg.Color('gray')
 COLOR_ACTIVE = pg.Color('black')
 FONT = pg.font.Font(None, 32)
 
-class PyInputBox:
+class PyUiElement(ABC):
+    def draw(self, screen) -> None:
+        raise NotImplementedError
+        
+    def handle_event(self, event) -> bool:
+        '''
+        Returns True if the event was handled, False otherwise.
+        '''
+        raise NotImplementedError
+
+class PyInputBox(PyUiElement):
     def __init__(self, x, y, w, h, text='') -> None:
         self.rect = pg.Rect(x, y, w, h)
         self.color: pg.Color = COLOR_INACTIVE
@@ -16,12 +28,13 @@ class PyInputBox:
         self.active: bool = False
         self.update()        
 
-    def handle_event(self, event) -> None:
+    def handle_event(self, event) -> bool:
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.set_active(not self.active)
             else:
                 self.set_active(False)
+            return True
                 
         if event.type == pg.KEYDOWN:
             if self.active:
@@ -33,6 +46,9 @@ class PyInputBox:
                     self.text += event.unicode
                 self.txt_surface = FONT.render(self.text, True, self.color)
                 self.update()
+                return True
+        
+        return False
                 
     def set_active(self, active: bool) -> None:
         self.active = active
@@ -50,14 +66,14 @@ class PyInputBox:
         # Blit the rect.
         pg.draw.rect(screen, self.color, self.rect, 2)
         
-class PyButton:
-    def __init__(self, text, x, y, width, height, color, hover_color, font_color) -> None:
+class PyButton(PyUiElement):
+    def __init__(self, text: str, x: float, y: float, width: float, height: float, color, hover_color, font_color, font: Font) -> None:
         self.text = text
         self.rect = pg.Rect(x, y, width, height)
         self.color = color
         self.hover_color = hover_color
         self.font_color = font_color
-        self.font = pg.font.SysFont(None, 40)
+        self.font: Font = font
         self.action: Callable[[], None]
     
     def draw(self, surface) -> None:
@@ -74,9 +90,11 @@ class PyButton:
     def connect(self, action) -> None:
         self.action = action
         
-    def handle_event(self, event) -> None:
+    def handle_event(self, event) -> bool:
         if self.is_clicked(event):
             self.action()
+            return True
+        return False
                 
     def is_clicked(self, event) -> bool:
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
