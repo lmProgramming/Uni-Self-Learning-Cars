@@ -25,7 +25,7 @@ class PySimulationUi:
         self.skip_generation_button: PyButton = skip_generation_button
         
     def handle_event(self, event) -> None:
-        self.skip_generation_button.check_if_clicked(event)
+        self.skip_generation_button.handle_event(event)
 
     def draw(self, win: Surface) -> None:
         self.skip_generation_button.draw(win)
@@ -58,6 +58,7 @@ class Simulation:
     def create_simulation_ui(self) -> None:
         skip_generation_button = PyButton("Skip generation", 10, 10, 100, 50, (0, 255, 0), (0, 200, 0), (100, 0, 0))
         skip_generation_button.connect(self.end_simulation)
+        print(skip_generation_button.action)
         self.simulation_ui = PySimulationUi(skip_generation_button)        
         
     def draw_simulation(self, bg_img, gen, debug=False) -> None:
@@ -95,12 +96,11 @@ class Simulation:
         
         win.blit(neural_net_image, (100, 100))
         
-    def check_if_quit(self) -> bool:
+    def check_if_quit(self, event) -> bool:
         keys: Sequence[bool] = pg.key.get_pressed()
 
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                return True
+        if event.type == pg.QUIT:
+            return True
 
         return keys[pg.K_ESCAPE]
 
@@ -124,7 +124,10 @@ class Simulation:
         if mouse_pressed[0] and config is not None:
             self.handle_car_selection(cars, mouse_position, config, win)
             
-        for event in pg.event.get():
+        for event in pg.event.get():            
+            if self.check_if_quit(event):
+                pg.quit()
+                quit()
             self.simulation_ui.handle_event(event)
 
     def handle_car_selection(self, cars: List[Car], mouse_pos: Vector2, config, win) -> None:
@@ -145,11 +148,7 @@ class Simulation:
             self.draw_background(BG_IMG)
 
             score = max([score] + [car.get_score() for car in self.cars])
-                        
-            if self.check_if_quit():
-                pg.quit()
-                quit()
-                
+                                        
             self.process_input(self.cars, self.config, win)
 
             # keys: ScancodeWrapper = pg.key.get_pressed()
@@ -158,7 +157,7 @@ class Simulation:
             while i < len(self.cars):
                 car: Car = self.cars[i]
                 
-                car.calculate_line_distances(self.walls)
+                car.calculate_line_distances_quick(self.walls)
                 outputs: Vector2 = car.get_desired_movement()
 
                 car.move_forward(outputs[0])

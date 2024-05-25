@@ -14,6 +14,7 @@ class PyInputBox:
         self.text: str = text
         self.txt_surface: pg.Surface = FONT.render(text, True, self.color)
         self.active: bool = False
+        self.update()        
 
     def handle_event(self, event) -> None:
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -31,6 +32,7 @@ class PyInputBox:
                 else:
                     self.text += event.unicode
                 self.txt_surface = FONT.render(self.text, True, self.color)
+                self.update()
                 
     def set_active(self, active: bool) -> None:
         self.active = active
@@ -72,9 +74,7 @@ class PyButton:
     def connect(self, action) -> None:
         self.action = action
         
-    def check_if_clicked(self, event) -> None:
-        print(event)
-        print(self.is_clicked(event))
+    def handle_event(self, event) -> None:
         if self.is_clicked(event):
             self.action()
                 

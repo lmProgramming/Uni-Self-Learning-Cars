@@ -54,19 +54,27 @@ class Car(ABC):
         return min([line.last_distance for line in self.rays])            
 
     def calculate_line_distances(self, walls) -> None:      
-        for line in self.rays:
-            lowest_distance: float = line.length
+        for ray in self.rays:
+            lowest_distance: float = ray.length
             closest_point: Vector2 | None = None
             for wall in walls:
-                _, point, distance = line.find_distance_to_wall(wall)
+                _, point, distance = ray.find_distance_to_wall(wall)
                 if distance < lowest_distance:                    
                     lowest_distance = distance
                     closest_point = point
                                                 
-            line.set_last_distance(lowest_distance)                            
-            line.set_last_point(closest_point)      
+            ray.set_last_distance(lowest_distance)                            
+            ray.set_last_point(closest_point)          
             
-            line.set_last_distance(lowest_distance)       
+    def calculate_line_distances_quick(self, walls) -> None:      
+        for ray in self.rays:
+            lowest_distance: float
+            closest_point: Vector2 | None
+            closest_point, lowest_distance = ray.find_distance_to_walls_quick(walls)
+                                                
+            ray.set_last_distance(lowest_distance)  
+            
+            ray.set_last_point(closest_point)
     
     @abstractmethod    
     def get_reward(self, reward: float):

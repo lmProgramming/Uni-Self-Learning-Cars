@@ -69,7 +69,7 @@ class MapMenu(QtWidgets.QWidget):
         layout.addLayout(top_bar_layout)
         
         self.create_new_map_button = QtWidgets.QPushButton("Create New Map")
-        self.create_new_map_button.clicked.connect(create_new_map)        
+        self.create_new_map_button.clicked.connect(self.create_new_map)        
         layout.addWidget(self.create_new_map_button)
         
         self.map_gallery = QtWidgets.QWidget()

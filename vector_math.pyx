@@ -1,7 +1,9 @@
 from pygame.math import Vector2
 import math
+from typing import List
+import numpy as np
 
-def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
+def find_lines_intersection(object A, object B, object C, object D):
     cdef float s10_x = B[0] - A[0]
     cdef float s10_y = B[1] - A[1]
     cdef float s32_x = D[0] - C[0]
@@ -35,6 +37,23 @@ def find_lines_intersection(A: Vector2, B: Vector2, C: Vector2, D: Vector2):
     point = Vector2(A[0] + (t * s10_x), A[1] + (t * s10_y))
 
     return point
+
+def find_closest_line_intersection(object A, object B, List[object] C, List[object] D, float default_intersection_length):
+    cdef int num_lines = len(C)
+    cdef int i
+    cdef float closest_intersection_length = default_intersection_length
+    cdef object closest_intersection_position = None
+
+    cdef float length
+    for i in range(num_lines):
+        intersection = find_lines_intersection(A, B, C[i], D[i])
+        if intersection is not None:
+            length = intersection.distance_to(A)
+            if length < closest_intersection_length:
+                closest_intersection_length = length
+                closest_intersection_position = intersection
+
+    return closest_intersection_position, closest_intersection_length
 
 def point_left_or_right_of_line(line_start: Vector2, line_end: Vector2, point: Vector2) -> int:
     cross_product = (line_end.x - line_start.x) * (point.y - line_start.y) - (line_end.y - line_start.y) * (point.x - line_start.x)
