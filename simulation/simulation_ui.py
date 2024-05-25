@@ -1,10 +1,10 @@
 import pygame as pg
-from pygame_input import PyButton, PyUiElement
+from pyui_elements import PyButton, PyUiElement
 from pygame.surface import Surface
 
-DEFAULT_BUTTON_COLOR = pg.Color(0, 0, 255)
-DEFAULT_HOVER_COLOR = pg.Color(0, 0, 200)
-DEFAULT_FONT_COLOR = pg.Color(50, 50, 50)
+DEFAULT_BUTTON_COLOR = pg.Color(44, 45, 47)
+DEFAULT_HOVER_COLOR = pg.Color(30, 31, 32)
+DEFAULT_FONT_COLOR = pg.Color(138, 180, 247)
 DEFAULT_FONT = pg.font.Font(None, 32)
 
 DEFAULT_BUTTON_HEIGHT = 64

@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QHBoxLayout, QBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QGridLayout, QCheckBox, QHBoxLayout, QBoxLayout, QWidget, QSpacerItem, QSizePolicy
 from map_scripts.map_tools import get_map_names
 from neat_training import main as start_simulation
 from map_scripts.map_maker import create_edit_map as create_new_map
@@ -52,7 +52,8 @@ class UiMain(QtWidgets.QWidget):
         back_button = QtWidgets.QPushButton("Back")  
         back_button.clicked.connect(self.open_main_menu_screen)             
 
-        title_label = QtWidgets.QLabel(title)      
+        title_label = QtWidgets.QLabel(title)  
+        title_label.setStyleSheet("font-weight: bold;")
 
         top_bar_layout.addWidget(back_button, 100)
         top_bar_layout.addWidget(title_label, 500)
@@ -99,54 +100,65 @@ class MapMenu(QtWidgets.QWidget):
         
     def create_new_map(self) -> None:
         create_new_map()
-
+        
+class FixedHeightWidget(QWidget):
+    def __init__(self, height, parent=None):
+        super().__init__(parent)
+        self.setFixedHeight(height)
+        
+BAR_HEIGHT = 50
+        
 class UiParametersMenu(QtWidgets.QWidget):
     def __init__(self, top_bar_layout, dimensions) -> None:
         super().__init__()
         self.resize(*dimensions)
         
         layout = QVBoxLayout()    
+        fixed_height_widget = FixedHeightWidget(BAR_HEIGHT)
+        fixed_height_widget.setLayout(top_bar_layout)
+        layout.addWidget(fixed_height_widget)
+                             
+        options_layout = QVBoxLayout()
         
-        layout.addLayout(top_bar_layout)
-                        
-        options_layout = QGridLayout()
+        options_layout.addSpacerItem(QSpacerItem(0, 20, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
+        self.car_count_label = QtWidgets.QLabel()
+        options_layout.addWidget(self.car_count_label)        
         self.car_count_slider = QtWidgets.QSlider(orientation=QtCore.Qt.Orientation.Horizontal)
-        options_layout.addWidget(self.car_count_slider, 0, 1)
-        self.car_count_slider.setRange(2, 200)        
-        self.car_count_label = QtWidgets.QLabel()       
         self.car_count_slider.valueChanged.connect(self.update_car_count_label)
         self.car_count_slider.setValue(50)
-        options_layout.addWidget(self.car_count_label, 0, 0)
+        self.car_count_slider.setRange(2, 200)               
+        options_layout.addWidget(self.car_count_slider)               
         
-        self.hidden_layers_count_slider = QtWidgets.QSlider(orientation=QtCore.Qt.Orientation.Horizontal)
-        options_layout.addWidget(self.hidden_layers_count_slider, 1, 1)
-        self.hidden_layers_count_slider.setRange(0, 10)
         self.hidden_layers_count_label = QtWidgets.QLabel()
+        options_layout.addWidget(self.hidden_layers_count_label)        
+        self.hidden_layers_count_slider = QtWidgets.QSlider(orientation=QtCore.Qt.Orientation.Horizontal)
+        self.hidden_layers_count_slider.setRange(0, 10)
         self.hidden_layers_count_slider.valueChanged.connect(self.update_hidden_layers_label)
         self.hidden_layers_count_slider.setValue(1)        
-        options_layout.addWidget(self.hidden_layers_count_label, 1, 0)
+        options_layout.addWidget(self.hidden_layers_count_slider)
 
+        self.random_angle_label = QtWidgets.QLabel("Random Angle")
+        options_layout.addWidget(self.random_angle_label)   
         self.random_angle = QCheckBox()
         self.random_angle.setChecked(True)
-        options_layout.addWidget(self.random_angle, 2, 1)
-        options_layout.setAlignment(self.random_angle, QtCore.Qt.AlignmentFlag.AlignRight)
-        self.random_angle_label = QtWidgets.QLabel("Random Angle")
-        options_layout.addWidget(self.random_angle_label, 2, 0)        
-
-        self.map_pool = CheckableComboBox()
+        options_layout.addWidget(self.random_angle)
         
-        options_layout.addWidget(self.map_pool, 3, 1)
+        self.map_pool_label = QtWidgets.QLabel("Map Pool")
+        options_layout.addWidget(self.map_pool_label)
+        self.map_pool = CheckableComboBox()        
         map_names: List[str] = get_map_names()
         self.map_pool.addItems(map_names)
         self.map_pool.on_selection_changed = self.update_start_button_state
-        self.map_pool_label = QtWidgets.QLabel("Map Pool")
-        options_layout.addWidget(self.map_pool_label, 3, 0)
-                                
-        layout.addLayout(options_layout)  
+        options_layout.addWidget(self.map_pool)
         
+        options_layout.addSpacerItem(QSpacerItem(0, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
+                                        
+        layout.addLayout(options_layout)                
+                
         self.start_parameters_simulation_button = QtWidgets.QPushButton("Start Simulation")
         self.start_parameters_simulation_button.clicked.connect(self.start_simulation_with_parameters)
+        self.start_parameters_simulation_button.setFixedHeight(BAR_HEIGHT)
         layout.addWidget(self.start_parameters_simulation_button)
                 
         self.update_start_button_state()
@@ -165,7 +177,7 @@ class UiParametersMenu(QtWidgets.QWidget):
         has_maps = self.has_maps
         self.start_parameters_simulation_button.setEnabled(has_maps)
         if not has_maps:
-            self.start_parameters_simulation_button.setToolTip("Add at least one map to start the simulation.")
+            self.start_parameters_simulation_button.setToolTip("Add at least one map to map pool to start the simulation.")
         else:
             self.start_parameters_simulation_button.setToolTip("")
     
@@ -184,3 +196,9 @@ class UiParametersMenu(QtWidgets.QWidget):
             ray_count=8,
             initial_population=self.car_count_slider.value())
         start_simulation(config)
+        
+def ui_element_with_label_hlayout(label: str, element: QWidget) -> QHBoxLayout:
+    layout = QHBoxLayout()
+    layout.addWidget(QtWidgets.QLabel(label))
+    layout.addWidget(element)
+    return layout

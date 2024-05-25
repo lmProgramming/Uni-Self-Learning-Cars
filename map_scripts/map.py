@@ -2,11 +2,12 @@ import pygame as pg
 from pygame.math import Vector2
 from vector_math import point_left_or_right_of_line # type: ignore
 
-WALL_COLOR = pg.Color(79, 82, 178)
-GATE_COLOR = pg.Color(216, 216, 216)
+WALL_COLOR = pg.Color(193, 216, 252)
+GATE_COLOR = pg.Color(255, 255, 255)
+DEFAULT_THICKNESS = 4
 
 class Wall:
-    def __init__(self, x1, y1, x2, y2, thickness=2) -> None:
+    def __init__(self, x1, y1, x2, y2, thickness=DEFAULT_THICKNESS) -> None:
         self.start_position = Vector2(x1, y1)
         self.end_position = Vector2(x2, y2)
         self.thickness = thickness
@@ -15,7 +16,7 @@ class Wall:
         pg.draw.line(win, WALL_COLOR, self.start_position, self.end_position, self.thickness)
 
 class Gate:
-    def __init__(self, num: int, x1, y1, x2, y2, thickness=2) -> None:
+    def __init__(self, num: int, x1, y1, x2, y2, thickness=DEFAULT_THICKNESS) -> None:
         self.start_position = Vector2(x1, y1)
         self.end_position = Vector2(x2, y2)
         self.thickness: int = thickness

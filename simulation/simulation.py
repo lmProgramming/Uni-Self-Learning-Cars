@@ -2,7 +2,7 @@ import os
 import pygame as pg
 from pygame.math import Vector2
 from typing import List, Sequence
-from pygame_input import PyButton
+from pyui_elements import PyButton
 from pygame.surface import Surface
 from cars.car import Car, AICar
 import visualization.visualize as visualize
@@ -17,7 +17,7 @@ HEIGHT = 960
 
 USE_BG_IMG: bool = False
 BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
-BG_COLOR = pg.Color(0, 0, 0)
+BG_COLOR = pg.Color(32, 32, 32)
 
 STAT_FONT = pg.font.SysFont("arial", 25)
 

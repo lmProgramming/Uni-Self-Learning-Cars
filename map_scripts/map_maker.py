@@ -5,7 +5,7 @@ from pygame.surface import Surface
 from map_scripts.map import Wall, Gate
 from map_scripts.map_reader import read_map_txt
 from map_scripts.map_tools import format_map_name
-from pygame_input import PyInputBox, PyButton
+from pyui_elements import PyInputBox, PyButton
 
 pg.font.init()
 
