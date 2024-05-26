@@ -1,0 +1,6 @@
+Cython==3.0.10
+graphviz==0.20.3
+matplotlib==3.8.4
+neat_python==0.92
+setuptools==69.5.1
+qdarktheme

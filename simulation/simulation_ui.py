@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame.font import Font
 from pygame_extensions.pyui_elements import PyButton, PyUiElement, PyInputBox, PyImage, PyPlot
 from pygame.surface import Surface
 from simulation.statistics import SimulationStatistics
@@ -20,9 +21,9 @@ class PyDefaultUi:
         self.ui_elements: list[PyUiElement] = [self.back_button]
         
         self.win: Surface = win
-        self.font = DEFAULT_FONT
+        self.font: Font = DEFAULT_FONT
         
-    def set_font(self, font) -> None:
+    def set_font(self, font: Font) -> None:
         self.font = font
         
     def handle_event(self, event) -> None:

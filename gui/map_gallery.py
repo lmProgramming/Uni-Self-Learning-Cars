@@ -3,20 +3,19 @@ from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QInputDialog, QMe
 
 from gui.scrollable_gallery import ScrollableGallery
 from map_scripts.map_tools import rename_map, delete_map
-from map_scripts.map_reader import read_map_txt
 from map_scripts.map_maker import edit_existing_map
 
 class MapGallery(ScrollableGallery):
-    def __init__(self, dimensions):
+    def __init__(self, dimensions) -> None:
         super().__init__(dimensions)
         self.rows = []
 
-    def populateGallery(self, map_names):
+    def populateGallery(self, map_names) -> None:
         for map_name in map_names:
             self.createMapRow(map_name)
         self.stretch_items()
         
-    def createMapRow(self, map_name):
+    def createMapRow(self, map_name) -> None:
         mapLabel = QLabel(map_name)
         renameButton = QPushButton('Rename')
         deleteButton = QPushButton('Delete')
@@ -31,22 +30,22 @@ class MapGallery(ScrollableGallery):
         
         self.rows.append((map_name, mapLabel))
 
-    def renameMap(self, mapLabel):
+    def renameMap(self, mapLabel) -> None:
         new_name, ok = QInputDialog.getText(self, 'Rename Map', 'Enter new name:')
         if ok and new_name:
             new_name = rename_map(mapLabel.text(), new_name)
             mapLabel.setText(new_name)
 
-    def deleteMap(self, mapLabel):
+    def deleteMap(self, mapLabel) -> None:
         rowWidget = mapLabel.parentWidget()
-        reply = QMessageBox.question(
+        reply: QMessageBox.StandardButton = QMessageBox.question(
             self, 'Delete Map', 'Are you sure you want to delete this map?',
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             delete_map(mapLabel.text())
             rowWidget.setParent(None)
 
-    def editMap(self, map_name):
+    def editMap(self, map_name) -> None:
         edit_existing_map(map_name)
 
 if __name__ == '__main__':
