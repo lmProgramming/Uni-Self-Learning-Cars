@@ -167,7 +167,6 @@ class MapMaker:
         self.close()
         
 def create_new_map() -> None:    
-    pg.init()
     pg.font.init()
     pg.display.set_caption("Creating new map")
     
@@ -177,7 +176,6 @@ def create_new_map() -> None:
     pg.quit()
     
 def edit_existing_map(file_name: str) -> None:    
-    pg.init()
     pg.font.init()
     pg.display.set_caption("Editing map")
     

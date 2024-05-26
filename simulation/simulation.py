@@ -10,6 +10,8 @@ import visualization.visualize as visualize
 from simulation.simulation_ui import PySimulationUi, PyNeatSimulationUi
 from simulation.statistics import SimulationStatistics
 
+pg.init()
+
 WIDTH = 1280
 HEIGHT = 960
 
@@ -160,9 +162,6 @@ class Simulation:
                 car.move_forward(outputs[0])
                 car.steer(outputs[1])    
 
-                if car.check_if_in_next_gate(self.gates):
-                    car.reward(100)
-
                 car.reward(car._speed / 60)
                 
                 if car.get_shortest_last_distance() < RAY_DISTANCE_KILL:
@@ -173,8 +172,12 @@ class Simulation:
                 else:
                     i += 1                
                     
-            for car in self.cars:
-                car.move()
+            for car in self.cars:     
+                results: List[tuple[int, int, int]] = car.calculate_on_which_side_of_next_gates(self.gates)  
+                print(results)  
+                car.move()                   
+                if car.check_if_in_on_other_side_of_gate(self.gates, results):
+                    car.reward(100)
 
             frames += 1
             

@@ -98,7 +98,6 @@ class NeatTrainingAttempt:
         stats = neat.StatisticsReporter()
         p.add_reporter(stats)
         
-        pg.init()
         pg.font.init()    
         pg.display.set_caption("Simulation - NEAT-Python")
 

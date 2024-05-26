@@ -5,6 +5,7 @@ from vector_math import point_left_or_right_of_line # type: ignore
 WALL_COLOR = pg.Color(193, 216, 252)
 GATE_COLOR = pg.Color(255, 255, 255)
 DEFAULT_THICKNESS = 4
+GATE_TOLERANCE = 5
 
 class Wall:
     def __init__(self, x1, y1, x2, y2, thickness=DEFAULT_THICKNESS) -> None:
@@ -51,6 +52,30 @@ class Gate:
                position.y > y1 and \
                position.x < x2 and \
                position.y < y2
+               
+    def check_if_inside_wider(self, position) -> bool:
+        x1: float
+        x2: float
+        y1: float
+        y2: float
+        if self.start_position.x < self.end_position.x:
+            x1 = self.start_position.x
+            x2 = self.end_position.x
+        else:
+            x1 = self.end_position.x
+            x2 = self.start_position.x
+        
+        if self.start_position.y < self.end_position.y:
+            y1 = self.start_position.y
+            y2 = self.end_position.y
+        else:
+            y1 = self.end_position.y
+            y2 = self.start_position.y
+
+        return position.x > x1 - GATE_TOLERANCE and \
+               position.y > y1 - GATE_TOLERANCE and \
+               position.x < x2 + GATE_TOLERANCE and \
+               position.y < y2 + GATE_TOLERANCE
 
     def draw(self, win) -> None:
         pg.draw.line(win, GATE_COLOR, self.start_position, self.end_position, self.thickness)

@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 from neat import DefaultGenome
 from cars.car_ray import CarRay
 from neat.nn import FeedForwardNetwork
+from map_scripts.map import Gate
 
 CAR_IMG = pg.image.load(os.path.join("imgs", "car_img.png"))
 
@@ -32,16 +33,34 @@ class Car(ABC):
         self.direction: int = 0
         self.rect: pg.Rect = pg.Rect(x, y, CAR_WIDTH, CAR_HEIGHT)
         
-    def _next_gate_index(self, gates) -> int:
+    def _next_gate_index(self, gates: list[Gate]) -> int:
         return ((self.last_gate) + self.direction) % len(gates)
+    
+    def gate_side_tuple(self, gates: list[Gate], gate_index: int) -> tuple[int, int, int]:
+        return (gates[gate_index].num, 
+                gates[gate_index].calculate_side(self.position), 
+                self.direction if self.direction != 0 else 1 if gate_index == 0 else -1)
+    
+    def calculate_on_which_side_of_next_gates(self, gates) -> list[tuple[int, int, int]]:
+        if self.direction == 0:
+            return [self.gate_side_tuple(gates, 0), self.gate_side_tuple(gates, -1)]
+        return [self.gate_side_tuple(gates, self._next_gate_index(gates))]
+    
+    def check_if_in_on_other_side_of_gate(self, gates: list[Gate], gate_sides: list[tuple[int, int, int]]) -> bool:
+        for gate_index, side, direction in gate_sides:
+            if gates[gate_index].check_if_inside_wider(self.position) and self.gate_side_tuple(gates, gate_index)[1] != side:
+                self.last_gate = gate_index
+                self.direction = direction
+                return True
+        return False
 
-    def check_if_in_next_gate(self, gates) -> bool:
+    def check_if_in_next_gate(self, gates: list[Gate]) -> bool:
         if self.direction == 0:
             return self._check_if_in_gate(gates, 0, dir=1) or self._check_if_in_gate(gates, -1, dir=-1)
         return self._check_if_in_gate(gates, self._next_gate_index(gates), self.direction)
 
-    def _check_if_in_gate(self, gates, gate_num, dir) -> bool:
-        gate = gates[gate_num]
+    def _check_if_in_gate(self, gates: list[Gate], gate_num: int, dir: int) -> bool:
+        gate: Gate = gates[gate_num]
 
         if gate.check_if_inside(self.get_centre_position()):
             if self.direction == 0:

@@ -14,7 +14,6 @@ TEST_INTENDED_ANGLE = True
 TESTED_MAP = DEFAULT_MAP
 
 def test_drive(random_angle: bool=True, processing_function=Linear) -> None:
-    pg.init()
     pg.font.init()    
     pg.display.set_caption("Simulation - Test Drive")
     
