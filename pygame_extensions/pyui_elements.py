@@ -103,10 +103,11 @@ class PyButton(PyUiElement):
             pg.draw.rect(surface, self.hover_color, self.rect)
         else:
             pg.draw.rect(surface, self.color, self.rect)
-        
-        text_surface: pg.Surface = self.font.render(self.text, True, self.font_color)
-        text_rect: pg.Rect = text_surface.get_rect(center=self.rect.center)
-        surface.blit(text_surface, text_rect)
+            
+        if self.text:        
+            text_surface: pg.Surface = self.font.render(self.text, True, self.font_color)
+            text_rect: pg.Rect = text_surface.get_rect(center=self.rect.center)
+            surface.blit(text_surface, text_rect)
         
     def connect(self, action) -> None:
         self.action = action
@@ -144,7 +145,6 @@ class PyPlot(PyUiElement):
     def __init__(self, x_right: float, y_bottom: float, width: float, height: float, *values_to_plot: list[float]):
         self.x_right: float = x_right
         self.y_bottom: float = y_bottom
-        print(*values_to_plot)
         self.plot: Surface = py_plot(width, height, *values_to_plot)
         
     def draw(self, screen):

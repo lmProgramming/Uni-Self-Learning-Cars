@@ -6,6 +6,7 @@ import random
 from typing import List, Optional
 from simulation.processing_functions import Linear, Quadratic
 from map_scripts.map_reader import read_map_txt
+from math import atan2, degrees, pi
 
 from cars.car import Car, AICar, HumanCar
 from map_scripts.map import Wall, Gate
@@ -13,9 +14,12 @@ from map_scripts.map import Wall, Gate
 RAY_LENGTH: float = 200
 NON_RAY_INPUTS: int = 1
 
+def angle_between(p1: Vector2, p2: Vector2) -> float:
+    return degrees(atan2(-(p2.y - p1.y), p2.x - p1.x) % (2 * pi)) + 180
+
 def find_angle_to_first_gate(position: Vector2, gates: List[Gate]) -> float:
     if gates:
-        return degrees(position.angle_to(gates[0].get_centre_position()))
+        return angle_between(position, gates[0].get_centre_position())
     else:
         raise ValueError("No gates found in the map")
     
@@ -25,7 +29,7 @@ def setup_generation(map_name: str, genomes: List[neat.DefaultGenome], config, r
     walls: List[Wall]
     gates: List[Gate]
     starting_point: Vector2
-
+    
     walls, gates, starting_point = read_map_txt(map_name)
     
     intended_angle: float | None = find_angle_to_first_gate(starting_point, gates) if not random_angle else None
@@ -48,7 +52,7 @@ def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starti
             starting_point.x, 
             starting_point.y, 
             random.randrange(-180, 180) if default_angle is None else default_angle)
-        
+                
         neural_net: FeedForwardNetwork = FeedForwardNetwork.create(genome, config)
         
         new_car.set_neural_net(neural_net)        

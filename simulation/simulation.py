@@ -141,8 +141,11 @@ class Simulation:
             return self.max_score, average_score
         except ZeroDivisionError:
             return self.max_score, 0
+        
 
-    def simulation_loop(self) -> None:
+    def simulation_loop(self) -> None:       
+        from simulation.simulation_setup import find_angle_to_first_gate
+        
         win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT), pg.SRCALPHA)
         clock = pg.time.Clock()
 
@@ -174,7 +177,6 @@ class Simulation:
                     
             for car in self.cars:     
                 results: List[tuple[int, int, int]] = car.calculate_on_which_side_of_next_gates(self.gates)  
-                print(results)  
                 car.move()                   
                 if car.check_if_in_on_other_side_of_gate(self.gates, results):
                     car.reward(100)
