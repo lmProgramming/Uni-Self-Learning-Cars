@@ -64,7 +64,9 @@ class Simulation:
         pg.display.update()
         
     def end_simulation(self) -> None:
-        self.cars = []     
+        for car in self.cars:
+            self.statistics.add_score(car.get_score())
+        self.cars.clear()
         
     def end_training(self):
         raise BreakTrainingException("Training ended.")
@@ -184,6 +186,7 @@ class Simulation:
             self.process_input(self.cars, self.config, win)
             
             self.refresh()
+        self.end_simulation()
             
     def get_statistics(self) -> SimulationStatistics:
         return self.statistics
