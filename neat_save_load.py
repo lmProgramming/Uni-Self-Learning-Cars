@@ -36,5 +36,10 @@ def delete_checkpoint(checkpoint: str):
         if file.startswith(timestamp):
             os.remove(file)
     
+def clear_all_checkpoints():
+    for file in os.listdir():
+        if re.match(r'\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-NEAT-*$', file):
+            os.remove(file)
+    
 def get_timestamp(checkpoint: str) -> str:
     return checkpoint.split("-NEAT")[0]

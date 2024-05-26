@@ -6,6 +6,7 @@ import sys
 import os
 import qdarktheme # type: ignore
 import platform
+import json
 
 from gui.gui_main import UiMain
 

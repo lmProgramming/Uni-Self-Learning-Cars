@@ -3,6 +3,7 @@ from neat_training import main
 from simulation.player_test import test_drive
 from map_scripts.map_maker import create_new_map, edit_existing_map
 from map_scripts.map_tools import get_map_names, delete_map as delete_map_func, rename_map as rename_map_func
+from neat_save_load import clear_all_checkpoints
 from main import open_main_menu
 from simulation.simulation_config import SimulationConfig
 
@@ -52,6 +53,10 @@ def edit_map_cmd(map_name: str) -> None:
 @app.command()
 def start_test_drive() -> None:
     test_drive()
+    
+@app.command()
+def clear_checkpoints() -> None:
+    clear_all_checkpoints()
 
 if __name__ == "__main__":
     app()
