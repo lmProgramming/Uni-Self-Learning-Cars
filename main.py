@@ -5,6 +5,7 @@ from simulation.player_test import test_drive
 import sys
 import os
 import qdarktheme # type: ignore
+import platform
 
 from gui.gui_main import UiMain
 
@@ -55,7 +56,7 @@ class Main(QMainWindow):
 def set_dark_theme(app) -> None:
     dark_palette: QtGui.QPalette = qdarktheme.load_palette()
     
-    app.setStyle("Fusion")
+    app.setStyle("Fusion" if platform.release() == "10" else "Windows")
     app.setPalette(dark_palette)
     
 def open_main_menu():
