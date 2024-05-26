@@ -59,4 +59,4 @@ WTFPL
 
 ## Issues
 
-A know issue is that Pygame will sometimes not create a window, for example, if you go back to main menu after creating a new map, and then do a test drive, and then try to create another map, the window might not be created.
+I know that Pygame will sometimes not create a window, for example, if you go back to main menu after creating a new map, and then do a test drive, and then try to create another map, the window might not be created. Probably a bug on my part.
