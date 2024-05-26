@@ -22,5 +22,5 @@ def delete_map(name: str) -> None:
     name = format_map_name(name)
     os.remove(os.path.join(MAP_FOLDER, name))
     
-def format_map_name(name: str):
+def format_map_name(name: str) -> str:
     return name.split('.')[0] + MAP_EXTENSION

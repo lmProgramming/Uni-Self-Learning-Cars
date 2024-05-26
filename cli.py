@@ -1,24 +1,23 @@
 import typer
-from neat_training import main as start_simulation
+from neat_training import main
 from simulation.player_test import test_drive
-from map_scripts.map_maker import create_new_map
+from map_scripts.map_maker import create_new_map, edit_existing_map
+from map_scripts.map_tools import get_map_names, delete_map as delete_map_func, rename_map as rename_map_func
 from main import open_main_menu
 from simulation.simulation_config import SimulationConfig
 
 app = typer.Typer()
 
 @app.command()
-def start_simulation_command_cmd():
-    """Starts the simulation."""
-    start_simulation()
+def start() -> None:
+    main()
 
 @app.command()
-def open_main_menu_screen_cmd():
-    """Opens the main menu screen."""
+def main_menu() -> None:
     open_main_menu()
 
 @app.command()
-def open_parameters_screen_cmd(car_count: int, hidden_layers_count: int, random_angle: bool, map_pool: list[str]) -> None:
+def start_with_params(car_count: int, hidden_layers_count: int, random_angle: bool, map_pool: list[str]) -> None:
     config = SimulationConfig(
         num_iterations=100, 
         map_pool=map_pool, 
@@ -26,21 +25,32 @@ def open_parameters_screen_cmd(car_count: int, hidden_layers_count: int, random_
         random_angle=random_angle,
         ray_count=8,
         initial_population=car_count)
-    start_simulation(config)
+    main(config)
     
 @app.command()
-def create_new_map_cmd():
+def new_map() -> None:
     create_new_map()
 
 @app.command()
-def open_map_screen_cmd():
-    """Opens the map screen."""
+def show_maps() -> None:  
+    typer.echo("Maps: ")  
+    for map in get_map_names():
+        typer.echo(map)
     
-    typer.echo("Maps")
+@app.command()    
+def delete_map(map_name: str) -> None:    
+    delete_map_func(map_name)
+    
+@app.command()    
+def rename_map(map_name: str, new_name: str) -> None:    
+    rename_map_func(map_name, new_name)
+    
+@app.command()    
+def edit_map_cmd(map_name: str) -> None:    
+    edit_existing_map(map_name)
 
 @app.command()
-def start_test_drive():
-    """Starts the test drive."""
+def start_test_drive() -> None:
     test_drive()
 
 if __name__ == "__main__":
