@@ -35,7 +35,7 @@ class PyInputBox(PyUiElement):
         self.text: str = ""
         self.txt_surface: pg.Surface = FONT.render(tooltip, True, self.color)
         self.active: bool = False
-        self.update()        
+        self.update_width()        
 
     def handle_event(self, event) -> bool:
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -54,7 +54,7 @@ class PyInputBox(PyUiElement):
                 else:
                     self.text += event.unicode
                 self.render_text()
-                self.update()
+                self.update_width()
                 return True
         
         return False
@@ -77,7 +77,7 @@ class PyInputBox(PyUiElement):
         self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
         self.txt_surface = FONT.render(self.text, True, self.color)
 
-    def update(self) -> None:
+    def update_width(self) -> None:
         width: int = max(self.default_width, self.txt_surface.get_width()+10)
         self.rect.w = width
 

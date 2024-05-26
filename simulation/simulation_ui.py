@@ -171,3 +171,5 @@ class PyMapMakerUi(PyDefaultUi):
     
     def set_map_name(self, name: str) -> None:
         self.map_name_input.text = name
+        self.map_name_input.render_text()
+        self.map_name_input.update_width()

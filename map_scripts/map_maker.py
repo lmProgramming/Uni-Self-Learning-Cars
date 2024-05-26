@@ -39,6 +39,7 @@ class MapMaker:
         self.placing_gate = False
         self.quit_pygame = False
         
+        self.font = pg.font.SysFont("arial", 32)
         self.ui: PyMapMakerUi = PyMapMakerUi(self.win, self.ask_to_close, self.try_to_save, WIDTH, HEIGHT)
         self.ui.set_map_name(default_filename)
         
@@ -60,6 +61,8 @@ class MapMaker:
 
         for gate in self.gates:
             gate.draw(win)      
+            text = self.font.render(str(gate.num), True, (255, 255, 255))
+            self.win.blit(text, gate.get_centre_position())
         
         pg.draw.circle(win, (0, 255, 0), self.starting_point, 10)     
         
@@ -107,10 +110,18 @@ class MapMaker:
                     run = False
                     pg.quit()
                 self.ui.handle_event(event)   
+                self.map_building_handle_event(event)
                 
             if self.quit_pygame:
                 run = False
                 return
+            
+    def map_building_handle_event(self, event):
+        if not self.ui.map_name_input.active and event.type == pg.KEYDOWN:
+            if event.key == pg.K_z and len(self.walls) > 0:
+                self.walls.pop()
+            if event.key == pg.K_x and len(self.gates) > 0:
+                self.gates.pop()
 
     def process_map_building(self, m_x, m_y, mouse_pressed) -> None:
         if mouse_pressed[0]:
@@ -179,7 +190,7 @@ def edit_existing_map(file_name: str) -> None:
     pg.font.init()
     pg.display.set_caption("Editing map")
     
-    map_maker = MapMaker()
+    map_maker = MapMaker(default_filename=file_name)
     map_maker.load_map(file_name)
     map_maker.edit_loop()
     
