@@ -9,6 +9,7 @@ Includes many useful extensions of PyQt widgets, and implements some basic UI el
 - [Usage](#usage)
 - [Features](#features)
 - [License](#license)
+- [Issues](#issues)
 
 ## Installation
 
@@ -55,4 +56,7 @@ python cli.py
 ## License
 
 WTFPL
-   
+
+## Issues
+
+A know issue is that Pygame will sometimes not create a window, for example, if you go back to main menu after creating a new map, and then do a test drive, and then try to create another map, the window might not be created.
