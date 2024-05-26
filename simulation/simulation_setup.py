@@ -51,9 +51,9 @@ def spawn_ai_cars(genomes: List[neat.DefaultGenome], config: neat.Config, starti
         
         neural_net: FeedForwardNetwork = FeedForwardNetwork.create(genome, config)
         
-        new_car.set_neural_net(neural_net)
+        new_car.set_neural_net(neural_net)        
+        new_car.set_geonme(genome)
         
-        new_car.genome = genome
         cars.append(new_car)
         
     return cars

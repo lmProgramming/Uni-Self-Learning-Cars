@@ -16,7 +16,7 @@ WIDTH = 1280
 HEIGHT = 960
 
 USE_BG_IMG: bool = False
-BG_IMG = pg.image.load(os.path.join("imgs", "bg_img.png"))
+BG_IMG: Surface = pg.image.load(os.path.join("imgs", "bg_img.png"))
 BG_COLOR = pg.Color(32, 32, 32)
 
 RAY_DISTANCE_KILL: float = 10
@@ -131,7 +131,7 @@ class Simulation:
     def handle_car_selection(self, cars: List[Car], mouse_pos: Vector2, config, win) -> None:
         selected: Car | None = self.selected_car(cars, mouse_pos)
         if selected and isinstance(self.simulation_ui, PyNeatSimulationUi) and isinstance(selected, AICar):
-            visualize.draw_net(config, selected.genome, view=False, filename="neural_net", fmt="png")  
+            visualize.draw_net(config, selected._genome, view=False, filename="neural_net", fmt="png")  
             self.simulation_ui.create_neat_diagram(0, HEIGHT, "neural_net.png")        
             
     def calculate_scores(self) -> tuple[float, float]:

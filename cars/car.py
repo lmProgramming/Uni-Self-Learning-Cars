@@ -158,23 +158,26 @@ class Car(ABC):
 class AICar(Car):    
     def __init__(self, *args) -> None:
         super().__init__(*args)
-        self.genome: DefaultGenome
-        self.neural_net: FeedForwardNetwork
+        self._genome: DefaultGenome
+        self._neural_net: FeedForwardNetwork
         
     def set_neural_net(self, neural_net):
-        self.neural_net = neural_net
+        self._neural_net = neural_net
+        
+    def set_geonme(self, genome):
+        self._genome = genome
     
     def get_desired_movement(self) -> Vector2:      
         inputs: List[float] = [ray.last_distance for ray in self.rays] + [self._speed, self._calculate_wheel_turn_coefficient()]
-        outputs = self.neural_net.activate(inputs)
+        outputs = self._neural_net.activate(inputs)
         
         return outputs
     
     def reward(self, reward: float):
-        self.genome.fitness += reward
+        self._genome.fitness += reward
         
     def get_score(self):
-        return self.genome.fitness
+        return self._genome.fitness
     
 class HumanCar(Car):
     def __init__(self, *args):
