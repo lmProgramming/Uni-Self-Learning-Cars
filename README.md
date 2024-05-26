@@ -24,6 +24,10 @@ Includes many useful extensions of PyQt widgets, and implements some basic UI el
     ```sh
     pip install -r requirements.txt
     ```
+4. Build cython code:
+   ```sh
+    python cython_setup.py build_ext --inplace
+    ```
 
 ## Usage
 
