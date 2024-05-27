@@ -25,6 +25,8 @@ def ask_yes_no_question(title, text):
     return result == 6
 
 class MapMaker:
+    DELETE_DISTANCE = 10
+    
     def __init__(self, walls=[], gates=[], starting_point=None, default_filename="") -> None:        
         self.walls: list[Wall] = walls
         self.gates: list[Gate] = gates
@@ -116,13 +118,37 @@ class MapMaker:
                 run = False
                 return
             
-    def map_building_handle_event(self, event):
+    def find_objects_in_distance(self, m_x, m_y, min_distance) -> list[Wall | Gate]:
+        objects = []
+        for duck in self.walls + self.gates:
+            distance1 = duck.start_position.distance_to((m_x, m_y))
+            distance2 = duck.end_position.distance_to((m_x, m_y))
+            
+            distance = min(distance1, distance2)
+            
+            if distance < min_distance:
+                objects.append(duck)
+        return objects
+            
+    def map_building_handle_event(self, event) -> None:
+        m_x, m_y = pg.mouse.get_pos()
+        
         if not self.ui.map_name_input.active and event.type == pg.KEYDOWN:
             if event.key == pg.K_z and len(self.walls) > 0:
                 self.walls.pop()
             if event.key == pg.K_x and len(self.gates) > 0:
                 self.gates.pop()
+            if event.key == pg.K_DELETE:
+                objects_to_delete: list[Wall | Gate] = self.find_objects_in_distance(m_x, m_y, self.DELETE_DISTANCE)
+                self.remove_generic_map_objects(objects_to_delete)
 
+    def remove_generic_map_objects(self, objects_to_delete):
+        for obj in objects_to_delete:
+            if isinstance(obj, Wall):
+                self.walls.remove(obj)
+            elif isinstance(obj, Gate):
+                self.gates.remove(obj)
+                
     def process_map_building(self, m_x, m_y, mouse_pressed) -> None:
         if mouse_pressed[0]:
             self.place_wall(self.placing_wall, m_x, m_y)
