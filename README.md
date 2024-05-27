@@ -51,7 +51,7 @@ python cli.py
 6. CLI interface, that allows you to do pretty much everything specified above
 7. The simulation also shows a graph of scores over time and it allows to click a car to see it's neural network
 8. ScrollableGallery - a small extension for PyQt
-9. PyUiElement, PyInputBox, PyButton, PyImage, PyPlot - Pygame UI extensions
+9. PyUiElement, PyInputBox, PyButton, PyImage, PyPlot and more - my Pygame UI extensions
 
 ## Screenshots
 
