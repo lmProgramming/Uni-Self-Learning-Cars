@@ -55,11 +55,22 @@ python cli.py
 
 ## Screenshots
 
+Simulation
 ![Alt text](github_images/simulation.png?raw=true "Simulation")
+
+Main menu
 ![Alt text](github_images/main_menu.png?raw=true "Main menu")
+
+Maps
 ![Alt text](github_images/maps.png?raw=true "Maps")
+
+Parameters
 ![Alt text](github_images/parameters.png?raw=true "Parameters")
+
+Test drive
 ![Alt text](github_images/test_drive.png?raw=true "Test drive")
+
+Typer
 ![Alt text](github_images/typer.png?raw=true "Typer")
 
 ## License
