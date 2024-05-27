@@ -5,3 +5,4 @@ neat_python==0.92
 setuptools==69.5.1
 pyqtdarktheme
 pygame
+typer

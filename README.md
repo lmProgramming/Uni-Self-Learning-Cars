@@ -53,6 +53,15 @@ python cli.py
 8. ScrollableGallery - a small extension for PyQt
 9. PyUiElement, PyInputBox, PyButton, PyImage, PyPlot - Pygame UI extensions
 
+## Screenshots
+
+![Alt text](github_images/simulation.png?raw=true "Simulation")
+![Alt text](github_images/main_menu.png?raw=true "Main menu")
+![Alt text](github_images/maps.png?raw=true "Maps")
+![Alt text](github_images/parameters.png?raw=true "Parameters")
+![Alt text](github_images/test_drive.png?raw=true "Test drive")
+![Alt text](github_images/typer.png?raw=true "Typer")
+
 ## License
 
 WTFPL
