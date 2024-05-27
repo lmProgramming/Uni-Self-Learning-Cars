@@ -1,9 +1,9 @@
 import pygame as pg
 from pygame.font import Font
-from pygame_extensions.pyui_elements import PyButton, PyUiElement, PyInputBox, PyImage, PyPlot
+from pygame_extensions.pyui_elements import PyButton, PyUiElement, PyInputBox, PyImage, PyPlot, PyScrollView
 from pygame.surface import Surface
 from simulation.statistics import SimulationStatistics
-from simulation.pygame_plot import py_plot
+from typing import Callable
 
 DEFAULT_BUTTON_COLOR = pg.Color(44, 45, 47)
 DEFAULT_HOVER_COLOR = pg.Color(30, 31, 32)
@@ -142,6 +142,33 @@ class PyNeatSimulationUi(PySimulationUi):
         self.ui_elements.remove(self.close_button)        
         self.ui_elements.remove(self.neat_diagram)        
         self.neat_diagram = None
+        
+class PyTestUi(PySimulationUi):
+    MAP_SELECTION_WIDTH = 200
+    MAP_SELECTION_HEIGHT = 400
+    MAP_SELECTION_SPACING = 10
+    
+    def __init__(self, win: Surface, go_back_action, skip_generation_action) -> None:
+        super().__init__(win, go_back_action, skip_generation_action)
+        self.map_selection: PyScrollView | None = None  
+        
+    def create_map_selection_ui(self, left_x: float, bottom_y: float, map_names: list[str], change_map_action: Callable[[str], None]) -> None:
+        self.map_selection = PyScrollView(
+            left_x, 
+            bottom_y - self.MAP_SELECTION_HEIGHT, 
+            self.MAP_SELECTION_WIDTH, 
+            self.MAP_SELECTION_HEIGHT)
+        self.ui_elements.append(self.map_selection)     
+        
+        button_top_y = 0
+        for map_name in map_names:
+            button: PyButton = self.create_button(0, button_top_y, self.MAP_SELECTION_WIDTH, DEFAULT_BUTTON_HEIGHT, map_name)
+            button.connect(lambda name=map_name: change_map_action(name))
+            self.map_selection.add_element(button, DEFAULT_BUTTON_HEIGHT + self.MAP_SELECTION_SPACING)
+            button_top_y += DEFAULT_BUTTON_HEIGHT + self.MAP_SELECTION_SPACING    
+        
+    def draw(self) -> None:
+        super().draw()
 
 class PyMapMakerUi(PyDefaultUi):
     def __init__(self, win: Surface, go_back_action, save_map_action, map_width: float, map_height: float) -> None:

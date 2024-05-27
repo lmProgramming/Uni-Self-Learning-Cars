@@ -95,11 +95,11 @@ class PyButton(PyUiElement):
         self.font_color = font_color
         self.font: Font = font
         self.action: Callable[[], None]
+        self.is_button_hovering = False
     
     def draw(self, surface) -> None:
-        mouse_pos = pg.mouse.get_pos()
         pg.draw.rect(surface, self.color, self.rect_border, 2)
-        if self.rect.collidepoint(mouse_pos):
+        if self.is_button_hovering:
             pg.draw.rect(surface, self.hover_color, self.rect)
         else:
             pg.draw.rect(surface, self.color, self.rect)
@@ -113,14 +113,19 @@ class PyButton(PyUiElement):
         self.action = action
         
     def handle_event(self, event) -> bool:
-        if self.is_clicked(event):
+        print(self.text)
+        if self.is_clicked(event):            
             self.action()
             return True
         return False
                 
     def is_clicked(self, event) -> bool:
-        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-            if self.rect.collidepoint(event.pos):
+        self.is_button_hovering = False        
+        if hasattr(event, 'pos'):
+            if not self.rect.collidepoint(event.pos):
+                return False
+            self.is_button_hovering = True
+            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 return True
         return False
        
@@ -153,58 +158,50 @@ class PyPlot(PyUiElement):
     def handle_event(self, _) -> bool:
         return False
         
-#class HidableUi:
-#    def __init__(self, win: Surface, element_inside: PyUiElement, show_animation_duration: int = 500, hide_animation_duration: int = 500) -> None:
-#        self.show_animation_duration: int = show_animation_duration
-#        self.hide_animation_duration: int = hide_animation_duration
-#        
-#        self.is_visible = False
-#        self.animation_start_time = 0
-#        self.animation_end_time = 0
-#        
-#        self.win: Surface = win
-#        
-#        self.show_hide_button: PyButton = self.create_button(10, 10, 200, DEFAULT_BUTTON_HEIGHT, "Show")
-#        self.show_hide_button.action = self.show_hide_ui
-#        
-#        self.element_inside: PyUiElement = element_inside
-#        
-#        self.ui_elements: list[PyUiElement] = [self.show_hide_button, self.element_inside]
-#        
-#    def handle_event(self, event) -> None:
-#        for element in self.ui_elements:
-#            element.handle_event(event)
-#
-#    def draw(self) -> None:
-#        if self.is_visible:
-#            self.animate_ui()
-#        
-#        for element in self.ui_elements:
-#            element.draw(self.win)
-#        
-#    def create_button(self, x: float, y: float, width: float, height: float, text: str) -> PyButton:
-#        button = PyButton(text, x, y, width, height, DEFAULT_BUTTON_COLOR, DEFAULT_HOVER_COLOR, DEFAULT_FONT_COLOR, DEFAULT_FONT)
-#        return button
-#    
-#    def show_hide_ui(self) -> None:
-#        if not self.is_visible:
-#            self.is_visible = True
-#            self.animation_start_time = pg.time.get_ticks()
-#            self.animation_end_time = self.animation_start_time + self.show_animation_duration
-#    
-#    def hide_ui(self) -> None:
-#        if self.is_visible:
-#            self.is_visible = False
-#            self.animation_start_time = pg.time.get_ticks()
-#            self.animation_end_time = self.animation_start_time + self.hide_animation_duration
-#    
-#    def animate_ui(self) -> None:
-#        current_time = pg.time.get_ticks()
-#        if current_time < self.animation_end_time:
-#            progress = (current_time - self.animation_start_time) / (self.animation_end_time - self.animation_start_time)
-#            
-#            for element in self.ui_elements:
-#                element.rect.y = -element.rect.height + int(progress * element.rect.height)
-#        else:
-#            for element in self.ui_elements:
-#                element.rect.y = 10
+class PyScrollView(PyUiElement):
+    SCROLL_STRENGTH = 10
+    def __init__(self, x: float, y: float, width: float, visible_height: float) -> None:
+        self.rect = pg.Rect(x, y, width, visible_height)
+        self.elements: list[PyUiElement] = []
+        self.scroll_offset: float = 0
+        self.scrollable_area = pg.Surface((width, visible_height))   
+        self.visible_height: float = visible_height     
+        self.needed_height: float = 0
+
+    def handle_event(self, event: pg.event.Event) -> bool:
+        self.handle_scrolling(event)         
+
+        for element in self.elements:            
+            if hasattr(event, 'pos'):
+                prev_event_pos = event.pos
+                event.pos -= pg.Vector2(0, self.rect.y - self.scroll_offset)
+                                
+                element.handle_event(event)
+                
+                event.pos = prev_event_pos
+
+        return False
+
+    def handle_scrolling(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if event.button == 4:
+                self.scroll_offset -= self.SCROLL_STRENGTH
+            elif event.button == 5:
+                self.scroll_offset += self.SCROLL_STRENGTH
+            self.scroll_offset = max(0, min(self.scroll_offset, self.scrollable_area.get_height() - self.rect.height))
+    
+    def add_element(self, element: PyUiElement, element_height: float) -> None:
+        self.elements.append(element)
+        self.needed_height += element_height
+        self.scrollable_area = pg.Surface((self.rect.width, max(self.needed_height, self.rect.height)))
+
+    def draw(self, screen) -> None:
+        self.scrollable_area.fill((255, 255, 255))
+
+        for element in self.elements:
+            element.draw(self.scrollable_area)            
+
+        visible_area: Surface = self.scrollable_area.subsurface(pg.Rect(0, self.scroll_offset, self.rect.width, self.rect.height))
+
+        screen.blit(visible_area, (self.rect.x, self.rect.y))
+        pg.draw.rect(screen, (0, 0, 0), self.rect, 2)

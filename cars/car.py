@@ -138,9 +138,9 @@ class Car(ABC):
         self._speed *= 0.94
 
         if self.angle < -180:
-            self.angle += 180
+            self.angle += 360
         if self.angle > 180:
-            self.angle -= 180
+            self.angle -= 360
         
         delta_y = -self._speed * math.cos(math.radians(self.angle))
         delta_x = self._speed * math.sin(math.radians(self.angle))

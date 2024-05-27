@@ -6,9 +6,11 @@ from typing import List, Sequence
 from pygame_extensions.pyui_elements import PyButton
 from pygame.surface import Surface
 from cars.car import Car, AICar
-import visualization.visualize as visualize
-from simulation.simulation_ui import PySimulationUi, PyNeatSimulationUi
+import neat_visualization.visualize as visualize
+from simulation.simulation_ui import PySimulationUi, PyNeatSimulationUi, PyTestUi
 from simulation.statistics import SimulationStatistics
+from map_scripts.map_tools import get_map_names
+from map_scripts.map_reader import read_map_txt
 
 pg.init()
 
@@ -38,19 +40,25 @@ class Simulation:
         self.clock = pg.time.Clock()
         self.frames: int = 0
         self.generation_number: int = generation_number
-        self.simulation_ui: PySimulationUi | PyNeatSimulationUi
+        self.simulation_ui: PySimulationUi | PyNeatSimulationUi | PyTestUi
         self.create_appropriate_ui()
         self.font: Font = pg.font.SysFont("arial", 25)
         self.statistics: SimulationStatistics = SimulationStatistics()
                 
     def create_appropriate_ui(self) -> None:
         if not self.is_neat_simulation:
-            self.simulation_ui = PySimulationUi(self.win, self.end_training, self.end_simulation)
+            self.simulation_ui = PyTestUi(self.win, self.end_training, self.end_simulation)
+            self.simulation_ui.create_map_selection_ui(0, HEIGHT, get_map_names(), self.change_map)
         else:
             self.simulation_ui = PyNeatSimulationUi(self.win, self.end_training, self.end_simulation)
                     
     def plot_values(self, values_to_plot: list[SimulationStatistics]) -> None:
         self.simulation_ui.plot_values(WIDTH, HEIGHT, values_to_plot)
+        
+    def change_map(self, map_name: str) -> None:
+        self.walls, self.gates, self.starting_point = read_map_txt(map_name)
+        for car in self.cars:
+            car.position = self.starting_point
             
     @property
     def is_neat_simulation(self) -> bool:
@@ -122,7 +130,7 @@ class Simulation:
         if mouse_pressed[0] and config is not None:
             self.handle_car_selection(cars, mouse_position, config, win)
             
-        for event in pg.event.get():            
+        for event in pg.event.get():        
             if self.check_if_quit(event):
                 pg.quit()
                 quit()
@@ -142,7 +150,6 @@ class Simulation:
         except ZeroDivisionError:
             return self.max_score, 0
         
-
     def simulation_loop(self) -> None:               
         win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT), pg.SRCALPHA)
         clock = pg.time.Clock()

@@ -34,12 +34,18 @@ class NeatTrainingAttempt:
         self.config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                     neat.DefaultStagnation, config_path)
         
-        self.statistics: List[SimulationStatistics] = []
+        self.statistics: List[SimulationStatistics] = [NeatTrainingAttempt.default_simulation_statistics()]
 
         self.simulation_config: Optional[SimulationConfig] = None
         if simulation_config is not None:
             self.simulation_config = simulation_config
             NeatTrainingAttempt.inject_simulation_config(self.config, simulation_config)
+            
+    @staticmethod      
+    def default_simulation_statistics() -> SimulationStatistics:
+        simulation_statistics = SimulationStatistics()
+        simulation_statistics.add_score(0)
+        return simulation_statistics
         
     @staticmethod        
     def get_ray_count_from_config(config) -> int:
