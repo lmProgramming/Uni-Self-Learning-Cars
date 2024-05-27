@@ -143,9 +143,7 @@ class Simulation:
             return self.max_score, 0
         
 
-    def simulation_loop(self) -> None:       
-        from simulation.simulation_setup import find_angle_to_first_gate
-        
+    def simulation_loop(self) -> None:               
         win: pg.surface.Surface = pg.display.set_mode((WIDTH, HEIGHT), pg.SRCALPHA)
         clock = pg.time.Clock()
 
