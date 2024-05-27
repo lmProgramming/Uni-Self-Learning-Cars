@@ -113,7 +113,6 @@ class PyButton(PyUiElement):
         self.action = action
         
     def handle_event(self, event) -> bool:
-        print(self.text)
         if self.is_clicked(event):            
             self.action()
             return True
