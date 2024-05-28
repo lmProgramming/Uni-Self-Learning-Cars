@@ -13,7 +13,7 @@ class Main(QMainWindow):
     def __init__(self, app) -> None:
         super().__init__()
         
-        self.ui = UiMain()
+        self.ui = UiMain(self.open_main_menu_screen)
         
         self.setCentralWidget(self.ui)
         

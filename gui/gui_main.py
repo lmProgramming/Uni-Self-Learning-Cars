@@ -11,10 +11,12 @@ from gui.saved_training_gallery import SavedTrainingGallery
 from gui.checkable_combo_box import CheckableComboBox
 
 class UiMain(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, open_main_menu_screen):
         super().__init__()
         self.QtStack = QtWidgets.QStackedLayout()  # Initialize QStackedLayout
         self.setLayout(self.QtStack)  # Set QStackedLayout as the layout for this widget
+        
+        self.open_main_menu_screen = open_main_menu_screen
 
     def setupUi(self, Main, dimensions) -> None:
         self.main_menu = QtWidgets.QWidget()
@@ -71,10 +73,6 @@ class UiMain(QtWidgets.QWidget):
         layout.setStretch(0, 0)
 
         return layout
-                
-    def open_main_menu_screen(self) -> None:
-        self.QtStack.setCurrentIndex(0)
-        self.setWindowTitle("Main Menu") 
         
 class MapMenu(QtWidgets.QWidget):
     def __init__(self, top_bar_layout, dimensions) -> None:
