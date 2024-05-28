@@ -21,7 +21,6 @@ class MapGallery(ScrollableGallery):
         deleteButton = QPushButton('Delete')
         editButton = QPushButton('Edit')
         
-        # Connect buttons to functions
         renameButton.clicked.connect(lambda: self.renameMap(mapLabel))
         deleteButton.clicked.connect(lambda: self.deleteMap(mapLabel))
         editButton.clicked.connect(lambda: self.editMap(map_name))
