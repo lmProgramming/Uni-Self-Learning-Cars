@@ -67,6 +67,6 @@ def open_main_menu():
     showMain = Main(app)
     showMain.show()
     sys.exit(app.exec_())
-        
+
 if __name__ == '__main__':
     open_main_menu()

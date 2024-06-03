@@ -1,7 +1,6 @@
 from pygame.math import Vector2
 import math
 from typing import List
-import numpy as np
 
 def find_lines_intersection(object A, object B, object C, object D):
     cdef float s10_x = B[0] - A[0]
